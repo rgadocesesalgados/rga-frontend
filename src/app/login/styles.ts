@@ -8,9 +8,10 @@ h-screen
 `
 
 export const Sform = tw.form`
-flex flex-col gap-5 w-full justify-center items-center
+flex flex-col gap-5 w-full justify-center 
 `
 
 export const Stitle = tw.span`
 text-3xl
+text-center
 `

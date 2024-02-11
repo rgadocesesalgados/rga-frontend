@@ -3,7 +3,7 @@ import tw from 'tailwind-styled-components'
 
 export const Saside = tw.aside`
 -left-full
-data-[isOpen=true]:left-0
+data-[isopen=true]:left-0
 top-0
 w-2/3 
 min-h-screen

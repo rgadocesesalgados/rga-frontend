@@ -10,7 +10,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   return (
-    <Saside data-isopen={isOpen} data-setisOpen={setIsOpen}>
+    <Saside data-isopen={isOpen}>
       <ButtonToggle className="border-black" icon={<SiconClose />} isOpen={isOpen} setIsOpen={setIsOpen} />
 
       {configSidebarlinks.map((link) => (

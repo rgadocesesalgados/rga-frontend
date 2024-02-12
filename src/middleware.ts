@@ -5,7 +5,6 @@ export function middleware(req: NextRequest) {
   const cookieAuth = cookies().get('nextauth.token')
 
   if (cookieAuth && req.nextUrl.pathname === '/login') {
-    console.log('Passou por aqui')
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
   if (!cookieAuth && req.nextUrl.pathname !== '/login') {
@@ -14,5 +13,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/dashboard/:path*', '/forms/:path*'],
+  matcher: ['/api/:path*', '/categorias:path*', '/dashboard/:path*', '/forms/:path*', '/login:path*'],
 }

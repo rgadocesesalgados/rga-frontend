@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 import Router from 'next/router'
 import { api } from '@/services/api/apiClient'
@@ -28,7 +28,7 @@ interface SignInProps {
 
 export const signOut = () => {
   try {
-    Cookies.remove('@nextauth.token')
+    Cookies.remove('nextauth.token')
     Router.push('/')
   } catch (error) {
     console.log('erro ao deslogar', error)
@@ -39,6 +39,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
   const [user, setUser] = useState<UserProps | null>(null)
   const isAuthenticated = !!user
+
+  useEffect(() => {
+    const token = Cookies.get('nextauth.token')
+
+    if (token) {
+      api
+        .get('/me')
+        .then((response) => {
+          const { id, name, tel } = response.data
+          setUser({ id, name, tel })
+        })
+        .catch(() => {
+          signOut()
+        })
+    }
+  }, [])
   const signIn = async ({ tel, password }: SignInProps) => {
     try {
       const response = await api.post('/auth', { tel, password })

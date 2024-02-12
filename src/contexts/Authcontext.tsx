@@ -44,8 +44,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const response = await api.post('/auth', { tel, password })
 
       const { token, id, name } = response.data
-      Cookies.set('@nextauth.token', token, {
+
+      Cookies.set('nextauth.token', token, {
         path: '/',
+        expires: 60 * 60 * 24 * 30 * 12, // 12 months
       })
 
       setUser({ id, name, tel })

@@ -4,9 +4,8 @@ import { AuthTokenError } from '../errors/AuthTokenError'
 import { signOut } from '@/contexts/Authcontext'
 
 export const setupApiClient = () => {
-  const cookies = Cookie.get('@nextauth.token')
+  const cookies = Cookie.get('nextauth.token')
 
-  console.log(cookies)
   const api = axios.create({
     baseURL: 'http://localhost:3333',
     headers: {

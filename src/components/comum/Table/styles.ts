@@ -6,10 +6,14 @@ flex-col
 gap-5
 rounded
 border
-p-5`
+p-5
+overflow-hidden
+overflow-x-auto
+`
 
 export const Stable = tw.table`
 w-full
+
 `
 
 export const Scaption = tw.caption`
@@ -24,10 +28,15 @@ export const StrHead = tw.tr`
 
 export const Sth = tw.th`
 pb-3
+px-3
 text-start
 font-normal
 `
 export const Std = tw.td`
 py-5
-uppercase
+px-3
+text-nowrap
+text-sm
+overflow-hidden
+text-ellipsis
 `

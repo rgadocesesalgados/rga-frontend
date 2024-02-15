@@ -16,6 +16,7 @@ import { FormData } from './types'
 import { Std } from '@/components/comum/Table/styles'
 import { EditItem } from '@/components/comum/Table/tableActions'
 import { Pencil } from '@/components/icon'
+import { getEnderecos } from './functions'
 
 export default function Enderecos() {
   const [isOpen, setIsOpen] = useState(false)
@@ -27,18 +28,7 @@ export default function Enderecos() {
     reset()
   }
 
-  const getEnderecos = () => {
-    api
-      .get('/address')
-      .then((response) => {
-        setData(response.data)
-        console.log(response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
-  useEffect(getEnderecos, [])
+  useEffect(() => getEnderecos({ setData }), [])
 
   const {
     register,
@@ -56,7 +46,7 @@ export default function Enderecos() {
       .post('/address', data)
       .then(() => {
         toast.success('Cadastrado com sucesso!')
-        getEnderecos()
+        getEnderecos({ setData })
         setIsOpen(!isOpen)
       })
       .catch((error) => {
@@ -75,7 +65,7 @@ export default function Enderecos() {
         toast.success('Editado com sucesso!')
         setIsOpen(false)
         reset()
-        getEnderecos()
+        getEnderecos({ setData })
       })
       .catch((error) => {
         toast.error(error.response?.data?.message)

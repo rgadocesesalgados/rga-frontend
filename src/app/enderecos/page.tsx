@@ -23,10 +23,11 @@ export default function Enderecos() {
   const [data, setData] = useState<FormData[]>([])
   const toggle = () => {
     setIsOpen(!isOpen)
+    setEdit(false)
     reset()
   }
 
-  const getCategorias = () => {
+  const getEnderecos = () => {
     api
       .get('/address')
       .then((response) => {
@@ -37,7 +38,7 @@ export default function Enderecos() {
         console.log(error)
       })
   }
-  useEffect(getCategorias, [])
+  useEffect(getEnderecos, [])
 
   const {
     register,
@@ -55,10 +56,12 @@ export default function Enderecos() {
       .post('/address', data)
       .then(() => {
         toast.success('Cadastrado com sucesso!')
+        getEnderecos()
         setIsOpen(!isOpen)
       })
       .catch((error) => {
-        toast.error(error.response?.data?.message)
+        console.log(error)
+        toast.error(error.response?.data?.error)
       })
 
     console.log(data)
@@ -72,7 +75,7 @@ export default function Enderecos() {
         toast.success('Editado com sucesso!')
         setIsOpen(false)
         reset()
-        getCategorias()
+        getEnderecos()
       })
       .catch((error) => {
         toast.error(error.response?.data?.message)

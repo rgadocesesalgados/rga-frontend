@@ -63,6 +63,7 @@ export default function Categorias() {
           <div className="flex justify-end gap-5">
             <Button
               color="red"
+              type="button"
               onClick={() => {
                 setIsOpen(!isOpen)
                 reset()

@@ -34,10 +34,10 @@ export const useHandleCategorias = () => {
   }
 
   const [data, setData] = useState<CategoryProps[]>([])
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [edit, setEdit] = useState(false)
 
-  useEffect(getCategorias, [data])
+  useEffect(getCategorias, [])
   const toogleModal = () => {
     setEdit(false)
     setIsOpen(!isOpen)

@@ -3,7 +3,7 @@ import { Wrap } from '@/components/comum/Wrap'
 import Layout from '../dashboard/layout'
 import Table from '@/components/comum/Table'
 import Modal from '@/components/comum/Modal/Index'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Sform } from '../login/styles'
 import Input from '@/components/comum/Input'
@@ -17,11 +17,10 @@ import { Std } from '@/components/comum/Table/styles'
 import { EditItem } from '@/components/comum/Table/tableActions'
 import { Pencil } from '@/components/icon'
 import { getEnderecos } from './functions'
+import { states } from './states'
 
 export default function Enderecos() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [edit, setEdit] = useState(false)
-  const [data, setData] = useState<FormData[]>([])
+  const { data, setData, isOpen, setIsOpen, edit, setEdit } = states()
   const toggle = () => {
     setIsOpen(!isOpen)
     setEdit(false)

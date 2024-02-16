@@ -11,6 +11,9 @@ export const Sform = tw.form`
 flex flex-col gap-5 w-full justify-center 
 `
 
+export const Soption = tw.option`
+p-5
+`
 export const Stitle = tw.span`
 text-3xl
 text-center

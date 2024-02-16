@@ -24,6 +24,7 @@ w-full
 h-full
 bg-white
 rounded-xl
+overflow-y-scroll
 `
 
 export const Sheader = tw.header`

@@ -4,7 +4,6 @@ import { schema } from './schema'
 export interface InputSelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   data: OptionProps[]
   label?: string
-  setValueId: (value: string) => void
 }
 
 export interface OptionProps {

@@ -1,47 +1,25 @@
 'use client'
-import Input from '../Input'
 import { Button } from '../Button'
-import { useStateInputSearch } from './forms'
-import { InputSelectProps, OptionProps } from './types'
+import { InputSelectProps } from './types'
 import { SconatainerOption, Soption } from './styles'
 import { forwardRef } from 'react'
 import { useStateInputSelect } from './states'
 
-export const InputSelect = forwardRef<HTMLInputElement, InputSelectProps>(({ data, setValueId, ...props }, ref) => {
-  const { register, setValue, watch } = useStateInputSearch()
+export const InputSelect = forwardRef<HTMLInputElement, InputSelectProps>(({ data, children, ...props }, ref) => {
   const { optionOpen, setOptionOpen } = useStateInputSelect()
 
-  const handleOption = ({ label, value }: OptionProps) => {
+  const handleOption = () => {
     setOptionOpen(false)
-    setValue('inputSearch', label)
-    setValueId(value)
   }
 
-  const filter = () => {
-    const filtradoPorLabel = data.filter(({ label }) => {
-      const labelUpperCase = label.toUpperCase().replace(/\s/g, '')
-      const inputSearchUpperCase = watch('inputSearch').toUpperCase().replace(/\s/g, '')
-
-      return labelUpperCase.includes(inputSearchUpperCase)
-    })
-
-    return filtradoPorLabel
-  }
   return (
     <div className="relative">
       <input type="text" ref={ref} {...props} className="border" readOnly hidden />
-
-      <Input
-        type="search"
-        label="Encontre o endereço"
-        {...register('inputSearch')}
-        autoComplete="none"
-        onClick={() => setOptionOpen(true)}
-      />
+      {children}
 
       <SconatainerOption data-open={optionOpen}>
-        {filter().map(({ label, value }) => (
-          <Soption key={value} onClick={() => handleOption({ label, value })}>
+        {data.map(({ label, value }) => (
+          <Soption key={value} onClick={handleOption}>
             {label}
           </Soption>
         ))}

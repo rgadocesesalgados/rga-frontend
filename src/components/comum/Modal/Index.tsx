@@ -13,19 +13,21 @@ interface ModalProps {
 export default function Modal({ isOpen = true, setIsOpen, title, children }: ModalProps) {
   const toggle = () => setIsOpen(!isOpen)
   return (
-    <Scontainer data-isopen={isOpen}>
-      <SdivClose onClick={toggle} />
-      <Scontent>
-        <Wrap>
-          <Sheader>
-            {title}
-            <Sbutton onClick={toggle}>
-              <CloseIcon />
-            </Sbutton>
-          </Sheader>
-          {children}
-        </Wrap>
-      </Scontent>
-    </Scontainer>
+    isOpen && (
+      <Scontainer data-isopen={isOpen}>
+        <SdivClose onClick={toggle} />
+        <Scontent>
+          <Wrap>
+            <Sheader>
+              {title}
+              <Sbutton onClick={toggle}>
+                <CloseIcon />
+              </Sbutton>
+            </Sheader>
+            {children}
+          </Wrap>
+        </Scontent>
+      </Scontainer>
+    )
   )
 }

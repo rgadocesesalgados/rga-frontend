@@ -94,6 +94,20 @@ export default function Clientes() {
     console.log('save: ', data)
   }
 
+  const deleteClient = (id: string, name: string) => {
+    console.log(id)
+    api
+      .delete('/client', { params: { id: id } })
+      .then(() => {
+        toast.success(`${name} deletado com sucesso!`)
+        getClientes({ setData })
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error(error.response?.data?.error)
+      })
+  }
+
   const submit = edit ? editSubmit : saveSubmit
   return (
     <Layout>
@@ -108,7 +122,7 @@ export default function Clientes() {
                 <EditItem onClick={() => openModalEdit({ id, name, tel, address_id, inputSearch })}>
                   <Pencil />
                 </EditItem>
-                <DeleteItem>
+                <DeleteItem onClick={() => deleteClient(id, name)}>
                   <CloseIcon />
                 </DeleteItem>
               </Std>

@@ -59,7 +59,17 @@ export default function Clientes() {
   }
 
   const editSubmit = (data: FormDataCliente) => {
-    console.log('edit: ', data)
+    api
+      .patch('/client', { name: data.name, tel: data.tel, address_id: data.address_id }, { params: { id: data.id } })
+      .then(() => {
+        toast.success(`${data.name} editado com sucesso!`)
+        getClientes({ setData })
+        setIsOpen(false)
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error(error.response?.data?.error)
+      })
   }
 
   const saveSubmit = (data: FormDataCliente) => {

@@ -9,27 +9,82 @@ import Modal from '@/components/comum/Modal/Index'
 import { Sform } from '../login/styles'
 import Input from '@/components/comum/Input'
 import { Button } from '@/components/comum/Button'
-import { useHandleCategorias } from '@/hooks/categorias/useHandleCategoria'
+import { useStateCategorias } from './useStateCategorias'
+import { useFormCategorias } from './useFormCategorias'
+import { getCategorias } from '../produtos/function'
+import { useEffect } from 'react'
+import { api } from '@/services/api/apiClient'
+import { toast } from 'react-toastify'
+import { FormDataCategorias } from './types'
 
 export interface CategoryProps {
   name: string
 }
 
+let idName = ''
+
 export default function Categorias() {
-  const {
-    toogleModal,
-    data,
-    editItemModal,
-    deleteCategory,
-    isOpen,
-    setIsOpen,
-    handleSubmit,
-    submit,
-    register,
-    errors,
-    edit,
-    reset,
-  } = useHandleCategorias()
+  const toogleModal = () => {
+    setEdit(false)
+    setIsOpen(!isOpen)
+  }
+
+  const deleteCategory = async (name: string) => {
+    await api
+      .delete('/category', { params: { name } })
+      .then(() => {
+        toast.success(` ${name} deletado com sucesso!`)
+        getCategorias({ setData })
+      })
+      .catch((error) => {
+        toast.warn(error.response.data?.error)
+      })
+  }
+
+  const saveSubmit = async (data: FormDataCategorias) => {
+    await api
+      .post('/category', data)
+      .then(() => {
+        toast.success('Cadastrado com sucesso!')
+        setIsOpen(!isOpen)
+        getCategorias({ setData })
+        reset()
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.warn(error.response.data?.error)
+      })
+  }
+
+  const editSubmit = async (data: FormDataCategorias) => {
+    await api
+      .patch('/category', { new_name: data.name }, { params: { name: idName } })
+      .then(() => {
+        toast.success('Editado com sucesso!')
+        setIsOpen(!isOpen)
+        getCategorias({ setData })
+        reset()
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.warn(error.response.data?.error)
+      })
+  }
+
+  const editItemModal = (name: string) => {
+    setValue('name', name)
+    idName = name
+    setEdit(true)
+    setIsOpen(!isOpen)
+  }
+
+  const { data, setData, edit, setEdit, isOpen, setIsOpen } = useStateCategorias()
+
+  const { register, handleSubmit, setValue, errors, reset } = useFormCategorias()
+
+  useEffect(() => getCategorias({ setData }), [])
+
+  const submit = edit ? editSubmit : saveSubmit
   return (
     <Layout>
       <Wrap>
@@ -45,11 +100,11 @@ export default function Categorias() {
               <Std>{name}</Std>
               <Std className="flex gap-2">
                 <EditItem onClick={() => editItemModal(name)}>
-                  <Pencil strokeWidth={2} />
+                  <Pencil />
                 </EditItem>
 
                 <DeleteItem onClick={() => deleteCategory(name)}>
-                  <CloseIcon strokeWidth={3} />
+                  <CloseIcon />
                 </DeleteItem>
               </Std>
             </tr>

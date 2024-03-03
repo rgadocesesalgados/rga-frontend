@@ -22,7 +22,7 @@ text-start
 text-sm
 `
 
-export const Std = tw.td`
+export const td = tw.td`
 py-5
 px-3
 text-nowrap
@@ -31,5 +31,9 @@ overflow-hidden
 text-ellipsis
 `
 
+export const tdAction = tw(td)`
+flex
+gap-2
+`
 export const tbory = tw.tbody`
 divide-y`

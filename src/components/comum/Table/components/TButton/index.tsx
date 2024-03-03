@@ -3,7 +3,7 @@ import { TButtonProps } from './types'
 
 export const TButton = ({ label, children, type, onClick }: TButtonProps) => {
   return (
-    <S.button data-type={type} onClick={onClick}>
+    <S.button type="button" data-type={type} onClick={onClick}>
       {!!label && label}
       {!!children && children}
     </S.button>

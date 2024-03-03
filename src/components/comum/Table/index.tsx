@@ -1,14 +1,9 @@
 'use client'
 
+import * as S from './styles'
 import { Button } from '../Button'
-import { Scaption, Scontainer, Stable, Sth } from './styles'
-
-export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
-  caption: string
-  theads: string[]
-  onClickLabel?: string
-  onClick?: () => void
-}
+import { THead } from './components/THead'
+import { TableProps } from './types'
 
 export default function Table({
   caption,
@@ -19,19 +14,18 @@ export default function Table({
   ...props
 }: TableProps) {
   return (
-    <Scontainer>
+    <S.container>
       <Button color="green" onClick={onClick}>
         {onClickLabel}
       </Button>
-      <Stable {...props}>
-        <Scaption>{caption}</Scaption>
 
-        <thead>
-          <tr>{theads?.map((th) => <Sth key={th}>{th}</Sth>)}</tr>
-        </thead>
+      <S.table {...props}>
+        <S.caption>{caption}</S.caption>
 
-        <tbody className="divide-y">{children}</tbody>
-      </Stable>
-    </Scontainer>
+        <THead theads={theads} />
+
+        <S.tbory className="">{children}</S.tbory>
+      </S.table>
+    </S.container>
   )
 }

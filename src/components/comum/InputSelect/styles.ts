@@ -10,8 +10,11 @@ divide-y
 overflow-y-scroll
 border
 data-[open=true]:flex
+z-50
 `
 
-export const Soption = tw.div`
+export const Soption = tw.button`
 p-5
-hover:bg-slate-300`
+hover:bg-slate-300
+focus:bg-slate-300
+`

@@ -1,74 +1,83 @@
 'use client'
-import { Button } from '../Button'
+
+import Input from '../Input'
+import { SconatainerOption } from './styles'
+import { filterLabel } from '@/app/utils/filterLabel'
+import Option from './Option'
 import { InputSelectProps } from './types'
-import { SconatainerOption, Soption } from './styles'
-import { forwardRef } from 'react'
+import { useFormContext } from 'react-hook-form'
 import { useStateInputSelect } from './states'
 
-export const InputSelect = forwardRef<HTMLInputElement, InputSelectProps>(({ data, children, ...props }, ref) => {
+export const InputSelect = ({ data, label, placeholder, error, inputid, inputSearch }: InputSelectProps) => {
   const { optionOpen, setOptionOpen } = useStateInputSelect()
+  const { register, watch, setValue, setFocus } = useFormContext()
 
-  const handleOption = () => {
-    setOptionOpen(false)
+  const options = filterLabel(data, watch(inputSearch))
+
+  const focus = (index: number) => {
+    document.getElementById(`${inputid}-${index}`)?.focus()
   }
-
   return (
-    <div className="relative">
-      <input type="text" ref={ref} {...props} className="border" readOnly hidden />
-      {children}
+    <div className="relative w-full">
+      <Input {...register(inputid)} readOnly error={error} hidden />
+
+      <Input
+        type="search"
+        placeholder={placeholder}
+        label={label}
+        autoComplete="off"
+        {...register(inputSearch)}
+        onClick={() => setOptionOpen(true)}
+        onKeyDown={(e) => {
+          setOptionOpen(true)
+          if (e.key === 'ArrowDown') {
+            focus(0)
+          }
+          if (e.key === 'Escape') {
+            setOptionOpen(false)
+          }
+          if (e.key === 'Enter') {
+            setOptionOpen(false)
+          }
+        }}
+        error={error}
+      />
 
       <SconatainerOption data-open={optionOpen}>
-        {data.map(({ label, value }) => (
-          <Soption key={value} onClick={handleOption}>
-            {label}
-          </Soption>
-        ))}
-        <div>
-          <Button type="button" color="green" className="w-full">
-            Criar endereço
-          </Button>
-        </div>
+        {options?.map(({ label, value }, index) => {
+          return (
+            <Option
+              id={`${inputid}-${index}`}
+              key={label}
+              label={label}
+              onClick={() => {
+                setValue(inputid, value)
+                setValue(inputSearch, label)
+                setOptionOpen(!optionOpen)
+                setFocus(inputSearch)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'ArrowDown') {
+                  focus(index + 1)
+                }
+
+                if (e.key === 'ArrowUp') {
+                  focus(index - 1)
+                }
+
+                if (e.key === 'Escape') {
+                  setOptionOpen(!optionOpen)
+                  setFocus(inputSearch)
+                }
+                if (e.key === 'Tab') {
+                  setOptionOpen(!optionOpen)
+                  setFocus(inputSearch)
+                }
+              }}
+            />
+          )
+        })}
       </SconatainerOption>
     </div>
   )
-})
-
-//
-//
-
-//     const select = watch('inputId')
-
-//     const filter = () => {
-//       const filtrado = data.filter(
-//         (item) => true == item.label.toUpperCase().replace(' ', '').includes(select.toUpperCase().replace(' ', '')),
-//       )
-//       return filtrado
-//     }
-
-//
-
-//     return (
-//       <>
-//         <Input
-//           type="search"
-//           label={label}
-//           placeholder="Endereço"
-//           autoComplete="none"
-//           onFocus={() => setOptionOpen(true)}
-//           onBlur={() => setOptionOpen(false)}
-//           {...props}
-//         />
-
-//         <SconatainerOption data-open={optionOpen}>
-//           {filter().map((item) => (
-//             <Soption key={item.value} onClick={() => handleOption(item)}>
-//               {item.label}
-//             </Soption>
-//           ))}
-
-//
-//         </SconatainerOption>
-
-//         <input readOnly ref={ref} {...register('inputId')} />
-//       </>
-//     )
+}

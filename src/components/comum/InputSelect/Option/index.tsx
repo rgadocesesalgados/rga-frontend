@@ -1,15 +1,12 @@
 import { Soption } from '../styles'
-interface OptionProps {
+interface OptionProps extends React.HTMLAttributes<HTMLButtonElement> {
   label: string
   onClick?: () => void
 }
-export default function Option({ label, onClick }: OptionProps) {
+
+export default function ({ label, ...props }: OptionProps) {
   return (
-    <Soption
-      onClick={() => {
-        onClick()
-      }}
-    >
+    <Soption type="button" {...props}>
       {label}
     </Soption>
   )

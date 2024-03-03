@@ -1,135 +1,34 @@
 'use client'
-import Table from '@/components/comum/Table'
 import { Wrap } from '@/components/comum/Wrap'
 import Layout from '../dashboard/layout'
-import { Std } from '@/components/comum/Table/styles'
-import { DeleteItem, EditItem } from '@/components/comum/Table/tableActions'
-import { CloseIcon, Pencil } from '@/components/icon'
-import Modal from '@/components/comum/Modal'
-import { Sform } from '../login/styles'
-import Input from '@/components/comum/Input'
-import { Button } from '@/components/comum/Button'
-import { useStateCategorias } from './useStateCategorias'
-import { useFormCategorias } from './useFormCategorias'
-import { useEffect } from 'react'
-import { api } from '@/services/api/apiClient'
-import { toast } from 'react-toastify'
-import { FormDataCategorias } from './types'
-import { getCategorias } from './function'
-
-export interface CategoryProps {
-  name: string
-}
-
-let idName = ''
+import { useStateCategorias } from '../../template/categorias/useStateCategorias'
+import { useFormCategorias } from '../../template/categorias/useFormCategorias'
+import { FormProvider } from 'react-hook-form'
+import { TableCategory } from '@/template/categorias/Table'
+import { ModalCategory } from '@/template/categorias/Modal'
 
 export default function Categorias() {
-  const toogleModal = () => {
-    setEdit(false)
-    setIsOpen(!isOpen)
+  const openModal = () => {
+    setIsOpen(true)
   }
 
-  const deleteCategory = async (name: string) => {
-    await api
-      .delete('/category', { params: { name } })
-      .then(() => {
-        toast.success(` ${name} deletado com sucesso!`)
-        getCategorias({ setData })
-      })
-      .catch((error) => {
-        toast.warn(error.response.data?.error)
-      })
+  const closeModal = () => {
+    setIsOpen(false)
   }
 
-  const saveSubmit = async (data: FormDataCategorias) => {
-    await api
-      .post('/category', data)
-      .then(() => {
-        toast.success('Cadastrado com sucesso!')
-        setIsOpen(!isOpen)
-        getCategorias({ setData })
-        reset()
-      })
-      .catch((error) => {
-        console.log(error)
-        toast.warn(error.response.data?.error)
-      })
-  }
+  const { isOpen, setIsOpen } = useStateCategorias()
 
-  const editSubmit = async (data: FormDataCategorias) => {
-    await api
-      .patch('/category', { new_name: data.name }, { params: { name: idName } })
-      .then(() => {
-        toast.success('Editado com sucesso!')
-        setIsOpen(!isOpen)
-        getCategorias({ setData })
-        reset()
-      })
-      .catch((error) => {
-        console.log(error)
-        toast.warn(error.response.data?.error)
-      })
-  }
+  const methods = useFormCategorias()
 
-  const editItemModal = (name: string) => {
-    setValue('name', name)
-    idName = name
-    setEdit(true)
-    setIsOpen(!isOpen)
-  }
-
-  const { data, setData, edit, setEdit, isOpen, setIsOpen } = useStateCategorias()
-
-  const { register, handleSubmit, setValue, errors, reset } = useFormCategorias()
-
-  useEffect(() => getCategorias({ setData }), [])
-
-  const submit = edit ? editSubmit : saveSubmit
   return (
     <Layout>
-      <Wrap>
-        <Table caption="Categorias" theads={['Nome', 'Ações']} onClick={toogleModal}>
-          {!data.length && (
-            <tr>
-              <td>Cadastre uma categoria...</td>
-              <td></td>
-            </tr>
-          )}
-          {data?.map(({ name }) => (
-            <tr key={name}>
-              <Std>{name}</Std>
-              <Std className="flex gap-2">
-                <EditItem onClick={() => editItemModal(name)}>
-                  <Pencil />
-                </EditItem>
+      <FormProvider {...methods}>
+        <Wrap>
+          <TableCategory openModal={openModal} />
+        </Wrap>
 
-                <DeleteItem onClick={() => deleteCategory(name)}>
-                  <CloseIcon />
-                </DeleteItem>
-              </Std>
-            </tr>
-          ))}
-        </Table>
-      </Wrap>
-
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Categoria">
-        <Sform onSubmit={handleSubmit(submit)}>
-          <Input placeholder="Nome da categoria" {...register('name')} error={errors.name?.message} />
-          <div className="flex justify-end gap-5">
-            <Button
-              color="red"
-              type="button"
-              onClick={() => {
-                setIsOpen(!isOpen)
-                reset()
-              }}
-            >
-              Cancelar
-            </Button>
-            {<Button>{edit ? 'Salvar alterações' : 'Cadastrar'}</Button>}
-          </div>
-        </Sform>
-      </Modal>
+        <ModalCategory isOpen={isOpen} closeModal={closeModal} />
+      </FormProvider>
     </Layout>
   )
 }

@@ -24,7 +24,7 @@ export default function Table({
 
         <THead theads={theads} />
 
-        <S.tbory className="">{children}</S.tbory>
+        <S.tbory>{children}</S.tbory>
       </S.table>
     </S.container>
   )

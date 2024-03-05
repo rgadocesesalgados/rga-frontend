@@ -27,8 +27,8 @@ export const useAddress = () => {
 
     return response
   }
-  const editAddress = async (address: AddressProps): Promise<AxiosResponse> => {
-    const response = await api.patch('/address', address)
+  const editAddress = async ({ id, ...address }: AddressProps): Promise<AxiosResponse> => {
+    const response = await api.patch('/address', address, { params: { id } })
 
     return response
   }

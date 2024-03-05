@@ -1,3 +1,4 @@
+'use client'
 import { createContext } from 'react'
 import { AddressContextData } from './types'
 import { useAddress } from './useAddress'

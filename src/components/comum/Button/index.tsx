@@ -4,9 +4,9 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   color?: 'outline' | 'green' | 'blue' | 'red'
 }
 
-export const Button = ({ children, color, ...props }: ButtonProps) => {
+export const Button = ({ children, color, type = 'button', ...props }: ButtonProps) => {
   return (
-    <Sbutton {...props} data-color={color}>
+    <Sbutton {...props} type={type} data-color={color}>
       {children}
     </Sbutton>
   )

@@ -25,7 +25,6 @@ export const InputSelect = ({ data, label, placeholder, error, inputid, inputSea
         type="search"
         placeholder={placeholder}
         label={label}
-        autoComplete="off"
         {...register(inputSearch)}
         onClick={() => setOptionOpen(true)}
         onKeyDown={(e) => {
@@ -40,6 +39,7 @@ export const InputSelect = ({ data, label, placeholder, error, inputid, inputSea
             setOptionOpen(false)
           }
         }}
+        autoComplete="off"
         error={error}
       />
 

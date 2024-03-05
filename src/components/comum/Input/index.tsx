@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useId } from 'react'
 import { Scontainer, SerrorMessage, Sinput, Slabel } from './styles'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -6,13 +6,16 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, ...props }, ref) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, type, className, ...props }, ref) => {
+  const id = useId()
   return (
-    <Scontainer>
-      <Slabel>{label}</Slabel>
-
-      <Sinput ref={ref} data-error={!!error} {...props} />
-
+    <Scontainer data-type={type} className={className}>
+      {label && (
+        <Slabel htmlFor={id} data-type={type}>
+          {label}
+        </Slabel>
+      )}
+      <Sinput id={id} type={type} data-type={type} ref={ref} data-error={!!error} {...props} />
       {error && <SerrorMessage>{error}</SerrorMessage>}
     </Scontainer>
   )

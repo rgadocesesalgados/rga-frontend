@@ -1,0 +1,1 @@
+export { MFooter } from './styles'

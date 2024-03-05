@@ -6,21 +6,20 @@ import { Sbutton, Scontainer, Scontent, SdivClose, Sheader } from './componentsM
 
 interface ModalProps {
   isOpen: boolean
-  setIsOpen: (value: boolean) => void
+  closeModal: () => void
   children?: React.ReactNode
   title: string
 }
-export default function Modal({ isOpen = true, setIsOpen, title, children }: ModalProps) {
-  const toggle = () => setIsOpen(!isOpen)
+export default function Modal({ isOpen = true, closeModal, title, children }: ModalProps) {
   return (
     isOpen && (
       <Scontainer data-isopen={isOpen}>
-        <SdivClose onClick={toggle} />
+        <SdivClose onClick={closeModal} />
         <Scontent>
           <Wrap>
             <Sheader>
               {title}
-              <Sbutton onClick={toggle}>
+              <Sbutton onClick={closeModal}>
                 <CloseIcon />
               </Sbutton>
             </Sheader>

@@ -2,6 +2,7 @@ import { ClientProps } from '@/app/clientes/types'
 import { api } from '@/services/api/apiClient'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 export const useClient = () => {
   const [clients, setClients] = useState<ClientProps[]>([])
@@ -23,14 +24,19 @@ export const useClient = () => {
     return response
   }
 
-  const removeClient = async (client_id: string): Promise<AxiosResponse> => {
-    const response = await api.delete('/client', { params: { id: client_id } })
-
-    return response
+  const removeClient = async (client_id: string): Promise<void> => {
+    await api
+      .delete('/client', { params: { id: client_id } })
+      .then(() => {
+        getAllClients()
+      })
+      .catch((error) => {
+        toast.error(error.response.data?.error)
+      })
   }
 
-  const editClient = async (client: ClientProps): Promise<AxiosResponse> => {
-    const response = await api.patch('/client', client)
+  const editClient = async ({ id, ...client }: ClientProps): Promise<AxiosResponse> => {
+    const response = await api.patch('/client', client, { params: { id } })
 
     return response
   }

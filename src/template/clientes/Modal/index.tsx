@@ -31,8 +31,12 @@ export const ModalClient = ({ isOpen, closeModal }: ModalTemplateProps) => {
           getAllClients()
           toast.success(`${name} editado com sucesso!`)
         })
-        .catch((error) => toast.error(error.response.data?.message))
+        .catch((error) => {
+          toast.error(error.response.data?.error)
+          console.log(error)
+        })
     } else {
+      console.log({ name, tel, address_id })
       addClient({ name, tel, address_id })
         .then(() => {
           closeModal()
@@ -40,11 +44,20 @@ export const ModalClient = ({ isOpen, closeModal }: ModalTemplateProps) => {
           getAllClients()
           toast.success(`${name} adicionado com sucesso!`)
         })
-        .catch((error) => toast.error(error.response.data?.message))
+        .catch((error) => {
+          toast.error(error.response.data?.error)
+
+          console.log(error)
+        })
     }
   }
+
+  const closeModalClient = () => {
+    closeModal()
+    reset()
+  }
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} title="Cliente">
+    <Modal isOpen={isOpen} closeModal={closeModalClient} title="Cliente">
       <Form onSubmit={handleSubmit(submit)}>
         <Input type="text" {...register('id')} error={errors.name?.message} hidden />
 
@@ -60,7 +73,7 @@ export const ModalClient = ({ isOpen, closeModal }: ModalTemplateProps) => {
         />
 
         <MFooter>
-          <Button type="button" color="red" onClick={closeModal}>
+          <Button type="button" color="red" onClick={closeModalClient}>
             Cancelar
           </Button>
           <Button type="submit">Salvar</Button>

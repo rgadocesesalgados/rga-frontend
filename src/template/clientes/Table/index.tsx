@@ -15,6 +15,7 @@ export const TableClient = ({ openModal }: TableTemplateProps) => {
   const { setValue } = useFormContext<FormDataCliente>()
 
   const edit = ({ id, name, tel, address_id }: ClientProps) => {
+    console.log({ id, name, tel, address_id })
     setValue('id', id)
     setValue('inputSearch', address?.find((address) => address.id === address_id)?.address_complete)
     setValue('name', name)
@@ -25,7 +26,6 @@ export const TableClient = ({ openModal }: TableTemplateProps) => {
 
   const openModalClient = async () => {
     await getAllAddresses()
-
     openModal()
   }
 

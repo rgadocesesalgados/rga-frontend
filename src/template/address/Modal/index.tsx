@@ -5,14 +5,11 @@ import Input from '@/components/comum/Input'
 import Modal from '@/components/comum/Modal'
 import { MFooter } from '@/components/comum/Modal/components/MFooter'
 import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
+import { ModalTemplateProps } from '@/template/types'
 import { useFormContext } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
-interface ModalProps {
-  isOpen: boolean
-  closeModal: () => void
-}
-export const ModalAddress = ({ isOpen, closeModal }: ModalProps) => {
+export const ModalAddress = ({ isOpen, closeModal }: ModalTemplateProps) => {
   const {
     handleSubmit,
     register,

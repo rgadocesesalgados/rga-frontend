@@ -7,11 +7,9 @@ import { useFormContext } from 'react-hook-form'
 import { FormDataAddress } from '@/app/enderecos/types'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
+import { TableTemplateProps } from '@/template/types'
 
-interface TableProps {
-  openModal: () => void
-}
-export const TableAddress = ({ openModal }: TableProps) => {
+export const TableAddress = ({ openModal }: TableTemplateProps) => {
   const { address, getAllAddresses, removeAddress } = useContextAddress()
   const { setValue, reset } = useFormContext<FormDataAddress>()
 

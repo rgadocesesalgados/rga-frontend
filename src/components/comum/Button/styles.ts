@@ -20,4 +20,10 @@ data-[color=blue]:text-blue-600
 data-[color=red]:border-red-600
 data-[color=red]:bg-red-100
 data-[color=red]:text-red-600
+
+data-[color=dash]:border-gray-400
+data-[color=dash]:bg-transparent
+data-[color=dash]:text-gray-500
+data-[color=dash]:border-dashed
+data-[color=dash]:border-2
 `

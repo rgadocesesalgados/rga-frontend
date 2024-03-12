@@ -8,7 +8,7 @@ h-screen
 `
 
 export const Sform = tw.form`
-flex flex-col gap-5 w-full justify-center 
+flex flex-col gap-10 w-full justify-center 
 `
 
 export const Soption = tw.option`

@@ -30,7 +30,7 @@ export default function Login() {
   const { signIn } = useAuth()
 
   const handleLogin = async (data: FormData) => {
-    await signIn(data)
+    await signIn({ tel: data.tel, password: data.password })
   }
   return (
     <>

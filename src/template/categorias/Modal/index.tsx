@@ -7,13 +7,9 @@ import { useContextCategory } from '@/contexts/dataContexts/categorysContext/use
 import { useFormContext } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { FormDataCategorias } from '../types'
+import { ModalTemplateProps } from '@/template/types'
 
-interface ModalCategoryProps {
-  isOpen: boolean
-  closeModal: () => void
-}
-
-export const ModalCategory = ({ isOpen, closeModal }: ModalCategoryProps) => {
+export const ModalCategory = ({ isOpen, closeModal }: ModalTemplateProps) => {
   const {
     handleSubmit,
     register,

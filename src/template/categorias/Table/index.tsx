@@ -7,12 +7,10 @@ import { CloseIcon, Pencil } from '@/components/icon'
 import { useFormContext } from 'react-hook-form'
 import { useEffect } from 'react'
 import { FormDataCategorias } from '../types'
+import { TableTemplateProps } from '@/template/types'
+import { toast } from 'react-toastify'
 
-interface TableCategoryProps {
-  openModal: () => void
-}
-
-export const TableCategory = ({ openModal }: TableCategoryProps) => {
+export const TableCategory = ({ openModal }: TableTemplateProps) => {
   const { categorys, removeCategory, getAllCategorys } = useContextCategory()
   const { setValue } = useFormContext<FormDataCategorias>()
   useEffect(() => {
@@ -28,6 +26,7 @@ export const TableCategory = ({ openModal }: TableCategoryProps) => {
               <T.td>{name}</T.td>
               <T.tdAction>
                 <TButton
+                  type="edit"
                   onClick={() => {
                     setValue('id', id)
                     setValue('name', name)
@@ -38,10 +37,16 @@ export const TableCategory = ({ openModal }: TableCategoryProps) => {
                 </TButton>
 
                 <TButton
-                  type="delete"
                   onClick={async () => {
-                    await removeCategory(name)
-                    await getAllCategorys()
+                    removeCategory(id)
+                      .then(() => {
+                        getAllCategorys()
+                        toast.success('Removido com sucesso!')
+                      })
+                      .catch((error) => {
+                        toast.error(error.response.data?.error)
+                        console.log(error)
+                      })
                   }}
                 >
                   <CloseIcon />

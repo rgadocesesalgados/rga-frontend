@@ -26,8 +26,8 @@ export const useCategorys = () => {
     return response
   }
 
-  const removeCategory = async (category_name: string): Promise<AxiosResponse> => {
-    const response = await api.delete('/category', { params: { name: category_name } })
+  const removeCategory = async (category_id: string): Promise<AxiosResponse> => {
+    const response = await api.delete('/category', { params: { id: category_id } })
 
     return response
   }

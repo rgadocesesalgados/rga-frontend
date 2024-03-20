@@ -1,9 +1,9 @@
 import { Space_Mono } from 'next/font/google'
 import './globals.css'
 import 'react-toastify/dist/ReactToastify.css'
-import { AuthProvider } from '@/contexts/Authcontext'
 import { ToastContainer } from 'react-toastify'
 import { Metadata } from 'next'
+import { ProvidersContext } from '@/contexts'
 
 const space_mono = Space_Mono({ subsets: ['latin'], weight: '400' })
 
@@ -19,7 +19,8 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={space_mono.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <ProvidersContext>{children}</ProvidersContext>
+
         <ToastContainer autoClose={3000} />
       </body>
     </html>

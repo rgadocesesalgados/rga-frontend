@@ -13,5 +13,15 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/api/:path*', '/categorias:path*', '/dashboard/:path*', '/forms/:path*', '/login:path*'],
+  matcher: [
+    '/api/:path*',
+    '/categorias:path*',
+    '/clients/:path*',
+    '/dashboard/:path*',
+    '/enderecos/:path*',
+    '/estoque/:path*',
+    '/login:path*',
+    '/pedidos/:path*',
+    '/produtos/:path*',
+  ],
 }

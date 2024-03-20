@@ -12,17 +12,21 @@ import { Payment } from '@/components/pedidos/Payment'
 import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
 import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
 import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
+import { useContextPedidos } from '@/contexts/dataContexts/ordersContext/useContextPedidos'
 import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
 import { ModalTemplateProps } from '@/template/types'
 import { useFormContext } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 export const ModalPedidos = ({ isOpen, closeModal }: ModalTemplateProps) => {
   const { clients } = useContextClient()
   const { categorys } = useContextCategory()
   const { products } = useContextProduct()
   const { address } = useContextAddress()
+  const { addOrder, getAllOrders } = useContextPedidos()
 
   const closeModalPedidos = () => {
+    reset()
     closeModal()
   }
 
@@ -33,23 +37,81 @@ export const ModalPedidos = ({ isOpen, closeModal }: ModalTemplateProps) => {
     handleSubmit,
     setValue,
     getValues,
+    reset,
   } = useFormContext<FormDataPedidos>()
 
   const delivery = watch('delivery')
   const orderProduct = watch('orderProduct')
   const logistic = watch('logistic')
 
-  const submit = async (data: FormDataPedidos) => {
-    console.log(data)
-  }
-
   const calculateTotal = () => {
-    const orderProductPricesSum = orderProduct?.reduce((acc, item, index) => acc + +item[index]?.price, 0) || 0
+    const orderProductPricesSum = orderProduct?.reduce((sum, item) => {
+      if (item.length > 0) {
+        const price = item.reduce((sum2, item) => sum2 + +item.price, 0)
 
-    const valueDelivery = address?.find((address) => address.id === getValues('address'))[logistic] || 0
-    console.log(valueDelivery)
+        console.log({ sum2: price })
+        return sum + price
+      }
+
+      return sum
+    }, 0)
+
+    const addressSeted = address?.find((address) => address.id === getValues('address'))
+    const valueByTypeDelivery = (addressSeted && addressSeted[logistic]) || 0
+    const valueDelivery = delivery ? valueByTypeDelivery : 0
 
     setValue('total', orderProductPricesSum + valueDelivery)
+  }
+
+  console.log(errors)
+
+  const submit = async ({
+    client,
+    data,
+    orderProduct,
+    cor_forminhas,
+    observations,
+    delivery,
+    address,
+    logistic,
+    value_frete,
+    total,
+    status,
+  }: FormDataPedidos) => {
+    const products = orderProduct?.reduce((sum, item) => {
+      item.length > 0 && sum.push(...item)
+
+      return sum
+    }, [])
+
+    console.log(products)
+
+    const existingProducts = products[0].product_id
+      ? products.map(({ price, product_id, quantity }) => ({ price, product_id, quantity }))
+      : []
+
+    addOrder({
+      client_id: client,
+      data,
+      products: existingProducts,
+      cor_da_forminha: cor_forminhas,
+      observations,
+      delivery,
+      address_id: address,
+      frete: logistic,
+      value_frete,
+      total,
+      status,
+    })
+      .then(() => {
+        getAllOrders()
+        closeModalPedidos()
+        toast.success('Pedido criado com sucesso!')
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error(error.response?.data?.error)
+      })
   }
 
   return (
@@ -92,9 +154,20 @@ export const ModalPedidos = ({ isOpen, closeModal }: ModalTemplateProps) => {
               inputid="address"
               label="Endereço"
               data={address?.map(({ id, address_complete }) => ({ label: address_complete, value: id }))}
+              error={errors?.searchAddress?.message}
             />
 
-            <Select {...register('logistic')} label="Logística" data={['frete_carro', 'frete_moto']} />
+            <Select {...register('logistic')} label="Logística" data={['FRETE_CARRO', 'FRETE_MOTO']} />
+
+            <Input
+              {...register('value_frete')}
+              label="Valor Frete"
+              type="number"
+              min={0.0}
+              step={0.01}
+              error={errors?.value_frete?.message}
+              required={false}
+            />
           </>
         )}
 
@@ -114,7 +187,7 @@ export const ModalPedidos = ({ isOpen, closeModal }: ModalTemplateProps) => {
         <Select
           {...register('status')}
           label="Status"
-          data={['RASCUNHO', 'ANOTADO', 'EM PRODUCAO', 'ENTREGUE', 'CANCELADO']}
+          data={['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'ENTREGUE', 'CANCELADO']}
           error={errors?.status?.message}
         />
 

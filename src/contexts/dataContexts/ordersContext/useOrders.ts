@@ -1,4 +1,4 @@
-import { OrderProps } from '@/app/pedidos/types'
+import { OrderProps, OrderRequestToCreate } from '@/app/pedidos/types'
 import { api } from '@/services/api/apiClient'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
@@ -18,14 +18,14 @@ export const useOrders = () => {
       })
   }
 
-  const addOrder = async ({ client_id, address_id, ...data }: OrderProps): Promise<AxiosResponse> => {
+  const addOrder = async ({ client_id, address_id, ...data }: OrderRequestToCreate): Promise<AxiosResponse> => {
     const response = await api.post('/order', data, { params: { client_id, address_id } })
 
     return response
   }
 
   const removeOrder = async (order_id: string): Promise<AxiosResponse> => {
-    const response = await api.delete('/order', { params: { id: order_id } })
+    const response = await api.delete('/order', { params: { order_id } })
 
     return response
   }

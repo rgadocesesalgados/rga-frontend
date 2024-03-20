@@ -21,24 +21,24 @@ export const ModalProdutos = ({ isOpen, closeModal }: ModalTemplateProps) => {
     formState: { errors },
   } = useFormContext<FormDataProdutos>()
 
-  const submit = async ({ id, category_name, name, banner_url, min_quantity, price }: FormDataProdutos) => {
+  const submit = async ({ id, name, min_quantity, price, category_id, banner_url }: FormDataProdutos) => {
     if (id) {
-      editProduct({ id, name, category_name, banner: banner_url, min_quantity, price })
+      editProduct({ id, name, price, category_id, min_quantity, banner: banner_url })
         .then(() => {
           closeModalProdutos()
           reset()
           toast.success(`${name} editado com sucesso!`)
         })
-        .catch((error) => toast.error(error.response.data?.message))
+        .catch((error) => toast.error(error.response.data?.error))
     } else {
-      addProduct({ name, category_name, banner: banner_url, min_quantity, price })
+      addProduct({ name, min_quantity, price, category_id, banner: banner_url })
         .then(() => {
           closeModalProdutos()
           toast.success(`${name} adicionado com sucesso!`)
         })
         .catch((error) => {
           console.log(error)
-          toast.error(error.response.data?.message)
+          toast.error(error.response.data?.error)
         })
     }
   }
@@ -50,18 +50,25 @@ export const ModalProdutos = ({ isOpen, closeModal }: ModalTemplateProps) => {
   return (
     <Modal isOpen={isOpen} closeModal={closeModalProdutos} title="Produto">
       <Form onSubmit={handleSubmit(submit)}>
-        <Input type="text" {...register('id')} error={errors.name?.message} hidden />
+        <Input {...register('id')} type="text" error={errors.name?.message} hidden />
 
-        <Input type="text" label="Nome" placeholder="Nome" {...register('name')} error={errors.name?.message} />
+        <Input {...register('name')} type="text" label="Nome" placeholder="Nome" error={errors.name?.message} />
 
         <InputSelect
           label="Bucar por categoria"
-          data={categorys?.map(({ name }) => ({ value: name, label: name }) as OptionProps)}
-          inputid="category_name"
-          inputSearch="inputSearch"
+          data={categorys?.map(({ name, id }) => ({ value: id, label: name }) as OptionProps)}
+          inputid="category_id"
+          inputSearch="categorySearch"
         />
 
-        <Input type="text" label="Preço" placeholder="R$ 00,00" {...register('price')} error={errors.price?.message} />
+        <Input
+          {...register('price')}
+          type="number"
+          label="Preço"
+          placeholder="R$ 00,00"
+          step={0.01}
+          error={errors.price?.message}
+        />
 
         <Input
           {...register('min_quantity')}
@@ -72,10 +79,10 @@ export const ModalProdutos = ({ isOpen, closeModal }: ModalTemplateProps) => {
         />
 
         <Input
+          {...register('banner_url')}
           type="url"
           label="Banner"
           placeholder="https://"
-          {...register('banner_url')}
           error={errors.banner_url?.message}
         />
 

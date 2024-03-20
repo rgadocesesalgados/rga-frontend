@@ -13,15 +13,23 @@ import { toast } from 'react-toastify'
 
 export const TableProdutos = ({ openModal }: TableTemplateProps) => {
   const { getAllProducts, removeProduct, products } = useContextProduct()
-  const { getAllCategorys, categorys } = useContextCategory()
+  const { getAllCategorys } = useContextCategory()
   const { setValue } = useFormContext<FormDataProdutos>()
 
-  const openModalProdutos = async ({ id, name, category_name, banner, min_quantity, price }: ProductProps) => {
+  const openModalProdutos = async ({
+    id,
+    name,
+    category_name,
+    banner,
+    min_quantity,
+    price,
+    category_id,
+  }: ProductProps) => {
     await getAllCategorys()
     setValue('id', id)
-    setValue('inputSearch', category_name)
+    setValue('categorySearch', category_name)
     setValue('name', name)
-    setValue('category_id', categorys?.find((category) => category.name === category_name)?.id)
+    setValue('category_id', category_id)
     setValue('banner_url', banner)
     setValue('min_quantity', min_quantity)
     setValue('price', price)

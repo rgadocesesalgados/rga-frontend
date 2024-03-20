@@ -1,4 +1,4 @@
-import { ProductProps } from '@/app/produtos/types'
+import { ProductProps, ProductPropsRequestToCreate } from '@/app/produtos/types'
 import { api } from '@/services/api/apiClient'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
@@ -18,8 +18,8 @@ export const useProduct = () => {
       })
   }
 
-  const addProduct = async ({ category_name, ...poduct }: Omit<ProductProps, 'id'>): Promise<AxiosResponse> => {
-    const response = await api.post('/product', poduct, { params: { category_name } })
+  const addProduct = async ({ category_id, ...poduct }: ProductPropsRequestToCreate): Promise<AxiosResponse> => {
+    const response = await api.post('/product', poduct, { params: { category_id } })
 
     return response
   }

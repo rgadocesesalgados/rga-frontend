@@ -37,7 +37,7 @@ export const ModalAddress = ({ isOpen, closeModal }: ModalTemplateProps) => {
           getAllAddresses()
           reset()
         })
-        .catch((error) => toast.error(error.response.data?.message))
+        .catch((error) => toast.error(error.response.data?.error))
     } else {
       addAddress({ rua, numero, bairro, ponto_de_referencia, cidade, frete_moto, frete_carro })
         .then(() => {
@@ -45,7 +45,10 @@ export const ModalAddress = ({ isOpen, closeModal }: ModalTemplateProps) => {
           toast.success(`${rua} adicionado com sucesso!`)
           getAllAddresses()
         })
-        .catch((error) => toast.error(error.response.data?.message))
+        .catch((error) => {
+          toast.error(error.response.data?.error)
+          console.log(error)
+        })
     }
   }
 
@@ -81,20 +84,22 @@ export const ModalAddress = ({ isOpen, closeModal }: ModalTemplateProps) => {
         <Input placeholder="Cidade" {...register('cidade')} error={errors.cidade?.message} label="Cidade" />
 
         <Input
+          {...register('frete_moto')}
           type="number"
           typeof="numeric"
           label="Frete moto R$"
-          {...register('frete_moto')}
           error={errors.frete_moto?.message}
           min={0}
+          step={0.01}
         />
 
         <Input
+          {...register('frete_carro')}
           type="number"
           typeof="numeric"
           label="Frete carro R$"
-          {...register('frete_carro')}
           error={errors.frete_carro?.message}
+          step={0.01}
           min={0}
         />
 

@@ -1,4 +1,4 @@
-import { AddressProps } from '@/app/enderecos/types'
+import { AddressProps, AddressPropsRequestToCreate } from '@/app/enderecos/types'
 import { api } from '@/services/api/apiClient'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
@@ -16,7 +16,7 @@ export const useAddress = () => {
       })
   }
 
-  const addAddress = async (address: AddressProps): Promise<AxiosResponse> => {
+  const addAddress = async (address: AddressPropsRequestToCreate): Promise<AxiosResponse> => {
     const response = await api.post('/address', address)
 
     return response

@@ -63,7 +63,7 @@ export const TableAddress = ({ openModal }: TableTemplateProps) => {
                     toast.success(`${rua} removido com sucesso!`)
                     getAllAddresses()
                   })
-                  .catch((error) => toast.error(error.response.data?.message))
+                  .catch((error) => toast.error(error.response.data?.error))
               }}
             >
               <CloseIcon />

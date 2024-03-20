@@ -1,5 +1,7 @@
 import { forwardRef, useId } from 'react'
-import { Scontainer, SerrorMessage, Sinput, Slabel } from './styles'
+import { Scontainer, SerrorMessage } from './styles'
+import { Input as Inputui } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -11,11 +13,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, type, cl
   return (
     <Scontainer data-type={type} className={className}>
       {label && (
-        <Slabel htmlFor={id} data-type={type}>
+        <Label htmlFor={id} data-type={type}>
           {label}
-        </Slabel>
+        </Label>
       )}
-      <Sinput id={id} type={type} data-type={type} ref={ref} data-error={!!error} {...props} />
+      <Inputui {...props} id={id} type={type} data-type={type} ref={ref} data-error={!!error} />
       {error && <SerrorMessage>{error}</SerrorMessage>}
     </Scontainer>
   )

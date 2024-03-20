@@ -19,13 +19,14 @@ export const InputSelect = ({ data, label, placeholder, error, inputid, inputSea
   }
   return (
     <div className="relative w-full">
-      <Input {...register(inputid)} readOnly error={error} hidden />
+      <Input readOnly hidden={true} className="hidden" {...register(inputid)} />
 
       <Input
+        {...register(inputSearch)}
+        autoComplete="off"
         type="search"
         placeholder={placeholder}
         label={label}
-        {...register(inputSearch)}
         onClick={() => setOptionOpen(true)}
         onKeyDown={(e) => {
           setOptionOpen(true)
@@ -39,7 +40,6 @@ export const InputSelect = ({ data, label, placeholder, error, inputid, inputSea
             setOptionOpen(false)
           }
         }}
-        autoComplete="off"
         error={error}
       />
 

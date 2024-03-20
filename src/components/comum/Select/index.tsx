@@ -18,6 +18,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({ label, data,
         className="w-full rounded border p-5 data-[error=true]:border-red-500"
         data-error={!!error}
         {...props}
+        defaultValue={data[0]}
       >
         {data.map((item) => {
           return <option key={item} value={item} label={item} />

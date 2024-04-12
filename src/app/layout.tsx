@@ -1,11 +1,11 @@
-import { Space_Mono } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import './globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { Metadata } from 'next'
 import { ProvidersContext } from '@/contexts'
 
-const space_mono = Space_Mono({ subsets: ['latin'], weight: '400' })
+const poppins = Poppins({ subsets: ['latin'], weight: '400' })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={space_mono.className}>
+      <body className={poppins.className}>
         <ProvidersContext>{children}</ProvidersContext>
 
         <ToastContainer autoClose={3000} />

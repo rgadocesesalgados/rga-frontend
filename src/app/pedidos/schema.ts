@@ -1,35 +1,76 @@
 import { z } from 'zod'
 
+const payment = z.array(
+  z.object({
+    formPayment: z.enum(['DINHEIRO', 'CARTAO_DE_CREDITO', 'CARTAO_DE_DEBITO', 'PIX', 'DUPLICATA']),
+    value: z.coerce.number().step(0.01),
+    paid: z.coerce.boolean(),
+  }),
+)
+
+const orderProduct = z.array(
+  z.array(
+    z.object({
+      id: z.string().optional(),
+      product_id: z.string(),
+      quantity: z.coerce.number(),
+      price: z.coerce.number(),
+      total: z.coerce.number(),
+    }),
+  ),
+)
+
+const recheios = z.array(
+  z.object({
+    id: z.string().optional(),
+    name: z.string().optional(),
+    price: z.coerce.number().optional(),
+    is_pesado: z.boolean().optional(),
+    to_bento_cake: z.boolean().optional(),
+    banner: z.string().optional(),
+  }),
+)
+
+const topper = z
+  .object({
+    id: z.string().optional(),
+    tema: z.string().optional(),
+    name: z.string().optional(),
+    idade: z.coerce.number().optional(),
+    price: z.coerce.number().optional(),
+    description: z.string().optional(),
+    banner: z.string().optional(),
+  })
+  .optional()
+
+const cakes = z.array(
+  z.object({
+    id: z.string().optional(),
+    peso: z.coerce.number().optional(),
+    recheios,
+    massa: z.string().optional(),
+    cobertura: z.string().optional(),
+    decoracao: z.string().optional(),
+    banner: z.string().optional(),
+    topper,
+    price: z.coerce.number().optional(),
+  }),
+)
+
 export const schema = z.object({
   id: z.string().optional(),
-  searchClient: z.string(),
   client: z.string(),
   data: z.coerce.date(),
-  orderProduct: z.array(
-    z.array(
-      z.object({
-        id: z.string().optional(),
-        product_id: z.string(),
-        quantity: z.coerce.number(),
-        price: z.coerce.number().step(0.01),
-        search: z.string(),
-      }),
-    ),
-  ),
-  cor_forminhas: z.string().min(4, 'A cor da forminha deve ter pelo menos 4 caracteres.'),
+  hour: z.string(),
+  cakes,
+  orderProduct,
+  cor_forminhas: z.string().min(4, 'A cor da forminha deve ter pelo menos 4 caracteres.').optional(),
   delivery: z.boolean(),
-  searchAddress: z.string().optional(),
   logistic: z.enum(['FRETE_CARRO', 'FRETE_MOTO']).optional(),
   value_frete: z.coerce.number().step(0.01).optional(),
   address: z.string().optional(),
   observations: z.string(),
-  payment: z.array(
-    z.object({
-      formPayment: z.enum(['DINHEIRO', 'CARTAO_DE_CREDITO', 'CARTAO_DE_DEBITO', 'PIX', 'DUPLICATA']),
-      value: z.coerce.number().step(0.01),
-      paid: z.coerce.boolean(),
-    }),
-  ),
+  payment,
   total: z.coerce.number().step(0.01),
   status: z.enum(['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'ENTREGUE', 'CANCELADO']),
 })

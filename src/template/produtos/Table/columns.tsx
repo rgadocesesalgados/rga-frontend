@@ -1,8 +1,6 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { Column } from './components'
-import { FormDataRecheios, RecheiosProps } from '@/app/recheios/types'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +11,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
-import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
+import { Column } from '@/template/recheios/Table/columns/components'
+import { FormDataProdutos, ProductProps } from '@/app/produtos/types'
+import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
 
-export const columns: ColumnDef<RecheiosProps>[] = [
+export const columns: ColumnDef<ProductProps>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -41,33 +41,23 @@ export const columns: ColumnDef<RecheiosProps>[] = [
         currency: 'BRL',
       }),
   },
+
   {
-    accessorKey: 'is_pesado',
+    accessorKey: 'category_name',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Pesado" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Categoria" />
     },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
-  },
-
-  {
-    accessorKey: 'to_bento_cake',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Bento cake" />
-    },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { removeRecheio, getAllRecheios } = useContextRecheios()
-      const methods = useFormContext<FormDataRecheios>()
+      const { removeProduct, getAllProducts } = useContextProduct()
+      const methods = useFormContext<FormDataProdutos>()
       const linha = row.original
 
-      const { handleOpen } = useModal()
+      const { handleOpenProduct } = useModal()
 
       return (
         <DropdownMenu>
@@ -91,7 +81,7 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               onClick={() => {
                 methods.reset(linha)
-                handleOpen()
+                handleOpenProduct()
               }}
             >
               Editar
@@ -102,10 +92,10 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               className="text-red-600 hover:bg-red-600 hover:text-white"
               onClick={() =>
-                removeRecheio(linha.id)
+                removeProduct(linha.id)
                   .then(() => {
                     toast(`${linha.name} removido com sucesso`)
-                    getAllRecheios()
+                    getAllProducts()
                   })
                   .catch((error) => toast.error(error.response.data?.error))
               }

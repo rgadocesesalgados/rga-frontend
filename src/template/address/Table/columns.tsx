@@ -1,8 +1,6 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { Column } from './components'
-import { FormDataRecheios, RecheiosProps } from '@/app/recheios/types'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,61 +11,58 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
-import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
+import { Column } from '@/template/recheios/Table/columns/components'
+import { AddressProps, FormDataAddress } from '@/app/enderecos/types'
+import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
 
-export const columns: ColumnDef<RecheiosProps>[] = [
+export const columns: ColumnDef<AddressProps>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'rua',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead label="Nome" toggleSorting={toggleSorting} />
+      return <Column.SortingHead label="Rua" toggleSorting={toggleSorting} />
     },
     cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
   },
   {
-    accessorKey: 'price',
+    accessorKey: 'numero',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Preço" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Nº" />
     },
-    cell: ({ cell }) =>
-      cell.getValue<number>().toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      }),
-  },
-  {
-    accessorKey: 'is_pesado',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Pesado" />
-    },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
   },
 
   {
-    accessorKey: 'to_bento_cake',
+    accessorKey: 'bairro',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Bento cake" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Bairro" />
     },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
+    cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
+  },
+  {
+    accessorKey: 'ponto_de_referencia',
+    header: ({ column }) => {
+      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
+
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Referencia" />
+    },
+    cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { removeRecheio, getAllRecheios } = useContextRecheios()
-      const methods = useFormContext<FormDataRecheios>()
+      const { removeAddress, getAllAddresses } = useContextAddress()
+      const methods = useFormContext<FormDataAddress>()
       const linha = row.original
 
-      const { handleOpen } = useModal()
+      const { handleOpenAddress } = useModal()
 
       return (
         <DropdownMenu>
@@ -91,7 +86,7 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               onClick={() => {
                 methods.reset(linha)
-                handleOpen()
+                handleOpenAddress()
               }}
             >
               Editar
@@ -102,10 +97,10 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               className="text-red-600 hover:bg-red-600 hover:text-white"
               onClick={() =>
-                removeRecheio(linha.id)
+                removeAddress(linha.id)
                   .then(() => {
-                    toast(`${linha.name} removido com sucesso`)
-                    getAllRecheios()
+                    toast(`${linha.address_complete} removido com sucesso`)
+                    getAllAddresses()
                   })
                   .catch((error) => toast.error(error.response.data?.error))
               }

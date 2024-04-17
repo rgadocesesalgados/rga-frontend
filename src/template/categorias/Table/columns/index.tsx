@@ -1,8 +1,6 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { Column } from './components'
-import { FormDataRecheios, RecheiosProps } from '@/app/recheios/types'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +11,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
-import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
+import { Column } from '@/template/recheios/Table/columns/components'
+import { CategoryProps, FormDataCategorias } from '../../types'
+import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
 
-export const columns: ColumnDef<RecheiosProps>[] = [
+export const columns: ColumnDef<CategoryProps>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -29,45 +29,13 @@ export const columns: ColumnDef<RecheiosProps>[] = [
     cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
   },
   {
-    accessorKey: 'price',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Preço" />
-    },
-    cell: ({ cell }) =>
-      cell.getValue<number>().toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      }),
-  },
-  {
-    accessorKey: 'is_pesado',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Pesado" />
-    },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
-  },
-
-  {
-    accessorKey: 'to_bento_cake',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Bento cake" />
-    },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
-  },
-  {
     id: 'actions',
     cell: ({ row }) => {
-      const { removeRecheio, getAllRecheios } = useContextRecheios()
-      const methods = useFormContext<FormDataRecheios>()
+      const { removeCategory, getAllCategorys } = useContextCategory()
+      const methods = useFormContext<FormDataCategorias>()
       const linha = row.original
 
-      const { handleOpen } = useModal()
+      const { handleOpenCategory } = useModal()
 
       return (
         <DropdownMenu>
@@ -91,7 +59,7 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               onClick={() => {
                 methods.reset(linha)
-                handleOpen()
+                handleOpenCategory()
               }}
             >
               Editar
@@ -102,10 +70,10 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               className="text-red-600 hover:bg-red-600 hover:text-white"
               onClick={() =>
-                removeRecheio(linha.id)
+                removeCategory(linha.id)
                   .then(() => {
                     toast(`${linha.name} removido com sucesso`)
-                    getAllRecheios()
+                    getAllCategorys()
                   })
                   .catch((error) => toast.error(error.response.data?.error))
               }

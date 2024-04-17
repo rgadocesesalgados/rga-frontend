@@ -1,8 +1,6 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { Column } from './components'
-import { FormDataRecheios, RecheiosProps } from '@/app/recheios/types'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +11,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
-import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
+import { Column } from '@/template/recheios/Table/columns/components'
+import { ClientProps, FormDataCliente } from '@/app/clientes/types'
+import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
 
-export const columns: ColumnDef<RecheiosProps>[] = [
+export const columns: ColumnDef<ClientProps>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -29,45 +29,31 @@ export const columns: ColumnDef<RecheiosProps>[] = [
     cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
   },
   {
-    accessorKey: 'price',
+    accessorKey: 'tel',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Preço" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Telefone" />
     },
-    cell: ({ cell }) =>
-      cell.getValue<number>().toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      }),
-  },
-  {
-    accessorKey: 'is_pesado',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Pesado" />
-    },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
   },
 
   {
-    accessorKey: 'to_bento_cake',
+    accessorKey: 'address',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Bento cake" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Categoria" />
     },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
+    cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { removeRecheio, getAllRecheios } = useContextRecheios()
-      const methods = useFormContext<FormDataRecheios>()
+      const { removeClient, getAllClients } = useContextClient()
+      const methods = useFormContext<FormDataCliente>()
       const linha = row.original
 
-      const { handleOpen } = useModal()
+      const { handleOpenClient } = useModal()
 
       return (
         <DropdownMenu>
@@ -91,7 +77,7 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               onClick={() => {
                 methods.reset(linha)
-                handleOpen()
+                handleOpenClient()
               }}
             >
               Editar
@@ -102,10 +88,10 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               className="text-red-600 hover:bg-red-600 hover:text-white"
               onClick={() =>
-                removeRecheio(linha.id)
+                removeClient(linha.id)
                   .then(() => {
                     toast(`${linha.name} removido com sucesso`)
-                    getAllRecheios()
+                    getAllClients()
                   })
                   .catch((error) => toast.error(error.response.data?.error))
               }

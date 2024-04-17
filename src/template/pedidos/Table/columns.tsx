@@ -1,8 +1,6 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { Column } from './components'
-import { FormDataRecheios, RecheiosProps } from '@/app/recheios/types'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,20 +11,42 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
-import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
+import { Column } from '@/template/recheios/Table/columns/components'
+import { FormDataPedidos, OrderProps } from '@/app/pedidos/types'
+import { StatusProps } from '@/app/pedidos/schema'
+import { Badge } from '@/components/ui/badge'
+import { useContextPedidos } from '@/contexts/dataContexts/ordersContext/useContextPedidos'
 
-export const columns: ColumnDef<RecheiosProps>[] = [
+enum tags {
+  RASCUNHO = 'yellow',
+  ANOTADO = 'slate',
+  EM_PRODUCAO = 'blue',
+  ENTREGUE = 'green',
+  CANCELADO = 'red',
+}
+
+export const columns: ColumnDef<OrderProps>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'client_name',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
       return <Column.SortingHead label="Nome" toggleSorting={toggleSorting} />
     },
     cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
+  },
+
+  {
+    accessorKey: 'delivery',
+    header: ({ column }) => {
+      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
+
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Categoria" />
+    },
+    cell: ({ cell }) => (cell.getValue<boolean>() ? 'Entrega' : 'Retirada'),
   },
   {
     accessorKey: 'price',
@@ -42,32 +62,22 @@ export const columns: ColumnDef<RecheiosProps>[] = [
       }),
   },
   {
-    accessorKey: 'is_pesado',
+    accessorKey: 'status',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Pesado" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Preço" />
     },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
-  },
-
-  {
-    accessorKey: 'to_bento_cake',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Bento cake" />
-    },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
+    cell: ({ cell }) => <Badge>{cell.getValue<StatusProps>()}</Badge>,
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { removeRecheio, getAllRecheios } = useContextRecheios()
-      const methods = useFormContext<FormDataRecheios>()
+      const { removeOrder, getAllOrders } = useContextPedidos()
+      const methods = useFormContext<FormDataPedidos>()
       const linha = row.original
 
-      const { handleOpen } = useModal()
+      const { handleOpenOrder } = useModal()
 
       return (
         <DropdownMenu>
@@ -91,7 +101,7 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               onClick={() => {
                 methods.reset(linha)
-                handleOpen()
+                handleOpenOrder()
               }}
             >
               Editar
@@ -102,10 +112,10 @@ export const columns: ColumnDef<RecheiosProps>[] = [
             <DropdownMenuItem
               className="text-red-600 hover:bg-red-600 hover:text-white"
               onClick={() =>
-                removeRecheio(linha.id)
+                removeOrder(linha.id)
                   .then(() => {
-                    toast(`${linha.name} removido com sucesso`)
-                    getAllRecheios()
+                    toast(`Pedido de ${linha.client_name} removido com sucesso`)
+                    getAllOrders()
                   })
                   .catch((error) => toast.error(error.response.data?.error))
               }

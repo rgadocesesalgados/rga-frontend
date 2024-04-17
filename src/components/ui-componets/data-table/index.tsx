@@ -26,7 +26,6 @@ import { EllipsisVertical } from 'lucide-react'
 
 export const DataTable = <TData, TValue>({ columns, data, inputFilter }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     columns,
@@ -100,7 +99,9 @@ export const DataTable = <TData, TValue>({ columns, data, inputFilter }: DataTab
             ))
           ) : (
             <TableRow>
-              <S.cellNoRecordsFound colSpan={columns.length}>Nenhum registro encontrado</S.cellNoRecordsFound>
+              <S.cellNoRecordsFound $as={TableCell} colSpan={columns.length}>
+                Nenhum registro encontrado
+              </S.cellNoRecordsFound>
             </TableRow>
           )}
         </TableBody>

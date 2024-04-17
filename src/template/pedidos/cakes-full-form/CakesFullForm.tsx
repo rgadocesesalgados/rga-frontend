@@ -3,6 +3,7 @@ import { InputForm } from '@/components/ui-componets/input-form'
 import { SelectSearch } from '@/components/ui-componets/select-search'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
 import { PlusCircle, Trash2 } from 'lucide-react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -10,7 +11,7 @@ export const CakesFullForm = () => {
   const { fields, append, remove } = useFieldArray<FormDataPedidos>({ name: 'cakes' })
   const methods = useFormContext<FormDataPedidos>()
   return (
-    <div className="flex flex-col">
+    <div className="my-10 flex flex-col">
       <Label className="mb-3 font-bold capitalize">Bolos completos</Label>
 
       {fields.map((field, index) => {
@@ -36,7 +37,8 @@ export const CakesFullForm = () => {
 }
 
 const Recheios = ({ index }: { index: number }) => {
-  const { fields, append } = useFieldArray<FormDataPedidos>({ name: `cakes.${index}.recheios` })
+  const { recheios } = useContextRecheios()
+  const { fields, append, remove } = useFieldArray<FormDataPedidos>({ name: `cakes.${index}.recheios` })
   const methods = useFormContext<FormDataPedidos>()
 
   return (
@@ -44,13 +46,19 @@ const Recheios = ({ index }: { index: number }) => {
       <Label className="mb-3 font-bold capitalize">Recheios</Label>
 
       {fields.map((field, index) => (
-        <SelectSearch
-          key={field.id}
-          control={methods.control}
-          name={`cakes.${index}.recheios`}
-          data={[{ label: '', value: '' }]}
-          onSelect={() => {}}
-        />
+        <div key={field.id} className="flex  gap-3">
+          <SelectSearch
+            control={methods.control}
+            name={`cakes.${index}.recheios.${index}.id`}
+            data={recheios.map((recheio) => ({ value: recheio.id, label: recheio.name }))}
+            onSelect={(recheioId) => methods.setValue(`cakes.${index}.recheios.${index}.id`, recheioId)}
+            className="flex-1"
+          />
+
+          <Button size="icon" variant="destructive" onClick={() => remove(index)}>
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       ))}
       <Button variant="outline" type="button" onClick={() => append({})}>
         Adicionar recheio

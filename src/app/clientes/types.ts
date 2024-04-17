@@ -8,4 +8,9 @@ export interface ClientProps {
   name: string
   tel: string
   address_id: string
+  address: string
 }
+
+export interface ClientAddRequest extends Omit<ClientProps, 'address' | 'id'> {}
+
+export interface ClientEditRequest extends Omit<ClientProps, 'address'> {}

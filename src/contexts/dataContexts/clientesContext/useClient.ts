@@ -1,4 +1,4 @@
-import { ClientProps } from '@/app/clientes/types'
+import { ClientAddRequest, ClientEditRequest, ClientProps } from '@/app/clientes/types'
 import { api } from '@/services/api/apiClient'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
@@ -18,7 +18,7 @@ export const useClient = () => {
       })
   }
 
-  const addClient = async ({ address_id, ...client }: ClientProps): Promise<AxiosResponse> => {
+  const addClient = async ({ address_id, ...client }: ClientAddRequest): Promise<AxiosResponse> => {
     const response = await api.post('/client', client, { params: { address_id } })
 
     return response
@@ -35,7 +35,7 @@ export const useClient = () => {
       })
   }
 
-  const editClient = async ({ id, ...client }: ClientProps): Promise<AxiosResponse> => {
+  const editClient = async ({ id, ...client }: ClientEditRequest): Promise<AxiosResponse> => {
     const response = await api.patch('/client', client, { params: { id } })
 
     return response

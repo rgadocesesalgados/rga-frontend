@@ -5,7 +5,6 @@ import { useState } from 'react'
 export const useRecheios = () => {
   const [recheios, setRecheios] = useState<RecheiosProps[]>([])
   const getAllRecheios = async () => {
-    // getAllRecheios
     api
       .get('/recheio')
       .then((response) => {

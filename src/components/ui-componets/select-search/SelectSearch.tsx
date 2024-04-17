@@ -14,6 +14,7 @@ interface SelectSearchProps<Tdata> {
   label?: string
   description?: string
   showMessageError?: boolean
+  className?: string
 }
 
 interface Option {
@@ -27,6 +28,7 @@ export function SelectSearch<Tdata>({
   data,
   label,
   description,
+  className,
   showMessageError = false,
   onSelect,
 }: SelectSearchProps<Tdata>) {
@@ -44,7 +46,7 @@ export function SelectSearch<Tdata>({
                 <Button
                   variant="outline"
                   type="button"
-                  className="h-min w-full text-wrap"
+                  className={`h-min w-full text-wrap ${className}`}
                   role="combobox"
                   aria-expanded={open}
                   onClick={() => setOpen(true)}

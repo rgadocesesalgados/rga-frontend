@@ -8,5 +8,4 @@ export const scheme = z.object({
     .min(11, 'O telefone deve conter DDD e o digito 9.')
     .max(11, 'O telefone deve conter DDD e o digito 9.'),
   address_id: z.string(),
-  inputSearch: z.string(),
 })

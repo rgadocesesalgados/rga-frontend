@@ -20,16 +20,7 @@ const orderProduct = z.array(
   ),
 )
 
-const recheios = z.array(
-  z.object({
-    id: z.string().optional(),
-    name: z.string().optional(),
-    price: z.coerce.number().optional(),
-    is_pesado: z.boolean().optional(),
-    to_bento_cake: z.boolean().optional(),
-    banner: z.string().optional(),
-  }),
-)
+const recheios = z.array(z.object({ id: z.string() }))
 
 const topper = z
   .object({
@@ -57,6 +48,10 @@ const cakes = z.array(
   }),
 )
 
+const status = z.enum(['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'ENTREGUE', 'CANCELADO'])
+
+export type StatusProps = z.infer<typeof status>
+
 export const schema = z.object({
   id: z.string().optional(),
   client: z.string(),
@@ -72,5 +67,5 @@ export const schema = z.object({
   observations: z.string(),
   payment,
   total: z.coerce.number().step(0.01),
-  status: z.enum(['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'ENTREGUE', 'CANCELADO']),
+  status,
 })

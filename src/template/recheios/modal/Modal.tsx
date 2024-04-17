@@ -5,19 +5,19 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Form } from '@/components/ui/form'
 import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
+import { useModal } from '@/contexts/modal'
 import { PlusCircle } from 'lucide-react'
-import { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 export const Modal = () => {
-  const [open, setOpen] = useState(false)
+  const { open, handleOpen: handleOpenContext } = useModal()
   const methods = useFormContext<FormDataRecheios>()
   const { addRecheio, editRecheio, getAllRecheios } = useContextRecheios()
 
   const handleOpen = async () => {
-    setOpen(!open)
-    methods.reset()
+    handleOpenContext()
+    methods.reset({})
     await getAllRecheios()
   }
 
@@ -26,8 +26,13 @@ export const Modal = () => {
       await editRecheio({ id, name, price, is_pesado, to_bento_cake })
         .then(() => {
           toast.success(`${name} editado com sucesso!`)
+          methods.reset({})
+          getAllRecheios()
+          handleOpenContext()
         })
         .catch((error) => toast.error(error.response.data?.error))
+
+      return
     }
     await addRecheio({
       name,
@@ -38,7 +43,7 @@ export const Modal = () => {
       .then(() => {
         toast.success(`${name} adicionado com sucesso!`)
         getAllRecheios()
-        setOpen(false)
+        handleOpenContext()
         methods.reset()
       })
       .catch((error) => toast.error(error.response.data?.error))

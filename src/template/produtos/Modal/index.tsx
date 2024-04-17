@@ -1,39 +1,37 @@
 import { FormDataProdutos } from '@/app/produtos/types'
-import { Button } from '@/components/comum/Button'
-import Form from '@/components/comum/Form'
-import Input from '@/components/comum/Input'
-import { InputSelect } from '@/components/comum/InputSelect'
-import { OptionProps } from '@/components/comum/InputSelect/types'
-import Modal from '@/components/comum/Modal'
-import { MFooter } from '@/components/comum/Modal/components/MFooter'
+import { InputForm } from '@/components/ui-componets/input-form'
+import { SelectSearch } from '@/components/ui-componets/select-search'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Form } from '@/components/ui/form'
 import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
 import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
-import { ModalTemplateProps } from '@/template/types'
+import { useModal } from '@/contexts/modal'
+import { DialogTrigger } from '@radix-ui/react-dialog'
+import { PlusCircle } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 import { toast } from 'react-toastify'
-export const ModalProdutos = ({ isOpen, closeModal }: ModalTemplateProps) => {
+export const ModalProdutos = () => {
+  const { openProduct, handleOpenProduct } = useModal()
   const { categorys } = useContextCategory()
   const { getAllProducts, addProduct, editProduct } = useContextProduct()
-  const {
-    handleSubmit,
-    register,
-    reset,
-    formState: { errors },
-  } = useFormContext<FormDataProdutos>()
+  const methods = useFormContext<FormDataProdutos>()
 
   const submit = async ({ id, name, min_quantity, price, category_id, banner_url }: FormDataProdutos) => {
     if (id) {
       editProduct({ id, name, price, category_id, min_quantity, banner: banner_url })
         .then(() => {
-          closeModalProdutos()
-          reset()
+          getAllProducts()
+          handleOpenProduct()
+          methods.reset()
           toast.success(`${name} editado com sucesso!`)
         })
         .catch((error) => toast.error(error.response.data?.error))
     } else {
       addProduct({ name, min_quantity, price, category_id, banner: banner_url })
         .then(() => {
-          closeModalProdutos()
+          getAllProducts()
+          handleOpenProduct()
           toast.success(`${name} adicionado com sucesso!`)
         })
         .catch((error) => {
@@ -42,57 +40,74 @@ export const ModalProdutos = ({ isOpen, closeModal }: ModalTemplateProps) => {
         })
     }
   }
-  const closeModalProdutos = async () => {
-    getAllProducts()
-    closeModal()
-    reset()
-  }
+
   return (
-    <Modal isOpen={isOpen} closeModal={closeModalProdutos} title="Produto">
-      <Form onSubmit={handleSubmit(submit)}>
-        <Input {...register('id')} type="text" error={errors.name?.message} hidden />
+    <Dialog
+      open={openProduct}
+      onOpenChange={() => {
+        handleOpenProduct()
+        methods.reset({})
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button type="submit">
+          Adicionar produto <PlusCircle className="ml-2 h-4 w-4" />
+        </Button>
+      </DialogTrigger>
 
-        <Input {...register('name')} type="text" label="Nome" placeholder="Nome" error={errors.name?.message} />
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Adicionar novo produto</DialogTitle>
+        </DialogHeader>
+        <Form {...methods}>
+          <form onSubmit={methods.handleSubmit(submit)} className="flex flex-col gap-5">
+            <InputForm control={methods.control} name="id" className="hidden" readOnly disabled />
 
-        <InputSelect
-          label="Bucar por categoria"
-          data={categorys?.map(({ name, id }) => ({ value: id, label: name }) as OptionProps)}
-          inputid="category_id"
-          inputSearch="categorySearch"
-        />
+            <InputForm control={methods.control} name="name" label="Nome" showMessageError />
 
-        <Input
-          {...register('price')}
-          type="number"
-          label="Preço"
-          placeholder="R$ 00,00"
-          step={0.01}
-          error={errors.price?.message}
-        />
+            <SelectSearch
+              label="Bucar por categoria"
+              data={categorys?.map(({ name, id }) => ({ value: id, label: name }))}
+              control={methods.control}
+              name="category_id"
+              onSelect={(e) => methods.setValue('category_id', e)}
+              showMessageError
+            />
 
-        <Input
-          {...register('min_quantity')}
-          type="number"
-          label="Quantidade minima"
-          placeholder="00"
-          error={errors.min_quantity?.message}
-        />
+            <InputForm
+              control={methods.control}
+              name="price"
+              type="number"
+              label="Preço"
+              placeholder="R$ 00,00"
+              step={0.01}
+              showMessageError
+            />
 
-        <Input
-          {...register('banner_url')}
-          type="url"
-          label="Banner"
-          placeholder="https://"
-          error={errors.banner_url?.message}
-        />
+            <InputForm
+              control={methods.control}
+              name="min_quantity"
+              type="number"
+              label="Quantidade minima"
+              placeholder="00"
+              showMessageError
+            />
 
-        <MFooter>
-          <Button color="red" onClick={closeModalProdutos}>
-            Cancelar
-          </Button>
-          <Button type="submit">Salvar</Button>
-        </MFooter>
-      </Form>
-    </Modal>
+            <InputForm
+              control={methods.control}
+              name="banner_url"
+              type="url"
+              label="Banner"
+              placeholder="https://"
+              showMessageError
+            />
+
+            <DialogFooter>
+              <Button type="submit">Salvar</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   )
 }

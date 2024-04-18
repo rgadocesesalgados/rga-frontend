@@ -5,12 +5,10 @@ import { FormDataPedidos } from '@/app/pedidos/types'
 import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
 import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
 import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
-import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 
-import { PlusCircle, Trash2 } from 'lucide-react'
-import { Label } from '@/components/ui/label'
+import { PlusCircle } from 'lucide-react'
 import { InputForm } from '@/components/ui-componets/input-form'
 import { SelectSearch } from '@/components/ui-componets/select-search'
 import { DatePickerForm } from '@/components/ui-componets/date-picker'
@@ -22,12 +20,12 @@ import { CakesFullForm } from '../cakes-full-form'
 import { Dialog, DialogContent, DialogFooter, DialogTrigger } from '@/components/ui/dialog'
 import { useModal } from '@/contexts/modal'
 import { Form } from '@/components/ui/form'
+import { ProductOrder } from '../product-order'
 
 export const ModalPedidos = () => {
   const { openOrder, handleOpenOrder } = useModal()
   const { clients } = useContextClient()
   const { categorys } = useContextCategory()
-  const { products } = useContextProduct()
   const { address } = useContextAddress()
 
   const methods = useFormContext<FormDataPedidos>()
@@ -52,8 +50,8 @@ export const ModalPedidos = () => {
     <Dialog
       open={openOrder}
       onOpenChange={() => {
+        methods.reset()
         handleOpenOrder()
-        methods.reset({})
       }}
     >
       <DialogTrigger asChild>
@@ -84,103 +82,7 @@ export const ModalPedidos = () => {
 
             <CakesFullForm />
 
-            {categorys?.map((category, index) => {
-              const orderProducts = useFieldArray<FormDataPedidos>({ name: `orderProduct.${index}` })
-
-              return (
-                <div key={category.id} className="my-10 flex flex-col gap-3">
-                  <Label className="mb-3 font-bold capitalize">{category.name}</Label>
-                  {orderProducts?.fields.map((field, fieldIndex) => {
-                    const quantityProduct = methods.watch(`orderProduct.${index}.${fieldIndex}.quantity`)
-                    // orderProduct[index][fieldIndex].quantity
-
-                    const calculateTotal = (priceProduct: number) => {
-                      if (!priceProduct || quantityProduct < 0 || !quantityProduct) return 0
-
-                      return priceProduct * quantityProduct
-                    }
-
-                    return (
-                      <div key={field.id} className="grid grid-cols-2 gap-3 rounded-xl py-3 even:bg-slate-50 ">
-                        <SelectSearch
-                          label="Produto"
-                          control={methods.control}
-                          name={`orderProduct.${index}.${fieldIndex}.product_id`}
-                          data={products
-                            .filter((product) => product.category_id === category.id)
-                            .map((product) => ({ label: product.name, value: product.id }))}
-                          onSelect={(value) => {
-                            methods.setValue(`orderProduct.${index}.${fieldIndex}.product_id`, value)
-                            methods.setValue(
-                              `orderProduct.${index}.${fieldIndex}.price`,
-                              products.find((product) => product.id === value)?.price,
-                            )
-
-                            const priceProduct = calculateTotal(
-                              products?.find((product) => product.id === value)?.price,
-                            )
-
-                            methods.setValue(`orderProduct.${index}.${fieldIndex}.total`, priceProduct)
-                          }}
-                        />
-
-                        <InputForm
-                          control={methods.control}
-                          name={`orderProduct.${index}.${fieldIndex}.quantity`}
-                          label="Quatidade"
-                          type="number"
-                          typeof="numeric"
-                          onChange={(event) => {
-                            methods.setValue(
-                              `orderProduct.${index}.${fieldIndex}.total`,
-                              +event.target?.value * orderProduct[index][fieldIndex].price,
-                            )
-                          }}
-                        />
-
-                        <InputForm
-                          control={methods.control}
-                          name={`orderProduct.${index}.${fieldIndex}.price`}
-                          label="Preço/R$"
-                          type="number"
-                          typeof="numeric"
-                          step={0.01}
-                          onChange={(event) => {
-                            methods.setValue(
-                              `orderProduct.${index}.${fieldIndex}.total`,
-                              +event.target?.value * orderProduct[index][fieldIndex].quantity,
-                            )
-                          }}
-                        />
-
-                        <InputForm
-                          control={methods.control}
-                          name={`orderProduct.${index}.${fieldIndex}.total`}
-                          label="Total/R$"
-                          type="number"
-                          min={0}
-                          step={0.01}
-                        />
-
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          onClick={() => orderProducts.remove(fieldIndex)}
-                          size="icon"
-                          className="self-end"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    )
-                  })}
-                  <Button variant="outline" type="button" onClick={() => orderProducts.append({})}>
-                    Adiconar
-                    <PlusCircle className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              )
-            })}
+            {categorys?.map((category, index) => <ProductOrder key={category.id} index={index} category={category} />)}
 
             <InputForm
               control={methods.control}

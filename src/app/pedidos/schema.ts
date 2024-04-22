@@ -20,7 +20,7 @@ const orderProduct = z.array(
   ),
 )
 
-const recheios = z.array(z.object({ id: z.string() }))
+const recheios = z.array(z.object({ id: z.string(), price: z.coerce.number() }))
 
 const topper = z
   .object({

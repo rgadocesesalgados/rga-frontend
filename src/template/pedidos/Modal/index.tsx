@@ -1,5 +1,3 @@
-import { DevTool } from '@hookform/devtools'
-
 import { FormDataPedidos } from '@/app/pedidos/types'
 
 import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
@@ -186,7 +184,6 @@ export const ModalPedidos = () => {
           </form>
         </Form>
       </DialogContent>
-      <DevTool control={methods.control} styles={{ button: { width: 40, height: 40 } }} />
     </Dialog>
   )
 }

@@ -1,1 +1,1 @@
-export { Select } from './SelectForm'
+export { SelectForm } from './SelectForm'

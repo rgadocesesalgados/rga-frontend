@@ -4,18 +4,25 @@ import { SelectSearch } from '@/components/ui-componets/select-search'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
 import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
 import { useModal } from '@/contexts/modal'
 import { DialogTrigger } from '@radix-ui/react-dialog'
-import { PlusCircle } from 'lucide-react'
+import { PlusCircle, Upload } from 'lucide-react'
+import Image from 'next/image'
+import { ChangeEvent, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { toast } from 'react-toastify'
 export const ModalProdutos = () => {
   const { openProduct, handleOpenProduct } = useModal()
   const { categorys } = useContextCategory()
   const { getAllProducts, addProduct, editProduct } = useContextProduct()
+
   const methods = useFormContext<FormDataProdutos>()
+
+  const [imageUrl, setImageUrl] = useState('')
 
   const submit = async ({ id, name, min_quantity, price, category_id, banner_url }: FormDataProdutos) => {
     if (id) {
@@ -41,12 +48,24 @@ export const ModalProdutos = () => {
     }
   }
 
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const sendImage = e.target.files
+
+    if (!sendImage) return
+
+    const image = sendImage[0]
+    const url = URL.createObjectURL(image)
+    setImageUrl(url)
+    methods.setValue('banner_url', image)
+  }
+
   return (
     <Dialog
       open={openProduct}
       onOpenChange={() => {
         handleOpenProduct()
         methods.reset({})
+        setImageUrl('')
       }}
     >
       <DialogTrigger asChild>
@@ -93,14 +112,24 @@ export const ModalProdutos = () => {
               showMessageError
             />
 
-            <InputForm
-              control={methods.control}
-              name="banner_url"
-              type="url"
-              label="Banner"
-              placeholder="https://"
-              showMessageError
+            <Label htmlFor="imagem" className="flex items-center justify-center rounded-xl border p-3">
+              {!imageUrl && (
+                <>
+                  Selecionar Imagem <Upload className="ml-2 h-4 w-4" />
+                </>
+              )}
+              {imageUrl && <Image src={imageUrl} alt="banner" width={200} height={200} className="w-full rounded-xl" />}
+            </Label>
+            <Input
+              type="file"
+              id="imagem"
+              accept="image/png, image/jpeg, image/jpg"
+              {...methods.register('banner_url', { onChange: handleFile })}
+              className="hidden"
             />
+            {methods.formState.errors.banner_url && (
+              <p className="text-sm text-red-500">{methods.formState.errors.banner_url.message}</p>
+            )}
 
             <DialogFooter>
               <Button type="submit">Salvar</Button>

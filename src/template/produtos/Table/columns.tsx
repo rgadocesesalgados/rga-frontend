@@ -17,6 +17,7 @@ import { useModal } from '@/contexts/modal'
 import { Column } from '@/template/recheios/Table/columns/components'
 import { FormDataProdutos, ProductProps } from '@/app/produtos/types'
 import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
+import { useView } from '@/contexts/view'
 
 export const columns: ColumnDef<ProductProps>[] = [
   {
@@ -56,6 +57,7 @@ export const columns: ColumnDef<ProductProps>[] = [
       const { removeProduct, getAllProducts } = useContextProduct()
       const methods = useFormContext<FormDataProdutos>()
       const linha = row.original
+      const { setId, handleOpen } = useView()
 
       const { handleOpenProduct } = useModal()
 
@@ -71,11 +73,16 @@ export const columns: ColumnDef<ProductProps>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-            <DropdownMenuItem>
-              <source />
+            <DropdownMenuItem
+              onClick={() => {
+                handleOpen()
+                setId(linha.id)
+              }}
+            >
               Vizualizar
               <SquareMenu className="ml-2 h-4 w-4" />
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
 
             <DropdownMenuItem

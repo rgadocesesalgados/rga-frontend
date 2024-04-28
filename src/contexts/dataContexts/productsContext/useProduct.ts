@@ -1,4 +1,4 @@
-import { ProductProps, ProductPropsRequestToCreate } from '@/app/produtos/types'
+import { ProductProps, ProductPropsRequestToCreate, ProductPropsRequestToEdit } from '@/app/produtos/types'
 import { api } from '@/services/api/apiClient'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
@@ -19,7 +19,15 @@ export const useProduct = () => {
   }
 
   const addProduct = async ({ category_id, ...poduct }: ProductPropsRequestToCreate): Promise<AxiosResponse> => {
-    const response = await api.post('/product', poduct, { params: { category_id } })
+    const data = new FormData()
+
+    data.append('name', poduct.name)
+    data.append('price', poduct.price.toString())
+    data.append('min_quantity', poduct.min_quantity.toString())
+    data.append('category_id', category_id)
+    data.append('banner', poduct.banner)
+
+    const response = await api.post('/product', data)
 
     return response
   }
@@ -30,8 +38,8 @@ export const useProduct = () => {
     return response
   }
 
-  const editProduct = async ({ category_name, ...prodcut }: ProductProps): Promise<AxiosResponse> => {
-    const response = await api.patch('/product', prodcut, { params: { category_name } })
+  const editProduct = async ({ category_id, ...prodcut }: ProductPropsRequestToEdit): Promise<AxiosResponse> => {
+    const response = await api.patch('/product', prodcut, { params: { category_name: category_id } })
 
     return response
   }

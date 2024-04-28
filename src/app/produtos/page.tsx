@@ -5,6 +5,7 @@ import { FormProvider } from 'react-hook-form'
 import { TableProdutos } from '@/template/produtos/Table'
 import { ModalProdutos } from '@/template/produtos/Modal'
 import { useFormProdutos } from './useFormProdutos'
+import { View } from '@/template/produtos/view'
 
 export default function Produtos() {
   const methods = useFormProdutos()
@@ -16,6 +17,8 @@ export default function Produtos() {
           <TableProdutos>
             <ModalProdutos />
           </TableProdutos>
+
+          <View />
         </Wrap>
       </FormProvider>
     </Layout>

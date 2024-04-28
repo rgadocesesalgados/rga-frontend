@@ -19,6 +19,7 @@ import { Dialog, DialogContent, DialogFooter, DialogTrigger } from '@/components
 import { useModal } from '@/contexts/modal'
 import { Form } from '@/components/ui/form'
 import { ProductOrder } from '../product-order'
+import { useOrder } from '@/app/pedidos/useFormCorePedidos'
 
 export const ModalPedidos = () => {
   const { openOrder, handleOpenOrder } = useModal()
@@ -28,21 +29,13 @@ export const ModalPedidos = () => {
 
   const methods = useFormContext<FormDataPedidos>()
 
-  const orderProduct = methods.watch('orderProduct')
   const isDelivery = methods.watch('delivery')
   const typeFrete = methods.watch('logistic')
   const addess_id = methods.watch('address')
-  const total = methods.watch('total')
-  const valueFrete = methods.watch('value_frete')
 
-  const totalOrderCalculate = () => {
-    const totalOrder = orderProduct?.reduce(
-      (acc, item) => acc + item.reduce((acc2, item2) => acc2 + +item2.total, 0),
-      0,
-    )
+  const { executeCalculateTotal } = useOrder()
 
-    return (+total || 0) + (+totalOrder || 0) + (+valueFrete || 0)
-  }
+  executeCalculateTotal()
 
   return (
     <Dialog
@@ -59,7 +52,7 @@ export const ModalPedidos = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-screen  overflow-y-scroll rounded-2xl">
+      <DialogContent className="max-h-screen  max-w-6xl overflow-y-scroll rounded-2xl">
         <Form {...methods}>
           <form className="flex flex-col gap-5" onSubmit={methods.handleSubmit((data) => console.log(data))}>
             <InputForm control={methods.control} name="id" readOnly className="hidden" />
@@ -132,7 +125,6 @@ export const ModalPedidos = () => {
                   onChange={(e) => {
                     const value: string = e.target.value
                     const addressSelect = address.find((address) => address.id === addess_id)
-                    alert(addressSelect)
                     methods.setValue('value_frete', addressSelect ? addressSelect[value.toLocaleLowerCase()] : 0)
                   }}
                 />
@@ -144,7 +136,9 @@ export const ModalPedidos = () => {
                   type="number"
                   typeof="numeric"
                   step={0.01}
+                  min={0}
                   label="Valor do frete/R$"
+                  onChange={executeCalculateTotal}
                   showMessageError
                 />
               </>
@@ -155,7 +149,6 @@ export const ModalPedidos = () => {
               name="total"
               type="number"
               typeof="numeric"
-              value={totalOrderCalculate()}
               readOnly
               placeholder="R$ 00,00"
               label="Total R$"

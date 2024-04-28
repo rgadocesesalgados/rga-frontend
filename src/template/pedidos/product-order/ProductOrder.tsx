@@ -1,8 +1,10 @@
+import * as S from './styles'
+
 import { FormDataPedidos } from '@/app/pedidos/types'
+import { useOrder, useOrderProduct } from '@/app/pedidos/useFormCorePedidos'
 import { InputForm } from '@/components/ui-componets/input-form'
 import { SelectSearch } from '@/components/ui-componets/select-search'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
 import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
 import { CategoryProps } from '@/template/categorias/types'
 import { PlusCircle, Trash2 } from 'lucide-react'
@@ -13,93 +15,94 @@ interface ProductOrderProps {
   category: CategoryProps
 }
 
-export const ProductOrder = ({ index, category }: ProductOrderProps) => {
-  const orderProducts = useFieldArray<FormDataPedidos>({ name: `orderProduct.${index}` })
+export const ProductOrder = ({ category, index: categoryIndex }: ProductOrderProps) => {
+  const orderProducts = useFieldArray<FormDataPedidos>({ name: `orderProduct.${categoryIndex}` })
+
   const methods = useFormContext<FormDataPedidos>()
+
   const { products } = useContextProduct()
+
+  const { setProductId, setProductPrice, setProductTotalPrice, getProductTotalPrice, getProducts } =
+    useOrderProduct(categoryIndex)
+
+  const { executeCalculateTotal } = useOrder()
+
   return (
-    <div className="my-10 flex flex-col gap-3">
-      <Label className="mb-3 font-bold capitalize">{category.name}</Label>
-      {orderProducts?.fields.map((field, fieldIndex) => {
-        const quantityProduct = methods.watch(`orderProduct.${index}.${fieldIndex}.quantity`)
-        const priceProduct = methods.watch(`orderProduct.${index}.${fieldIndex}.price`)
-
-        const calculateTotal = (priceProduct: number) => {
-          if (!priceProduct || quantityProduct < 0 || !quantityProduct) return 0
-
-          return priceProduct * quantityProduct
-        }
-
+    <S.container>
+      <S.labelHead>{category.name}</S.labelHead>
+      {orderProducts?.fields.map((field, productIndex) => {
         return (
-          <div key={field.id} className="grid grid-cols-2 gap-3 rounded-xl py-3 even:bg-slate-50 ">
+          <S.containerProduct key={field.id}>
             <SelectSearch
               label="Produto"
               control={methods.control}
-              name={`orderProduct.${index}.${fieldIndex}.product_id`}
-              data={products
-                .filter((product) => product.category_id === category.id)
-                .map((product) => ({ label: product.name, value: product.id }))}
+              name={`orderProduct.${categoryIndex}.${productIndex}.product_id`}
+              data={getProducts(products, category)}
               onSelect={(value) => {
-                methods.setValue(`orderProduct.${index}.${fieldIndex}.product_id`, value)
-                methods.setValue(
-                  `orderProduct.${index}.${fieldIndex}.price`,
-                  products.find((product) => product.id === value)?.price,
-                )
-
-                const priceProduct = calculateTotal(products?.find((product) => product.id === value)?.price)
-
-                methods.setValue(`orderProduct.${index}.${fieldIndex}.total`, priceProduct)
+                setProductId({ productIndex, value })
+                setProductPrice({
+                  productIndex,
+                  value: products.find((product) => product.id === value)?.price,
+                })
+                setProductTotalPrice({ productIndex, value: getProductTotalPrice(productIndex) })
+                executeCalculateTotal()
               }}
             />
 
             <InputForm
               control={methods.control}
-              name={`orderProduct.${index}.${fieldIndex}.quantity`}
+              name={`orderProduct.${categoryIndex}.${productIndex}.quantity`}
               label="Quatidade"
               type="number"
               typeof="numeric"
-              onChange={(event) => {
-                methods.setValue(`orderProduct.${index}.${fieldIndex}.total`, +event.target?.value * priceProduct)
+              min={0}
+              onChange={() => {
+                setProductTotalPrice({ productIndex, value: getProductTotalPrice(productIndex) })
+                executeCalculateTotal()
               }}
             />
 
             <InputForm
               control={methods.control}
-              name={`orderProduct.${index}.${fieldIndex}.price`}
+              name={`orderProduct.${categoryIndex}.${productIndex}.price`}
               label="Preço/R$"
               type="number"
               typeof="numeric"
               step={0.01}
-              onChange={(event) => {
-                methods.setValue(`orderProduct.${index}.${fieldIndex}.total`, +event.target?.value * quantityProduct)
+              min={0}
+              onChange={() => {
+                setProductTotalPrice({ productIndex, value: getProductTotalPrice(productIndex) })
+                executeCalculateTotal()
               }}
             />
 
             <InputForm
               control={methods.control}
-              name={`orderProduct.${index}.${fieldIndex}.total`}
+              name={`orderProduct.${categoryIndex}.${productIndex}.total`}
               label="Total/R$"
               type="number"
+              typeof="numeric"
               min={0}
               step={0.01}
+              onChange={executeCalculateTotal}
             />
 
             <Button
               type="button"
-              variant="destructive"
-              onClick={() => orderProducts.remove(fieldIndex)}
-              size="icon"
-              className="self-end"
+              variant="ghost"
+              onClick={() => orderProducts.remove(productIndex)}
+              className="text-red-500"
             >
-              <Trash2 className="h-4 w-4" />
+              Remover produto
+              <Trash2 className="ml-3 h-4 w-4" />
             </Button>
-          </div>
+          </S.containerProduct>
         )
       })}
-      <Button variant="outline" type="button" onClick={() => orderProducts.append({})}>
+      <Button type="button" onClick={() => orderProducts.append({})}>
         Adiconar
         <PlusCircle className="ml-2 h-4 w-4" />
       </Button>
-    </div>
+    </S.container>
   )
 }

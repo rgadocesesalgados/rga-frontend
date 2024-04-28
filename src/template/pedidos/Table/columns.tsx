@@ -20,14 +20,6 @@ import { StatusProps } from '@/app/pedidos/schema'
 import { Badge } from '@/components/ui/badge'
 import { useContextPedidos } from '@/contexts/dataContexts/ordersContext/useContextPedidos'
 
-enum tags {
-  RASCUNHO = 'yellow',
-  ANOTADO = 'slate',
-  EM_PRODUCAO = 'blue',
-  ENTREGUE = 'green',
-  CANCELADO = 'red',
-}
-
 export const columns: ColumnDef<OrderProps>[] = [
   {
     accessorKey: 'client_name',
@@ -92,10 +84,10 @@ export const columns: ColumnDef<OrderProps>[] = [
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
             <DropdownMenuItem>
-              <source />
               Vizualizar
               <SquareMenu className="ml-2 h-4 w-4" />
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
 
             <DropdownMenuItem

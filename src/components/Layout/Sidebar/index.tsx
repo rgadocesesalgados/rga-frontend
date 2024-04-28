@@ -1,21 +1,25 @@
 import { configSidebarlinks } from '@/config-components/links/sidebar'
-import ButtonToggle from '../Buttontoggle'
-import { Saside, SiconClose } from './styles'
-import NavLink from '../NavLink'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { Menu } from 'lucide-react'
+import Link from 'next/link'
 
-interface SidebarProps {
-  isOpen: boolean
-  setIsOpen: (value: boolean) => void
-}
-
-export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+export default function Sidebar() {
   return (
-    <Saside data-isopen={isOpen}>
-      <ButtonToggle className="border-black" icon={<SiconClose />} isOpen={isOpen} setIsOpen={setIsOpen} />
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button size="icon" variant="outline">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
 
-      {configSidebarlinks.map((link) => (
-        <NavLink key={link.href} href={link.href} label={link.label} />
-      ))}
-    </Saside>
+      <SheetContent side="left" className="flex flex-col pt-10">
+        {configSidebarlinks.map((link) => (
+          <Button key={link.href} asChild variant="outline" className="text-left">
+            <Link href={link.href}>{link.label}</Link>
+          </Button>
+        ))}
+      </SheetContent>
+    </Sheet>
   )
 }

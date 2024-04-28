@@ -1,19 +1,14 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { Sheader, SmenuBars } from './styles'
-import ButtonToggle from '../Buttontoggle'
+import { Sheader } from './styles'
 
-export interface HeaderProps {
-  isOpen: boolean
-  setIsOpen: (value: boolean) => void
-}
-export default function Header({ isOpen, setIsOpen }: HeaderProps) {
+export default function Header({ children }: { children: React.ReactNode }) {
   const pathName = usePathname()
 
   return (
     <Sheader>
-      <ButtonToggle isOpen={isOpen} setIsOpen={setIsOpen} icon={<SmenuBars />} />
+      {children}
       <h1>{pathName}</h1>
     </Sheader>
   )

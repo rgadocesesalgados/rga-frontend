@@ -16,7 +16,7 @@ export const TableClient = ({ children }: { children?: React.ReactNode }) => {
   return (
     <>
       {children}
-      <DataTable columns={columns} data={clients} inputFilter="name" />
+      <DataTable columns={columns} data={clients} inputFilter="name" inputFilterLabel="nome" />
     </>
   )
 }

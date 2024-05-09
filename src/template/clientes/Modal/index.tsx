@@ -24,7 +24,7 @@ export const ModalClient = () => {
       editClient({ id, name, tel, address_id })
         .then(() => {
           handleOpenClient()
-          methods.reset()
+          methods.reset({})
           getAllClients()
           toast.success(`${name} editado com sucesso!`)
         })
@@ -37,7 +37,7 @@ export const ModalClient = () => {
       addClient({ name, tel, address_id })
         .then(() => {
           handleOpenClient()
-          methods.reset()
+          methods.reset({})
           getAllClients()
           toast.success(`${name} adicionado com sucesso!`)
         })
@@ -50,7 +50,13 @@ export const ModalClient = () => {
   }
 
   return (
-    <Dialog open={openClient} onOpenChange={handleOpenClient}>
+    <Dialog
+      open={openClient}
+      onOpenChange={() => {
+        handleOpenClient()
+        methods.reset({})
+      }}
+    >
       <DialogTrigger asChild>
         <Button>
           Adicionar cliente

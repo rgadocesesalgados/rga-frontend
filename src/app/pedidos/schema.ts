@@ -1,11 +1,29 @@
 import { z } from 'zod'
 
 const payment = z.array(
-  z.object({
-    formPayment: z.enum(['DINHEIRO', 'CARTAO_DE_CREDITO', 'CARTAO_DE_DEBITO', 'PIX', 'DUPLICATA']),
-    value: z.coerce.number().step(0.01),
-    paid: z.coerce.boolean(),
-  }),
+  z
+    .object({
+      formPayment: z.enum(['DINHEIRO', 'CARTAO_DE_CREDITO', 'CARTAO_DE_DEBITO', 'PIX', 'DUPLICATA']),
+      value: z.coerce.number().step(0.01),
+      paid: z.coerce.boolean(),
+      date: z.coerce.date(),
+    })
+    .refine(
+      (fields) => {
+        if (fields.paid === true) {
+          return !!fields.date
+        }
+      },
+      { message: 'Data deve ser preenchida.', path: ['date'] },
+    )
+    .refine(
+      (fields) => {
+        if (fields.paid === true) {
+          return !!fields.value
+        }
+      },
+      { message: 'Valor deve ser preenchido.', path: ['value'] },
+    ),
 )
 
 const orderProduct = z.array(

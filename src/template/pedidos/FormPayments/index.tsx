@@ -1,4 +1,5 @@
 import { FormDataPedidos } from '@/app/pedidos/types'
+import { DatePickerForm } from '@/components/ui-componets/date-picker'
 import { InputForm } from '@/components/ui-componets/input-form'
 import { InputToggle } from '@/components/ui-componets/input-toggle'
 import { SelectForm } from '@/components/ui-componets/select-form/SelectForm'
@@ -42,6 +43,7 @@ export const FormPayment = () => {
                   step={0.01}
                   min={0}
                   label="Valor"
+                  showMessageError
                 />
               </div>
 
@@ -51,6 +53,8 @@ export const FormPayment = () => {
                 onChange={(value) => methods.setValue(`payment.${index}.paid`, value)}
                 label="Pago"
               />
+
+              <DatePickerForm control={methods.control} name={`payment.${index}.date`} label="Data" />
 
               <Button
                 type="button"

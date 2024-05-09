@@ -87,6 +87,10 @@ export const ModalPedidos = () => {
       }
     })
 
+    const payments = data.payment.map((pay) => {
+      return { date: pay.date, paid: pay.paid, value: pay.value, type: pay.formPayment }
+    })
+
     addOrder({
       client: { id: data.client.id },
       date: data.date,
@@ -98,8 +102,8 @@ export const ModalPedidos = () => {
       total: data.total,
       status: data.status,
       cakes,
-      products: products,
-      payments: [],
+      products,
+      payments,
     })
       .then(() => {
         toast.success('Pedido criado com sucesso!')

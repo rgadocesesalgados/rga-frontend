@@ -15,7 +15,7 @@ export function DatePickerForm<Tdata>({ control, name, label, description, showM
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col">
+        <FormItem className="flex flex-col gap-2">
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <DatePickerDemo value={field.value as Date} onChange={field.onChange} />

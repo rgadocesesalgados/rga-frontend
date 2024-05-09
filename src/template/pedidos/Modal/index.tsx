@@ -20,12 +20,17 @@ import { useModal } from '@/contexts/modal'
 import { Form } from '@/components/ui/form'
 import { ProductOrder } from '../product-order'
 import { useOrder } from '@/app/pedidos/useFormCorePedidos'
+import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useContextOrders'
+import { toast } from 'react-toastify'
+import { CreateCake } from '@/types/cake/create'
+import { CreateProductOrder } from '@/types/order-product'
 
 export const ModalPedidos = () => {
   const { openOrder, handleOpenOrder } = useModal()
   const { clients } = useContextClient()
   const { categorys } = useContextCategory()
   const { address } = useContextAddress()
+  const { addOrder } = useContextOrders()
 
   const methods = useFormContext<FormDataPedidos>()
 
@@ -36,6 +41,74 @@ export const ModalPedidos = () => {
   const { executeCalculateTotal } = useOrder()
 
   executeCalculateTotal()
+
+  console.log(methods.formState?.errors)
+  const submit = async ({ orderProduct, ...data }: FormDataPedidos) => {
+    console.log({ orderProduct, ...data })
+    const products = orderProduct
+      .reduce((acc, category) => {
+        return [...acc, ...category]
+      })
+      .map((product) => {
+        return {
+          product_id: product.product_id,
+          price: product.price,
+          quantity: product.quantity,
+          total: product.total,
+        } as CreateProductOrder
+      })
+
+    const cakes: CreateCake[] = data.cakes.map((cake) => {
+      const recheio: CreateCake['recheio'] = cake.recheios.map((recheio) => {
+        return { id: recheio.id }
+      })
+
+      const topper: CreateCake['topper'] = {
+        id: cake.topper?.id,
+        tema: cake.topper?.tema,
+        name: cake.topper?.name,
+        idade: cake.topper?.idade,
+        price: cake.topper?.price,
+        description: cake.topper?.description,
+        banner: cake.topper?.banner,
+      }
+
+      return {
+        peso: cake.peso,
+        formato: cake.formato,
+        massa: cake.massa,
+        recheio,
+        price: cake.price,
+        cobertura: cake.cobertura,
+        description: cake.decoracao,
+        banner: cake.banner,
+        tem_topper: cake.tem_topper,
+        topper,
+      }
+    })
+
+    addOrder({
+      client: { id: data.client.id },
+      date: data.date,
+      hour: data.hour,
+      cor_forminhas: data.cor_forminhas,
+      observations: data.observations,
+      delivery: data.delivery,
+      address: { id: addess_id, type_frete: data.logistic, value_frete: data.value_frete },
+      total: data.total,
+      status: data.status,
+      cakes,
+      products: products,
+      payments: [],
+    })
+      .then(() => {
+        toast.success('Pedido criado com sucesso!')
+      })
+      .catch((error) => {
+        console.log(error.response.data.error)
+        toast.error(error.response?.data?.error)
+      })
+  }
 
   return (
     <Dialog
@@ -54,26 +127,28 @@ export const ModalPedidos = () => {
 
       <DialogContent className="max-h-screen  max-w-6xl overflow-y-scroll rounded-2xl">
         <Form {...methods}>
-          <form className="flex flex-col gap-5" onSubmit={methods.handleSubmit((data) => console.log(data))}>
+          <form className="flex flex-col gap-5" onSubmit={methods.handleSubmit(submit)}>
             <InputForm control={methods.control} name="id" readOnly className="hidden" />
 
             <SelectSearch
-              name="client"
+              name="client.id"
               label="Cliente"
               control={methods.control}
               data={clients.map((client) => ({ label: client.name, value: client.id }))}
               onSelect={(value) => {
-                methods.setValue('client', value)
+                methods.setValue('client.id', value)
               }}
             />
 
-            <DatePickerForm control={methods.control} name="data" label="Data" />
+            <DatePickerForm control={methods.control} name="date" label="Data" />
 
             <InputForm control={methods.control} name="hour" label="Hora" type="time" />
 
             <CakesFullForm />
 
-            {categorys?.map((category, index) => <ProductOrder key={category.id} index={index} category={category} />)}
+            {categorys?.map((category) => (
+              <ProductOrder key={category.id} index={category.priority} category={category} />
+            ))}
 
             <InputForm
               control={methods.control}

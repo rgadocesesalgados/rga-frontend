@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
+import { MoreHorizontal, SquarePen, XCircle } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
@@ -52,13 +52,6 @@ export const columns: ColumnDef<CategoryProps>[] = [
 
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-
-            <DropdownMenuItem>
-              <source />
-              Vizualizar
-              <SquareMenu className="ml-2 h-4 w-4" />
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
 
             <DropdownMenuItem
               onClick={() => {

@@ -13,7 +13,7 @@ export const TableCategory = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {children}
-      <DataTable columns={columns} data={categorys} inputFilter="name" />
+      <DataTable columns={columns} data={categorys} inputFilter="name" inputFilterLabel="nome" />
     </>
   )
 }

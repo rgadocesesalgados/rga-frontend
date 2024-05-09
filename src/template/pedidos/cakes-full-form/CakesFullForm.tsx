@@ -17,7 +17,7 @@ export const CakesFullForm = () => {
 
       {fields.map((field, index) => {
         return (
-          <Cake key={field.id} index={index}>
+          <Cake key={field.id} cakeIndex={index}>
             {cakes && cakes[index]?.tem_topper && <TopperForm CakeIndex={index} />}
 
             <Button
@@ -34,7 +34,7 @@ export const CakesFullForm = () => {
           </Cake>
         )
       })}
-      <Button type="button" onClick={() => append({ formato: 'REDONDO', massa: 'BRANCA' })}>
+      <Button type="button" onClick={() => append({ formato: 'REDONDO', massa: 'BRANCA', topper: { price: 15 } })}>
         Adicionar bolo <PlusCircle className="ml-2 h-4 w-4" />
       </Button>
     </S.container>

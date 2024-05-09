@@ -4,40 +4,28 @@ import { FormDataPedidos } from '@/app/pedidos/types'
 import { useFormCorePedidos } from '@/app/pedidos/useFormCorePedidos'
 import { InputForm } from '@/components/ui-componets/input-form'
 import { SelectForm } from '@/components/ui-componets/select-form'
-import { ChangeEvent, useId, useState } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { useController, useFieldArray, useFormContext } from 'react-hook-form'
 import { Recheios } from '../recheios'
 import { TextareaForm } from '@/components/ui-componets/textarea-form'
 import { Label } from '@/components/ui/label'
-import { Upload } from 'lucide-react'
-import Image from 'next/image'
-import { Input } from '@/components/ui/input'
-import { CheckboxForm } from '@/components/ui-componets/checkbox-form/CheckboxForm'
+import { PlusCircle } from 'lucide-react'
 
-export const Cake = ({ index, children }: { index: number; children: React.ReactNode }) => {
-  const id = useId()
+import { CheckboxForm } from '@/components/ui-componets/checkbox-form/CheckboxForm'
+import { Button } from '@/components/ui/button'
+
+export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: React.ReactNode }) => {
   const methods = useFormContext<FormDataPedidos>()
   const cake = useFormCorePedidos()
 
-  const [imageUrl, setImageUrl] = useState('')
+  const { fieldState } = useController({ control: methods.control, name: `cakes.${cakeIndex}.banner` })
+  const { fields, append, remove } = useFieldArray({ control: methods.control, name: `cakes.${cakeIndex}.recheios` })
 
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const sendImage = e.target.files
+  const imageCake = methods.watch(`cakes.${cakeIndex}.banner`)
 
-    if (!sendImage) return
-
-    const image = sendImage[0]
-    const url = URL.createObjectURL(image)
-
-    console.log({ url, image })
-
-    setImageUrl(url)
-    methods.setValue(`cakes.${index}.banner`, image)
-  }
-
+  const imageValid = imageCake?.includes('https://') || imageCake?.includes('http://') ? imageCake : ''
   return (
     <S.containerCake>
-      <InputForm control={methods.control} name={`cakes.${index}.id`} className="hidden" />
+      <InputForm control={methods.control} name={`cakes.${cakeIndex}.id`} className="hidden" />
 
       <div className="flex gap-3">
         <InputForm
@@ -46,15 +34,15 @@ export const Cake = ({ index, children }: { index: number; children: React.React
           step={0.01}
           typeof="numeric"
           control={methods.control}
-          name={`cakes.${index}.peso`}
+          name={`cakes.${cakeIndex}.peso`}
           label="Peso/kg"
           onChange={() => {
-            methods.setValue(`cakes.${index}.price`, cake.getPriceCake(index))
+            methods.setValue(`cakes.${cakeIndex}.price`, cake.getPriceCake(cakeIndex))
           }}
         />
         <SelectForm
           control={methods.control}
-          name={`cakes.${index}.formato`}
+          name={`cakes.${cakeIndex}.formato`}
           label="Formato"
           data={[
             { label: 'Redondo', value: 'REDONDO' },
@@ -63,7 +51,7 @@ export const Cake = ({ index, children }: { index: number; children: React.React
         />
         <SelectForm
           control={methods.control}
-          name={`cakes.${index}.massa`}
+          name={`cakes.${cakeIndex}.massa`}
           label="Massa"
           data={[
             { label: 'Branca', value: 'BRANCA' },
@@ -73,13 +61,21 @@ export const Cake = ({ index, children }: { index: number; children: React.React
         />
       </div>
 
-      <Recheios index={index} />
+      <Label>Recheios</Label>
+      <div className="flex flex-wrap gap-5">
+        {fields.map((field, IndexRecheio) => (
+          <Recheios key={field.id} cakeIndex={cakeIndex} recheioIndex={IndexRecheio} remove={remove} />
+        ))}
+      </div>
 
-      <TextareaForm control={methods.control} name={`cakes.${index}.decoracao`} label="Descricão" />
+      <Button type="button" variant="link" onClick={() => append({})} className="w-min">
+        Adicionar recheio
+        <PlusCircle className="ml-2 h-4 w-4" />
+      </Button>
 
       <InputForm
         control={methods.control}
-        name={`cakes.${index}.price`}
+        name={`cakes.${cakeIndex}.price`}
         label="Preço"
         type="number"
         typeof="numeric"
@@ -87,30 +83,35 @@ export const Cake = ({ index, children }: { index: number; children: React.React
         step={0.01}
       />
 
-      <Label
-        htmlFor={id}
-        data-image={!!imageUrl}
-        className="flex items-center justify-center rounded-xl border p-3 even:bg-white data-[image=true]:w-min data-[image=true]:items-start data-[image=true]:justify-start "
-      >
-        {!imageUrl && (
-          <>
-            Selecionar Imagem <Upload className="ml-2 h-4 w-4" />
-          </>
-        )}
-        {imageUrl && <Image src={imageUrl} alt="banner" width={200} height={200} className="max-w-7xl rounded-xl" />}
-      </Label>
-      <Input
-        type="file"
-        id={id}
-        accept="image/png, image/jpeg, image/jpg"
-        {...methods.register(`cakes.${index}.banner`, { onChange: handleFile })}
-        className="hidden"
+      <SelectForm
+        control={methods.control}
+        name={`cakes.${cakeIndex}.cobertura`}
+        label="Cobertura"
+        data={[
+          { label: 'Chantilly', value: 'CHANTILLY' },
+          { label: 'Avela batido', value: 'AVELA_BATIDO' },
+          { label: 'Nata', value: 'NATA' },
+          { label: 'Clara queimada', value: 'CLARA_QUEIMADA' },
+        ]}
       />
-      {methods.formState?.errors?.cakes && (
-        <p className="text-sm text-red-500">{methods.formState.errors.cakes[index].banner.message}</p>
-      )}
 
-      <CheckboxForm control={methods.control} name={`cakes.${index}.tem_topper`} label="Tem topper" />
+      <TextareaForm control={methods.control} name={`cakes.${cakeIndex}.decoracao`} label="Descricão" />
+
+      <InputForm
+        control={methods.control}
+        name={`cakes.${cakeIndex}.banner`}
+        type="url"
+        accept="image/png, image/jpeg, image/jpg"
+        label="Foto do bolo"
+        placeholder="http://"
+      />
+
+      {/* Regex para validar imagem */}
+      {imageValid && <img src={imageValid} alt="Cake" width={200} height={200} className="rounded-xl" />}
+
+      {fieldState?.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+
+      <CheckboxForm control={methods.control} name={`cakes.${cakeIndex}.tem_topper`} label="Tem topper" />
 
       {children}
     </S.containerCake>

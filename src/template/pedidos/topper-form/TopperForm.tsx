@@ -1,41 +1,15 @@
 import { FormDataPedidos } from '@/app/pedidos/types'
 import { InputForm } from '@/components/ui-componets/input-form'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Upload } from 'lucide-react'
-import Image from 'next/image'
-import { ChangeEvent, useId, useState } from 'react'
+import { TextareaForm } from '@/components/ui-componets/textarea-form'
 import { useFormContext } from 'react-hook-form'
 
 export const TopperForm = ({ CakeIndex }: { CakeIndex: number }) => {
-  const {
-    control,
-    setValue,
-    register,
-    formState: { errors },
-  } = useFormContext<FormDataPedidos>()
-  const id = useId()
+  const { control, watch } = useFormContext<FormDataPedidos>()
 
-  const [imageUrl, setImageUrl] = useState('')
-
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const sendImage = e.target.files
-
-    if (!sendImage) return
-
-    const image = sendImage[0]
-    const url = URL.createObjectURL(image)
-
-    console.log({ url, image })
-
-    setImageUrl(url)
-    setValue(`cakes.${CakeIndex}.banner`, image)
-  }
+  const imageUrl = watch(`cakes.${CakeIndex}.topper.banner`)
 
   return (
-    <div className="space-y-5 rounded-xl border bg-white p-5">
-      <InputForm control={control} name={`cakes.${CakeIndex}.topper.id`} className="hidden" />
-
+    <div className="flex flex-wrap gap-5 rounded-xl border bg-white p-5">
       <InputForm control={control} name={`cakes.${CakeIndex}.topper.tema`} label="Tema" />
 
       <InputForm control={control} name={`cakes.${CakeIndex}.topper.name`} label="Nome" />
@@ -52,28 +26,20 @@ export const TopperForm = ({ CakeIndex }: { CakeIndex: number }) => {
         step={0.01}
       />
 
-      <InputForm control={control} name={`cakes.${CakeIndex}.topper.description`} label="Descrição" />
+      <TextareaForm control={control} name={`cakes.${CakeIndex}.topper.description`} label="Descrição" />
 
-      <Label
-        htmlFor={id}
-        data-image={!!imageUrl}
-        className="flex items-center justify-center rounded-xl border p-3 even:bg-white data-[image=true]:w-min data-[image=true]:items-start data-[image=true]:justify-start "
-      >
-        {!imageUrl && (
-          <>
-            Selecionar Imagem <Upload className="ml-2 h-4 w-4" />
-          </>
-        )}
-        {imageUrl && <Image src={imageUrl} alt="banner" width={200} height={200} className="max-w-7xl rounded-xl" />}
-      </Label>
-      <Input
-        type="file"
-        id={id}
-        accept="image/png, image/jpeg, image/jpg"
-        {...register(`cakes.${CakeIndex}.topper.banner`, { onChange: handleFile })}
-        className="hidden"
+      <InputForm
+        control={control}
+        name={`cakes.${CakeIndex}.topper.banner`}
+        label="Banner"
+        placeholder="http://"
+        type="url"
+        showMessageError
       />
-      {errors[CakeIndex]?.banner && <p className="text-sm text-red-500">{errors[CakeIndex].banner.message}</p>}
+
+      {imageUrl && <img src={imageUrl} alt="Foto do topper" className="rounded-2xl" width={200} height={200} />}
+
+      <InputForm control={control} name={`cakes.${CakeIndex}.topper.id`} className="hidden" />
     </div>
   )
 }

@@ -3,7 +3,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
 import { useView } from '@/contexts/view'
 import { Images } from 'lucide-react'
-import Image from 'next/image'
 
 export const View = () => {
   const { id, open, handleOpen, setId } = useView()
@@ -14,10 +13,6 @@ export const View = () => {
   if (!product) return null
 
   const { name, banner, category_name, price, min_quantity } = product
-
-  const imageUrl = `http://localhost:3333/files/${banner}`
-
-  console.log({ imageUrl, banner })
 
   return (
     <Dialog
@@ -31,7 +26,7 @@ export const View = () => {
         <DialogHeader>
           <DialogTitle>{name}</DialogTitle>
         </DialogHeader>
-        {banner && <Image src={imageUrl} alt={name} width={200} height={200} className="w-full rounded-xl" />}
+        {banner && <img src={banner} alt={name} className="w-full rounded-xl" />}
 
         {!banner && (
           <div className="flex items-center justify-center rounded-xl border py-10 ">

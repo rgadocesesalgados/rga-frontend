@@ -48,13 +48,13 @@ export const ModalCategory = () => {
     >
       <DialogTrigger asChild>
         <Button>
-          Adiconar Recheio <PlusCircle className="ml-2 h-4 w-4" />
+          Adiconar categoria <PlusCircle className="ml-2 h-4 w-4" />
         </Button>
       </DialogTrigger>
 
       <DialogContent className="rounded-2xl">
         <DialogHeader>
-          <DialogTitle>Recheios</DialogTitle>
+          <DialogTitle>Categoria</DialogTitle>
         </DialogHeader>
 
         <Form {...methods}>

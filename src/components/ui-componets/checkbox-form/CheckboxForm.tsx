@@ -28,7 +28,7 @@ export function CheckboxForm<Tdata>({
       rules={{ onChange }}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="flex flex-col gap-2 rounded-md border p-5">
+          <FormLabel className="flex flex-col gap-2 rounded-md border bg-white p-5">
             <div className="flex items-center gap-2">
               <FormControl>
                 <Checkbox checked={field.value as CheckedState} onCheckedChange={field.onChange} />

@@ -1,10 +1,12 @@
-import { OrderProps, OrderRequestToCreate } from '@/app/pedidos/types'
+import { OrderProps } from '@/app/pedidos/types'
+import { GetOrder } from '@/types/order'
+import { CreateOrder } from '@/types/order/create'
 import { AxiosResponse } from 'axios'
 
 export interface OrdersContextData {
-  orders: OrderProps[]
+  orders: GetOrder[]
   getAllOrders: () => Promise<void>
-  addOrder: (order: OrderRequestToCreate) => Promise<AxiosResponse>
+  addOrder: (order: CreateOrder) => Promise<AxiosResponse>
   removeOrder: (id: string) => Promise<AxiosResponse>
   editOrder: (order: OrderProps) => Promise<AxiosResponse>
 }

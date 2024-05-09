@@ -1,10 +1,12 @@
-import { OrderProps, OrderRequestToCreate } from '@/app/pedidos/types'
+import { OrderProps } from '@/app/pedidos/types'
 import { api } from '@/services/api/apiClient'
+import { GetOrder } from '@/types/order'
+import { CreateOrder } from '@/types/order/create'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
 
 export const useOrders = () => {
-  const [orders, setOrders] = useState<OrderProps[]>([])
+  const [orders, setOrders] = useState<GetOrder[]>([])
 
   const getAllOrders = async () => {
     api
@@ -18,8 +20,8 @@ export const useOrders = () => {
       })
   }
 
-  const addOrder = async ({ client_id, address_id, ...data }: OrderRequestToCreate): Promise<AxiosResponse> => {
-    const response = await api.post('/order', data, { params: { client_id, address_id } })
+  const addOrder = async ({ client, ...data }: CreateOrder): Promise<AxiosResponse> => {
+    const response = await api.post('/order', data, { params: { client_id: client.id, address_id: data.address.id } })
 
     return response
   }

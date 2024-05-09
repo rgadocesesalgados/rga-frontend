@@ -90,9 +90,9 @@ export const columns: ColumnDef<GetOrder>[] = [
       console.log(orderProduct.map((i) => i.product_id))
 
       const order: FormDataPedidos = {
-        address: address.id,
-        value_frete: address.value_frete,
-        logistic: address.type_frete,
+        address: address?.id,
+        value_frete: address?.value_frete,
+        logistic: address?.type_frete,
         orderProduct: orderProduct.reduce(
           (acc, item) => {
             if (typeof acc[item.category.priority] === 'undefined') {

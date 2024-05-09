@@ -16,7 +16,7 @@ export const TableProdutos = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {children}
-      <DataTable columns={columns} data={products} inputFilter="name" />
+      <DataTable columns={columns} data={products} inputFilter="name" inputFilterLabel="nome" />
     </>
   )
 }

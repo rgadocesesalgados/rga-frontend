@@ -28,7 +28,7 @@ export const ModalProdutos = () => {
         .then(() => {
           getAllProducts()
           handleOpenProduct()
-          methods.reset()
+          methods.reset({})
           toast.success(`${name} editado com sucesso!`)
         })
         .catch((error) => toast.error(error.response.data?.error))
@@ -62,7 +62,7 @@ export const ModalProdutos = () => {
 
       <DialogContent className="max-h-screen overflow-y-scroll rounded-2xl">
         <DialogHeader>
-          <DialogTitle>Adicionar novo produto</DialogTitle>
+          <DialogTitle>Produto</DialogTitle>
         </DialogHeader>
         <Form {...methods}>
           <form onSubmit={methods.handleSubmit(submit)} className="flex flex-col gap-5">

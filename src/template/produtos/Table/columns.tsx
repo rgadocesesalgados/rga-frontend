@@ -10,14 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
+import { MoreHorizontal, SquarePen, XCircle } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
 import { Column } from '@/template/recheios/Table/columns/components'
 import { FormDataProdutos, ProductProps } from '@/app/produtos/types'
 import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
-import { useView } from '@/contexts/view'
 
 export const columns: ColumnDef<ProductProps>[] = [
   {
@@ -57,7 +56,6 @@ export const columns: ColumnDef<ProductProps>[] = [
       const { removeProduct, getAllProducts } = useContextProduct()
       const methods = useFormContext<FormDataProdutos>()
       const linha = row.original
-      const { setId, handleOpen } = useView()
 
       const { handleOpenProduct } = useModal()
 
@@ -75,19 +73,8 @@ export const columns: ColumnDef<ProductProps>[] = [
 
             <DropdownMenuItem
               onClick={() => {
-                handleOpen()
-                setId(linha.id)
-              }}
-            >
-              Vizualizar
-              <SquareMenu className="ml-2 h-4 w-4" />
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem
-              onClick={() => {
-                methods.reset(linha)
+                const { banner, ...rest } = linha
+                methods.reset({ banner_url: banner, ...rest })
                 handleOpenProduct()
               }}
             >
@@ -104,7 +91,10 @@ export const columns: ColumnDef<ProductProps>[] = [
                     toast(`${linha.name} removido com sucesso`)
                     getAllProducts()
                   })
-                  .catch((error) => toast.error(error.response.data?.error))
+                  .catch((error) => {
+                    console.log(error)
+                    toast.error(error.response.data?.error)
+                  })
               }
             >
               Excluir <XCircle className="ml-2 h-4 w-4" />

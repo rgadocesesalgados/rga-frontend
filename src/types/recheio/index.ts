@@ -1,0 +1,1 @@
+export { GetRecheio } from './get'

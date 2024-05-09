@@ -1,0 +1,1 @@
+export { GetCategory } from './get'

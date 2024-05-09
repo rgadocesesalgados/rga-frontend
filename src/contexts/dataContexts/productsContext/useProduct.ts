@@ -18,16 +18,8 @@ export const useProduct = () => {
       })
   }
 
-  const addProduct = async ({ category_id, ...poduct }: ProductPropsRequestToCreate): Promise<AxiosResponse> => {
-    const data = new FormData()
-
-    data.append('name', poduct.name)
-    data.append('price', poduct.price.toString())
-    data.append('min_quantity', poduct.min_quantity.toString())
-    data.append('category_id', category_id)
-    data.append('banner', poduct.banner)
-
-    const response = await api.post('/product', data)
+  const addProduct = async (poduct: ProductPropsRequestToCreate): Promise<AxiosResponse> => {
+    const response = await api.post('/product', poduct)
 
     return response
   }
@@ -39,7 +31,7 @@ export const useProduct = () => {
   }
 
   const editProduct = async ({ category_id, ...prodcut }: ProductPropsRequestToEdit): Promise<AxiosResponse> => {
-    const response = await api.patch('/product', prodcut, { params: { category_name: category_id } })
+    const response = await api.patch('/product', prodcut, { params: { category_id: category_id } })
 
     return response
   }

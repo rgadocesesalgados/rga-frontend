@@ -12,8 +12,14 @@ import { toast } from 'react-toastify'
 
 export const Modal = () => {
   const { open, handleOpen: handleOpenContext } = useModal()
+
   const methods = useFormContext<FormDataRecheios>()
+
   const { addRecheio, editRecheio, getAllRecheios } = useContextRecheios()
+
+  const imageCake = methods.watch('banner')
+
+  const imageValid = imageCake?.includes('https://') || imageCake?.includes('http://') ? imageCake : ''
 
   const handleOpen = async () => {
     handleOpenContext()
@@ -21,9 +27,9 @@ export const Modal = () => {
     await getAllRecheios()
   }
 
-  const submit = async ({ id, name, price, is_pesado, to_bento_cake }: FormDataRecheios) => {
+  const submit = async ({ id, name, price, is_pesado, to_bento_cake, banner }: FormDataRecheios) => {
     if (id) {
-      await editRecheio({ id, name, price, is_pesado, to_bento_cake })
+      await editRecheio({ id, name, price, is_pesado, to_bento_cake, banner })
         .then(() => {
           toast.success(`${name} editado com sucesso!`)
           methods.reset({})
@@ -39,6 +45,7 @@ export const Modal = () => {
       price,
       is_pesado,
       to_bento_cake,
+      banner,
     })
       .then(() => {
         toast.success(`${name} adicionado com sucesso!`)
@@ -91,6 +98,8 @@ export const Modal = () => {
             />
 
             <InputForm control={methods.control} name="banner" label="Foto" placeholder="https://link-da-foto.com.br" />
+
+            {imageValid && <img src={imageValid} alt="Imagem do recheio" className="rounded-2xl" />}
 
             <DialogFooter>
               <Button type="submit">Save changes</Button>

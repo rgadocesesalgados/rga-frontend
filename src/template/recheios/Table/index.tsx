@@ -14,7 +14,7 @@ export const Table = ({ children }: TableTemplateProps) => {
   return (
     <>
       {children}
-      <DataTable columns={columns} data={recheios} inputFilter="name" />
+      <DataTable columns={columns} data={recheios} inputFilter="name" inputFilterLabel="nome" />
     </>
   )
 }

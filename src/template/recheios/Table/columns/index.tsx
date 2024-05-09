@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
+import { MoreHorizontal, SquarePen, XCircle } from 'lucide-react'
 import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
@@ -80,13 +80,6 @@ export const columns: ColumnDef<RecheiosProps>[] = [
 
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-
-            <DropdownMenuItem>
-              <source />
-              Vizualizar
-              <SquareMenu className="ml-2 h-4 w-4" />
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
 
             <DropdownMenuItem
               onClick={() => {

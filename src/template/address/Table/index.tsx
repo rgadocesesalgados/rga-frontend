@@ -13,7 +13,7 @@ export const TableAddress = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {children}
-      <DataTable columns={columns} data={address} inputFilter="rua" />
+      <DataTable columns={columns} data={address} inputFilter="address_complete" inputFilterLabel="endereço" />
     </>
   )
 }

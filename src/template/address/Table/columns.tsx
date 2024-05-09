@@ -17,6 +17,7 @@ import { useModal } from '@/contexts/modal'
 import { Column } from '@/template/recheios/Table/columns/components'
 import { AddressProps, FormDataAddress } from '@/app/enderecos/types'
 import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
+import { useView } from '@/contexts/view'
 
 export const columns: ColumnDef<AddressProps>[] = [
   {
@@ -62,6 +63,8 @@ export const columns: ColumnDef<AddressProps>[] = [
       const methods = useFormContext<FormDataAddress>()
       const linha = row.original
 
+      const { handleOpen, setId } = useView()
+
       const { handleOpenAddress } = useModal()
 
       return (
@@ -76,7 +79,12 @@ export const columns: ColumnDef<AddressProps>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                handleOpen()
+                setId(linha.id)
+              }}
+            >
               <source />
               Vizualizar
               <SquareMenu className="ml-2 h-4 w-4" />
@@ -111,5 +119,10 @@ export const columns: ColumnDef<AddressProps>[] = [
         </DropdownMenu>
       )
     },
+  },
+  {
+    accessorKey: 'address_complete',
+    header: null,
+    cell: null,
   },
 ]

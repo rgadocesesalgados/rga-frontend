@@ -30,7 +30,7 @@ const topper = z
     idade: z.coerce.number().optional(),
     price: z.coerce.number().optional(),
     description: z.string().optional(),
-    banner: z.string().optional(),
+    banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).url().optional(),
   })
   .optional()
 
@@ -40,10 +40,10 @@ const cakes = z.array(
     peso: z.coerce.number().optional(),
     recheios,
     formato: z.enum(['REDONDO', 'QUADRADO']),
-    massa: z.string().optional(),
-    cobertura: z.string().optional(),
+    massa: z.enum(['BRANCA', 'CHOCOLATE', 'MASSA_MESCLADA']).optional(),
+    cobertura: z.enum(['CHANTILLY', 'AVELA_BATIDO', 'NATA', 'CLARA_QUEIMADA']).optional(),
     decoracao: z.string().optional(),
-    banner: z.instanceof(File, { message: 'A imagem é obrigatória.' }).optional(),
+    banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).url().optional(),
     topper,
     tem_topper: z.coerce.boolean().optional(),
     price: z.coerce.number().optional(),
@@ -56,18 +56,19 @@ export type StatusProps = z.infer<typeof status>
 
 export const schema = z.object({
   id: z.string().optional(),
-  client: z.string(),
-  data: z.coerce.date(),
+  date: z.coerce.date(),
   hour: z.string(),
+  cor_forminhas: z.string().min(4, 'A cor da forminha deve ter pelo menos 4 caracteres.').optional(),
+  observations: z.string(),
+  total: z.coerce.number().step(0.01),
+  delivery: z.boolean(),
+  status,
+  client: z.object({ id: z.string() }),
+
   cakes,
   orderProduct,
-  cor_forminhas: z.string().min(4, 'A cor da forminha deve ter pelo menos 4 caracteres.').optional(),
-  delivery: z.boolean(),
   logistic: z.enum(['FRETE_CARRO', 'FRETE_MOTO']).optional(),
   value_frete: z.coerce.number().step(0.01).optional(),
   address: z.string().optional(),
-  observations: z.string(),
   payment,
-  total: z.coerce.number().step(0.01),
-  status,
 })

@@ -6,6 +6,7 @@ import { useFormPedidos } from './useFormPedidos'
 import { FormProvider } from 'react-hook-form'
 import { TablePedidos } from '@/template/pedidos/Table'
 import { ModalPedidos } from '@/template/pedidos/Modal'
+import { View } from '@/template/pedidos/view'
 
 export default function Pedios() {
   const methods = useFormPedidos()
@@ -18,6 +19,7 @@ export default function Pedios() {
             <ModalPedidos />
           </TablePedidos>
         </Wrap>
+        <View />
       </FormProvider>
     </Layout>
   )

@@ -6,13 +6,38 @@ export type FormDataPedidos = z.infer<typeof schema>
 
 export type FormDataPedidosPath = Path<FormDataPedidos>
 
+export interface CakeProps {
+  id: string
+  order_id: string
+  peso: number
+  formato: 'REDONDO' | 'QUADRADO'
+  massa: 'BRANCA' | 'CHOCOLATE' | 'MASSA_MESCLADA'
+  recheio: { id: string; price: number; name: string }[]
+  cobertura: 'CHANTILLY' | 'AVELA_BATIDO' | 'NATA' | 'CLARA_QUEIMADA'
+  price: number
+  description: string
+  banner: string
+  topper?: Omit<TopperProps, 'id'>
+}
+
+export interface TopperProps {
+  id: string
+  tema: string
+  name: string
+  idade: number
+  price: number
+  description: string
+  banner: string
+}
+
 export interface OrderProps {
   id: string
   client_name: string
   client_tel: string
   client_id: string
-  data: Date
-  bolos?: string
+  date: Date
+  hour: string
+  bolos?: Omit<CakeProps, 'order_id' | 'id'>[]
   products: OrderProductProps[]
   cor_da_forminha: string
   observations: string
@@ -33,9 +58,4 @@ export interface OrderProductProps {
   product_price: number
   quantity: number
   price: number
-}
-
-export interface OrderRequestToCreate
-  extends Omit<OrderProps, 'id' | 'client_name' | 'client_tel' | 'address' | 'products'> {
-  products: Omit<OrderProductProps, 'id' | 'product_name' | 'product_price' | 'order_id'>[]
 }

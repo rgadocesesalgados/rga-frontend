@@ -15,14 +15,25 @@ import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
 import { Column } from '@/template/recheios/Table/columns/components'
-import { FormDataPedidos, OrderProps } from '@/app/pedidos/types'
+import { FormDataPedidos } from '@/app/pedidos/types'
 import { StatusProps } from '@/app/pedidos/schema'
-import { Badge } from '@/components/ui/badge'
-import { useContextPedidos } from '@/contexts/dataContexts/ordersContext/useContextPedidos'
+import { Badge, BadgeProps } from '@/components/ui/badge'
+import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useContextOrders'
+import { useView } from '@/contexts/view'
+import { GetOrder } from '@/types/order'
 
-export const columns: ColumnDef<OrderProps>[] = [
+export const columns: ColumnDef<GetOrder>[] = [
   {
-    accessorKey: 'client_name',
+    accessorKey: 'date',
+    header: ({ column }) => {
+      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
+
+      return <Column.SortingHead label="Data" toggleSorting={toggleSorting} />
+    },
+    cell: ({ cell }) => <div className="text-nowrap">{new Date(cell.getValue<string>()).toLocaleDateString()}</div>,
+  },
+  {
+    accessorKey: 'client.name',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
@@ -36,16 +47,16 @@ export const columns: ColumnDef<OrderProps>[] = [
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Categoria" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Retirada/Entrega" />
     },
     cell: ({ cell }) => (cell.getValue<boolean>() ? 'Entrega' : 'Retirada'),
   },
   {
-    accessorKey: 'price',
+    accessorKey: 'total',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Preço" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Total" />
     },
     cell: ({ cell }) =>
       cell.getValue<number>().toLocaleString('pt-BR', {
@@ -58,18 +69,50 @@ export const columns: ColumnDef<OrderProps>[] = [
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Preço" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Status" />
     },
-    cell: ({ cell }) => <Badge>{cell.getValue<StatusProps>()}</Badge>,
+    cell: ({ cell }) => {
+      const status = cell.getValue<StatusProps>()
+
+      const statusNormalized = status === 'EM_PRODUCAO' ? 'EM PRODUÇÃO' : status
+      return <Badge variant={status.toLocaleLowerCase() as BadgeProps['variant']}>{statusNormalized}</Badge>
+    },
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { removeOrder, getAllOrders } = useContextPedidos()
+      const { removeOrder, getAllOrders } = useContextOrders()
       const methods = useFormContext<FormDataPedidos>()
       const linha = row.original
 
+      const { address, orderProduct, date, ...rest } = linha
+
+      console.log(orderProduct.map((i) => i.product_id))
+
+      const order: FormDataPedidos = {
+        address: address.id,
+        value_frete: address.value_frete,
+        logistic: address.type_frete,
+        orderProduct: orderProduct.reduce(
+          (acc, item) => {
+            if (typeof acc[item.category.priority] === 'undefined') {
+              acc[item.category.priority] = [item]
+
+              return acc
+            }
+
+            acc[item.category.priority].push(item)
+
+            return acc
+          },
+          [] as FormDataPedidos['orderProduct'],
+        ),
+        date: new Date(date),
+        ...rest,
+      }
+
       const { handleOpenOrder } = useModal()
+      const { handleOpen, setId } = useView()
 
       return (
         <DropdownMenu>
@@ -83,7 +126,12 @@ export const columns: ColumnDef<OrderProps>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setId(linha.id)
+                handleOpen()
+              }}
+            >
               Vizualizar
               <SquareMenu className="ml-2 h-4 w-4" />
             </DropdownMenuItem>
@@ -92,7 +140,8 @@ export const columns: ColumnDef<OrderProps>[] = [
 
             <DropdownMenuItem
               onClick={() => {
-                methods.reset(linha)
+                console.log(order.orderProduct)
+                methods.reset(order)
                 handleOpenOrder()
               }}
             >
@@ -106,7 +155,7 @@ export const columns: ColumnDef<OrderProps>[] = [
               onClick={() =>
                 removeOrder(linha.id)
                   .then(() => {
-                    toast(`Pedido de ${linha.client_name} removido com sucesso`)
+                    toast(`Pedido de ${linha.client.name} removido com sucesso`)
                     getAllOrders()
                   })
                   .catch((error) => toast.error(error.response.data?.error))

@@ -24,7 +24,12 @@ import { DataTablePagination } from './data-table-pagination'
 import { Input } from '@/components/ui/input'
 import { EllipsisVertical } from 'lucide-react'
 
-export const DataTable = <TData, TValue>({ columns, data, inputFilter }: DataTableProps<TData, TValue>) => {
+export const DataTable = <TData, TValue>({
+  columns,
+  data,
+  inputFilter,
+  inputFilterLabel,
+}: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([])
 
   const table = useReactTable({
@@ -44,7 +49,7 @@ export const DataTable = <TData, TValue>({ columns, data, inputFilter }: DataTab
     <S.container>
       <div className="flex gap-3">
         <Input
-          placeholder={`Filtrar por ${inputFilter}`}
+          placeholder={`Filtrar por ${inputFilterLabel}`}
           className="max-w-sm"
           value={(table.getColumn(`${inputFilter}`)?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn(`${inputFilter}`)?.setFilterValue(event.target.value)}

@@ -29,6 +29,10 @@ export const columns: ColumnDef<CategoryProps>[] = [
     cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
   },
   {
+    accessorKey: 'priority',
+    header: 'Prioriade',
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
       const { removeCategory, getAllCategorys } = useContextCategory()

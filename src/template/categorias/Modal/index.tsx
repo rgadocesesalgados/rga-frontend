@@ -16,9 +16,9 @@ export const ModalCategory = () => {
 
   const { addCategory, editCategory, getAllCategorys } = useContextCategory()
 
-  const submit = async ({ name, id }: FormDataCategorias) => {
+  const submit = async ({ name, id, priority }: FormDataCategorias) => {
     if (id) {
-      await editCategory({ name, id })
+      await editCategory({ name, id, priority })
         .then(() => {
           toast.success(`${name} editado com sucesso!`)
           handleOpenCategory()
@@ -27,7 +27,7 @@ export const ModalCategory = () => {
           toast.error(error.response?.data?.error)
         })
     } else {
-      await addCategory(name)
+      await addCategory(name, priority)
         .then(() => {
           handleOpenCategory()
           toast.success(`${name} criado com sucesso!`)
@@ -67,6 +67,17 @@ export const ModalCategory = () => {
               control={methods.control}
               name="name"
               showMessageError
+            />
+
+            <InputForm
+              control={methods.control}
+              name="priority"
+              showMessageError
+              type="number"
+              typeof="numeric"
+              min={0}
+              label="Prioriade"
+              description="Esse campo irá definir qual categia tem prioriade no pedido"
             />
             <DialogFooter>
               <Button type="submit">Salvar</Button>

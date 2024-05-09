@@ -88,7 +88,7 @@ export const ModalAddress = () => {
 
             <InputForm
               control={methods.control}
-              name="frete_carro"
+              name="frete_moto"
               type="number"
               typeof="numeric"
               label="Frete moto R$"
@@ -97,7 +97,7 @@ export const ModalAddress = () => {
             />
             <InputForm
               control={methods.control}
-              name="frete_moto"
+              name="frete_carro"
               type="number"
               typeof="numeric"
               label="Frete carro R$"

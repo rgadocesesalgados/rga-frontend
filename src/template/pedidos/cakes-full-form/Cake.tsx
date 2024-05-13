@@ -4,7 +4,7 @@ import { FormDataPedidos } from '@/app/pedidos/types'
 import { useFormCorePedidos } from '@/app/pedidos/useFormCorePedidos'
 import { InputForm } from '@/components/ui-componets/input-form'
 import { SelectForm } from '@/components/ui-componets/select-form'
-import { useController, useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext } from 'react-hook-form'
 import { Recheios } from '../recheios'
 import { TextareaForm } from '@/components/ui-componets/textarea-form'
 import { Label } from '@/components/ui/label'
@@ -17,7 +17,6 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
   const methods = useFormContext<FormDataPedidos>()
   const cake = useFormCorePedidos()
 
-  const { fieldState } = useController({ control: methods.control, name: `cakes.${cakeIndex}.banner` })
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
     name: `cakes.${cakeIndex}.recheios`,
@@ -43,6 +42,7 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
           onChange={() => {
             methods.setValue(`cakes.${cakeIndex}.price`, cake.getPriceCake(cakeIndex))
           }}
+          autoFocus
         />
         <SelectForm
           control={methods.control}
@@ -105,15 +105,11 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
         control={methods.control}
         name={`cakes.${cakeIndex}.banner`}
         type="url"
-        accept="image/png, image/jpeg, image/jpg"
         label="Foto do bolo"
-        placeholder="http://"
+        autoFocus={false}
       />
 
-      {/* Regex para validar imagem */}
       {imageValid && <img src={imageValid} alt="Cake" width={200} height={200} className="rounded-xl" />}
-
-      {fieldState?.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
 
       <CheckboxForm control={methods.control} name={`cakes.${cakeIndex}.tem_topper`} label="Tem topper" />
 

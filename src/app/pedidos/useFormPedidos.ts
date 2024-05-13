@@ -9,7 +9,7 @@ export const useFormPedidos = () => {
     mode: 'onSubmit',
     defaultValues: {
       id: '',
-      data: new Date(),
+      date: new Date(),
       hour: '07:30',
       observations: '',
       delivery: false,

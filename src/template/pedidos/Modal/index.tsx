@@ -42,7 +42,6 @@ export const ModalPedidos = () => {
 
   executeCalculateTotal()
 
-  console.log(methods.formState?.errors)
   const submit = async ({ orderProduct, ...data }: FormDataPedidos) => {
     console.log({ orderProduct, ...data })
     const products = orderProduct

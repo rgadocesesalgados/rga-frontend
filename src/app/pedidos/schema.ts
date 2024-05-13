@@ -1,5 +1,11 @@
 import { z } from 'zod'
 
+enum CakeRules {
+  MAIOR_PESO_REDONDO = 4,
+  MAIOR_PESO_QUADRADO = 6,
+  MENOR_PESO_QUADRADO = 2.5,
+}
+
 const payment = z.array(
   z
     .object({
@@ -53,19 +59,41 @@ const topper = z
   .optional()
 
 const cakes = z.array(
-  z.object({
-    id: z.string().optional(),
-    peso: z.coerce.number().optional(),
-    recheios,
-    formato: z.enum(['REDONDO', 'QUADRADO']),
-    massa: z.enum(['BRANCA', 'CHOCOLATE', 'MASSA_MESCLADA']).optional(),
-    cobertura: z.enum(['CHANTILLY', 'AVELA_BATIDO', 'NATA', 'CLARA_QUEIMADA']).optional(),
-    decoracao: z.string().optional(),
-    banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).url().optional(),
-    topper,
-    tem_topper: z.coerce.boolean().optional(),
-    price: z.coerce.number().optional(),
-  }),
+  z
+    .object({
+      id: z.string().optional(),
+      peso: z.coerce.number().optional(),
+      recheios,
+      formato: z.enum(['REDONDO', 'QUADRADO']),
+      massa: z.enum(['BRANCA', 'CHOCOLATE', 'MASSA_MESCLADA']).optional(),
+      cobertura: z.enum(['CHANTILLY', 'AVELA_BATIDO', 'NATA', 'CLARA_QUEIMADA']).optional(),
+      decoracao: z.string().optional(),
+      banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).url().optional(),
+      topper,
+      tem_topper: z.coerce.boolean().optional(),
+      price: z.coerce.number().optional(),
+    })
+    .refine(
+      (fields) => {
+        if (fields.peso < CakeRules.MENOR_PESO_QUADRADO) {
+          return fields.formato === 'REDONDO'
+        }
+        return true
+      },
+      { message: 'Para esse peso de bolo, o formato deve ser redondo.', path: ['peso'] },
+    )
+    .refine(
+      (fields) => {
+        if (fields.peso > CakeRules.MAIOR_PESO_REDONDO) {
+          return fields.formato === 'QUADRADO'
+        }
+        return true
+      },
+      {
+        message: 'Para esse peso de bolo, o formato deve ser quadrado.',
+        path: ['peso'],
+      },
+    ),
 )
 
 const status = z.enum(['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'ENTREGUE', 'CANCELADO'])

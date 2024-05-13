@@ -18,7 +18,11 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
   const cake = useFormCorePedidos()
 
   const { fieldState } = useController({ control: methods.control, name: `cakes.${cakeIndex}.banner` })
-  const { fields, append, remove } = useFieldArray({ control: methods.control, name: `cakes.${cakeIndex}.recheios` })
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: `cakes.${cakeIndex}.recheios`,
+    rules: { minLength: 1, maxLength: 3 },
+  })
 
   const imageCake = methods.watch(`cakes.${cakeIndex}.banner`)
 
@@ -46,7 +50,7 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
           label="Formato"
           data={[
             { label: 'Redondo', value: 'REDONDO' },
-            { label: 'Retangular', value: 'RETANGULAR' },
+            { label: 'Quadrado', value: 'QUADRADO' },
           ]}
         />
         <SelectForm

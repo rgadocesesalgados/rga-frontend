@@ -1,2 +1,3 @@
-export { PaymentCreate } from './create'
-export { GetPayment } from './get'
+export type { PaymentCreate } from './create'
+export type { GetPayment } from './get'
+export type { EditPayment } from './edit'

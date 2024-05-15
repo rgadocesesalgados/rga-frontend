@@ -13,6 +13,13 @@ import {
 import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useContextOrders'
 import { useView } from '@/contexts/view'
 
+const TypePaymet = {
+  PIX: 'Pix',
+  DINHEIRO: 'Dinheiro',
+  CARTAO_DE_CREDITO: 'Cartão de Credito',
+  CARTAO_DE_DEBITO: 'Cartão de Debito',
+}
+
 export const View = () => {
   const { id, open, handleOpen, setId } = useView()
   const { orders } = useContextOrders()
@@ -37,7 +44,13 @@ export const View = () => {
     { categorys: [] as string[] },
   )
 
-  console.log(order)
+  const totalPayment = payment.reduce((acc, pay) => {
+    if (pay.paid) return acc + pay.value
+
+    return acc
+  }, 0)
+
+  const totalRestant = order.total - totalPayment
 
   return (
     <Dialog
@@ -213,19 +226,47 @@ export const View = () => {
             </Table>
           ))}
 
-        <div className="rounded-2xl border border-green-500 bg-green-50 p-2 text-end text-green-800">
-          Total: {toBRL(order.total)}
+        <Table>
+          <TableHeader>
+            <TableHead>Tipo</TableHead>
+            <TableHead>Valor</TableHead>
+            <TableHead>Pago</TableHead>
+            <TableHead>Data</TableHead>
+          </TableHeader>
+          <TableBody>
+            {payment.length > 0 &&
+              payment.map((pay) => (
+                <TableRow key={pay.id}>
+                  <TableHead>{TypePaymet[pay.type]}</TableHead>
+                  <TableCell>{toBRL(pay.value)}</TableCell>
+                  <TableCell>{pay.paid ? 'Sim' : 'Não'}</TableCell>
+                  <TableCell>{pay.date ? new Date(pay.date).toLocaleDateString() : ''}</TableCell>
+                </TableRow>
+              ))}
+
+            {payment.length === 0 && (
+              <TableRow>
+                <TableHead colSpan={4} className="text-center">
+                  Nenhum pagamento encontrado
+                </TableHead>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        <div className="rounded-2xl border border-green-500 bg-green-50 p-5 text-end text-green-800">
+          Valor total: {toBRL(order.total)}
         </div>
 
-        <div className="rounded-2xl border border-blue-500 bg-blue-50 p-2 text-end text-blue-800">
-          Pagamentos: {payment.reduce((acc, pay) => acc + pay.value, 0)}
-          {payment.length > 0 &&
-            payment.map((p) => (
-              <div key={p.id}>
-                {p.type}: {p.value}
-              </div>
-            ))}
+        <div className="rounded-2xl border border-blue-500 bg-blue-50 p-5 text-end text-blue-800">
+          Total pago: {toBRL(totalPayment)}
         </div>
+
+        {totalRestant > 0 && (
+          <div className="rounded-2xl border border-red-500 bg-red-50 p-5 text-end text-red-800">
+            Restante a pagar: {toBRL(totalRestant)}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   )

@@ -1,6 +1,5 @@
-import { OrderProps } from '@/app/pedidos/types'
 import { api } from '@/services/api/apiClient'
-import { GetOrder } from '@/types/order'
+import { EditOrder, GetOrder } from '@/types/order'
 import { CreateOrder } from '@/types/order/create'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
@@ -32,8 +31,8 @@ export const useOrders = () => {
     return response
   }
 
-  const editOrder = async ({ id, ...order }: OrderProps): Promise<AxiosResponse> => {
-    const response = await api.patch('/order', order, { params: { id } })
+  const editOrder = async (order: EditOrder): Promise<AxiosResponse> => {
+    const response = await api.patch('/order', order)
 
     return response
   }

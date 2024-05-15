@@ -87,8 +87,6 @@ export const columns: ColumnDef<GetOrder>[] = [
 
       const { address, orderProduct, date, ...rest } = linha
 
-      console.log(orderProduct.map((i) => i.product_id))
-
       const order: FormDataPedidos = {
         address: address?.id,
         value_frete: address?.value_frete,
@@ -140,7 +138,6 @@ export const columns: ColumnDef<GetOrder>[] = [
 
             <DropdownMenuItem
               onClick={() => {
-                console.log(order.orderProduct)
                 methods.reset(order)
                 handleOpenOrder()
               }}

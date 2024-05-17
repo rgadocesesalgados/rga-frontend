@@ -5,14 +5,11 @@ import { PlusCircle, Trash2 } from 'lucide-react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { TopperForm } from '../topper-form'
 import { Cake } from './Cake'
-import { useDeleteCake } from '@/contexts/delete-cake'
 
 export const CakesFullForm = () => {
   const methods = useFormContext<FormDataPedidos>()
   const { fields, append, remove } = useFieldArray({ name: 'cakes', control: methods.control })
   const cakes = methods.watch('cakes')
-
-  const { handleSetDeleteCake } = useDeleteCake()
 
   return (
     <S.container>
@@ -28,7 +25,6 @@ export const CakesFullForm = () => {
               type="button"
               onClick={() => {
                 remove(index)
-                handleSetDeleteCake(field.id)
               }}
               className="text-red-500 "
             >

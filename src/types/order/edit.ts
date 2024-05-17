@@ -1,7 +1,7 @@
 import { EditAddressOrder } from '../address-order'
 import { EditCake } from '../cake'
-import { EditOrderProduct } from '../order-product'
-import { EditPayment } from '../payment'
+import { CreateProductOrder } from '../order-product'
+import { PaymentCreate } from '../payment'
 
 export interface EditOrder {
   id: string
@@ -10,8 +10,8 @@ export interface EditOrder {
   hour: string
   bolo: EditCake[]
   address: EditAddressOrder
-  orderProduct: EditOrderProduct[]
-  payment: EditPayment[]
+  orderProduct: CreateProductOrder[]
+  payment: PaymentCreate[]
   cor_forminhas: string
   observations: string
   total: number

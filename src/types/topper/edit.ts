@@ -5,4 +5,5 @@ export interface EditTopper {
   price: number
   description: string
   banner: string
+  tem_topper: boolean
 }

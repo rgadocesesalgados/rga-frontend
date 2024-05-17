@@ -15,7 +15,13 @@ export default function Sidebar() {
 
       <SheetContent side="left" className="flex flex-col pt-10">
         {configSidebarlinks.map((link) => (
-          <Button key={link.href} asChild variant="outline" className="text-left">
+          <Button
+            key={link.href}
+            asChild
+            variant="outline"
+            size="lg"
+            className="py-8 hover:bg-primary hover:font-black hover:text-black"
+          >
             <Link href={link.href}>{link.label}</Link>
           </Button>
         ))}

@@ -85,12 +85,32 @@ export const columns: ColumnDef<GetOrder>[] = [
       const methods = useFormContext<FormDataPedidos>()
       const linha = row.original
 
-      const { address, orderProduct, date, ...rest } = linha
+      const { address, orderProduct, date, bolo, payment, ...rest } = linha
 
       const order: FormDataPedidos = {
         address: address?.id,
         value_frete: address?.value_frete,
         logistic: address?.type_frete,
+        cakes: bolo?.map((cake) => ({
+          id: cake.id,
+          peso: cake.peso,
+          formato: cake.formato,
+          massa: cake.massa,
+          recheios: cake.recheio,
+          price: cake.price,
+          cobertura: cake.cobertura,
+          decoracao: cake.description ?? '',
+          banner: cake.banner,
+          tem_topper: cake.topper ? true : false,
+          topper: {
+            tema: cake.topper?.tema ?? '',
+            name: cake.topper?.name ?? '',
+            idade: cake.topper?.idade,
+            price: cake.topper?.price ?? 15,
+            description: cake.topper?.description ?? '',
+            banner: cake.topper?.banner ?? '',
+          },
+        })),
         orderProduct: orderProduct.reduce(
           (acc, item) => {
             if (typeof acc[item.category.priority] === 'undefined') {
@@ -106,6 +126,14 @@ export const columns: ColumnDef<GetOrder>[] = [
           [] as FormDataPedidos['orderProduct'],
         ),
         date: new Date(date),
+        payment: payment.map((pay) => {
+          return {
+            date: pay.date ? new Date(pay.date) : new Date(),
+            paid: pay.paid,
+            value: pay.value,
+            formPayment: pay.type,
+          }
+        }),
         ...rest,
       }
 
@@ -138,6 +166,7 @@ export const columns: ColumnDef<GetOrder>[] = [
 
             <DropdownMenuItem
               onClick={() => {
+                console.log(order)
                 methods.reset(order)
                 handleOpenOrder()
               }}

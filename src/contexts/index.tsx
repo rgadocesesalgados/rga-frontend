@@ -5,6 +5,7 @@ import { ProviderClient } from './dataContexts/clientesContext'
 import { ProviderOrders } from './dataContexts/ordersContext'
 import { ProviderProduct } from './dataContexts/productsContext'
 import { ProviderRecheios } from './dataContexts/recheios'
+import { ProviderCakeDelete } from './delete-cake'
 import { ProviderModal } from './modal'
 import { ProviderView } from './view'
 
@@ -19,7 +20,9 @@ export const ProvidersContext = ({ children }: { children: React.ReactNode }) =>
                 <ProviderRecheios>
                   <ProviderProduct>
                     <ProviderModal>
-                      <ProviderView>{children}</ProviderView>
+                      <ProviderView>
+                        <ProviderCakeDelete>{children}</ProviderCakeDelete>
+                      </ProviderView>
                     </ProviderModal>
                   </ProviderProduct>
                 </ProviderRecheios>

@@ -23,14 +23,14 @@ import { useOrder } from '@/app/pedidos/useFormCorePedidos'
 import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useContextOrders'
 import { toast } from 'react-toastify'
 import { CreateCake } from '@/types/cake/create'
-import { CreateProductOrder } from '@/types/order-product'
+import { EditCake } from '@/types/cake'
 
 export const ModalPedidos = () => {
   const { openOrder, handleOpenOrder } = useModal()
   const { clients } = useContextClient()
   const { categorys } = useContextCategory()
   const { address } = useContextAddress()
-  const { addOrder } = useContextOrders()
+  const { addOrder, editOrder, getAllOrders } = useContextOrders()
 
   const methods = useFormContext<FormDataPedidos>()
 
@@ -43,8 +43,7 @@ export const ModalPedidos = () => {
   executeCalculateTotal()
 
   const submit = async ({ orderProduct, ...data }: FormDataPedidos) => {
-    console.log({ orderProduct, ...data })
-    const products = orderProduct
+    const productsList = orderProduct
       .reduce((acc, category) => {
         return [...acc, ...category]
       })
@@ -54,70 +53,142 @@ export const ModalPedidos = () => {
           price: product.price,
           quantity: product.quantity,
           total: product.total,
-        } as CreateProductOrder
+        }
       })
-
-    const cakes: CreateCake[] = data.cakes.map((cake) => {
-      const recheio: CreateCake['recheio'] = cake.recheios.map((recheio) => {
-        return { id: recheio.id }
-      })
-
-      const topper: CreateCake['topper'] = {
-        id: cake.topper?.id,
-        tema: cake.topper?.tema,
-        name: cake.topper?.name,
-        idade: cake.topper?.idade,
-        price: cake.topper?.price,
-        description: cake.topper?.description,
-        banner: cake.topper?.banner,
-      }
-
-      return {
-        peso: cake.peso,
-        formato: cake.formato,
-        massa: cake.massa,
-        recheio,
-        price: cake.price,
-        cobertura: cake.cobertura,
-        description: cake.decoracao,
-        banner: cake.banner,
-        tem_topper: cake.tem_topper,
-        topper,
-      }
-    })
 
     const payments = data.payment.map((pay) => {
       return { date: pay.date, paid: pay.paid, value: pay.value, type: pay.formPayment }
     })
 
-    addOrder({
-      client: { id: data.client.id },
-      date: data.date,
-      hour: data.hour,
-      cor_forminhas: data.cor_forminhas,
-      observations: data.observations,
-      delivery: data.delivery,
-      address: { id: addess_id, type_frete: data.logistic, value_frete: data.value_frete },
-      total: data.total,
-      status: data.status,
-      cakes,
-      products,
-      payments,
-    })
-      .then(() => {
-        toast.success('Pedido criado com sucesso!')
+    if (data.id) {
+      const editCakes: EditCake[] = data.cakes.map((cake) => {
+        const recheio: EditCake['recheio'] = cake.recheios.map((recheio) => {
+          return { id: recheio.id }
+        })
+
+        const topper: EditCake['topper'] = {
+          tema: cake.topper?.tema,
+          name: cake.topper?.name,
+          idade: cake.topper?.idade,
+          price: cake.topper?.price,
+          description: cake.topper?.description,
+          banner: cake.topper?.banner,
+          tem_topper: cake.tem_topper,
+        }
+
+        return {
+          id: cake.id,
+          peso: cake.peso,
+          formato: cake.formato,
+          massa: cake.massa,
+          recheio,
+          price: cake.price,
+          cobertura: cake.cobertura,
+          description: cake.decoracao,
+          banner: cake.banner,
+          topper,
+        }
       })
-      .catch((error) => {
-        console.log(error.response.data.error)
-        toast.error(error.response?.data?.error)
+      editOrder({
+        id: data.id,
+        client_id: data.client.id,
+        date: data.date,
+        hour: data.hour,
+        bolo: editCakes,
+        orderProduct: productsList,
+        cor_forminhas: data.cor_forminhas,
+        observations: data.observations,
+        delivery: data.delivery,
+        address: { address_id: data.address, type_frete: data.logistic, value_frete: data.value_frete },
+        total: data.total,
+        payment: payments,
+        status: data.status,
       })
+        .then(() => {
+          getAllOrders()
+          handleOpenOrder()
+          toast.success('Pedido editado com sucesso!')
+        })
+        .catch((error) => {
+          console.log(error.response.data.error)
+          toast.error(error.response?.data?.error)
+        })
+    } else {
+      const cakes: CreateCake[] = data.cakes.map((cake) => {
+        const recheio: CreateCake['recheio'] = cake.recheios.map((recheio) => {
+          return { id: recheio.id }
+        })
+
+        const topper: CreateCake['topper'] = {
+          id: cake.topper?.id,
+          tema: cake.topper?.tema,
+          name: cake.topper?.name,
+          idade: cake.topper?.idade,
+          price: cake.topper?.price,
+          description: cake.topper?.description,
+          banner: cake.topper?.banner,
+        }
+
+        return {
+          peso: cake.peso,
+          formato: cake.formato,
+          massa: cake.massa,
+          recheio,
+          price: cake.price,
+          cobertura: cake.cobertura,
+          description: cake.decoracao,
+          banner: cake.banner,
+          tem_topper: cake.tem_topper,
+          topper,
+        }
+      })
+      addOrder({
+        client: { id: data.client.id },
+        date: data.date,
+        hour: data.hour,
+        cor_forminhas: data.cor_forminhas,
+        observations: data.observations,
+        delivery: data.delivery,
+        address: { id: addess_id, type_frete: data.logistic, value_frete: data.value_frete },
+        total: data.total,
+        status: data.status,
+        cakes,
+        products: productsList,
+        payments,
+      })
+        .then(() => {
+          getAllOrders()
+          handleOpenOrder()
+          toast.success('Pedido criado com sucesso!')
+        })
+        .catch((error) => {
+          console.log(error.response.data.error)
+          toast.error(error.response?.data?.error)
+        })
+    }
   }
 
   return (
     <Dialog
       open={openOrder}
       onOpenChange={() => {
-        methods.reset()
+        methods.reset({
+          id: '',
+          client: { id: '' },
+          date: new Date(),
+          hour: '07:30',
+          cakes: [],
+          orderProduct: [],
+          cor_forminhas: '',
+          observations: '',
+          delivery: false,
+          address: '',
+          logistic: 'FRETE_MOTO',
+          value_frete: 0,
+          total: 0,
+          payment: [],
+          status: 'RASCUNHO',
+        })
         handleOpenOrder()
       }}
     >
@@ -158,6 +229,7 @@ export const ModalPedidos = () => {
               name="cor_forminhas"
               label="Cor das forminhas"
               placeholder="Se tiver doces, adicione a cor da forminha aqui"
+              showMessageError
             />
 
             <TextareaForm control={methods.control} name="observations" placeholder="Observações" label="Observações" />

@@ -12,13 +12,14 @@ const payment = z.array(
       formPayment: z.enum(['DINHEIRO', 'CARTAO_DE_CREDITO', 'CARTAO_DE_DEBITO', 'PIX', 'DUPLICATA']),
       value: z.coerce.number().step(0.01),
       paid: z.coerce.boolean(),
-      date: z.coerce.date(),
+      date: z.coerce.date().optional(),
     })
     .refine(
       (fields) => {
         if (fields.paid === true) {
           return !!fields.date
         }
+        return true
       },
       { message: 'Data deve ser preenchida.', path: ['date'] },
     )
@@ -27,6 +28,7 @@ const payment = z.array(
         if (fields.paid === true) {
           return !!fields.value
         }
+        return true
       },
       { message: 'Valor deve ser preenchido.', path: ['value'] },
     ),
@@ -54,7 +56,7 @@ const topper = z
     idade: z.coerce.number().optional(),
     price: z.coerce.number().optional(),
     description: z.string().optional(),
-    banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).url().optional(),
+    banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).optional(),
   })
   .optional()
 
@@ -68,11 +70,21 @@ const cakes = z.array(
       massa: z.enum(['BRANCA', 'CHOCOLATE', 'MASSA_MESCLADA']).optional(),
       cobertura: z.enum(['CHANTILLY', 'AVELA_BATIDO', 'NATA', 'CLARA_QUEIMADA']).optional(),
       decoracao: z.string().optional(),
-      banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).url().optional(),
+      banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).optional(),
       topper,
       tem_topper: z.coerce.boolean().optional(),
       price: z.coerce.number().optional(),
     })
+    .refine(
+      (fields) => {
+        if (fields.tem_topper) {
+          return !!fields.topper.tema
+        }
+
+        return true
+      },
+      { message: 'O tema do topper é obrigatório.', path: ['topper.tema'] },
+    )
     .refine(
       (fields) => {
         if (fields.peso < CakeRules.MENOR_PESO_QUADRADO) {
@@ -104,7 +116,7 @@ export const schema = z.object({
   id: z.string().optional(),
   date: z.coerce.date(),
   hour: z.string(),
-  cor_forminhas: z.string().min(4, 'A cor da forminha deve ter pelo menos 4 caracteres.').optional(),
+  cor_forminhas: z.string().optional(),
   observations: z.string(),
   total: z.coerce.number().step(0.01),
   delivery: z.boolean(),

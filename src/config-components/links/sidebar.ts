@@ -1,4 +1,8 @@
-import { NavLinkProps } from '@/components/Layout/NavLink'
+export interface NavLinkProps {
+  href: string
+  children?: React.ReactNode
+  label?: string
+}
 
 export const configSidebarlinks: NavLinkProps[] = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -8,4 +12,5 @@ export const configSidebarlinks: NavLinkProps[] = [
   { href: '/produtos', label: 'Produtos' },
   { href: '/recheios', label: 'Recheios' },
   { href: '/categorias', label: 'Categorias' },
+  { href: '/relatorios', label: 'Relatórios' },
 ]

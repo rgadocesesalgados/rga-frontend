@@ -1,4 +1,5 @@
 import { GetBolos } from './bolos/get'
+import { GetToppers } from '../relatorios'
 
 export interface GetRelatorio {
   // client: string
@@ -12,6 +13,7 @@ export interface GetRelatorio {
   //   value_frete: number
   // } | null
   bolos: GetBolos[]
+  toppers: GetToppers[]
   // products: {
   //   name: string
   //   quantity: number

@@ -87,6 +87,7 @@ export const ModalPedidos = () => {
           description: cake.decoracao,
           banner: cake.banner,
           topper,
+          tem_topper: cake.tem_topper,
         }
       })
       editOrder({

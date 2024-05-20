@@ -1,3 +1,9 @@
+import Layout from './dashboard/layout'
+
 export default function Home() {
-  return <h1>olá</h1>
+  return (
+    <Layout>
+      <h1>olá</h1>
+    </Layout>
+  )
 }

@@ -5,7 +5,7 @@ export interface NavLinkProps {
 }
 
 export const configSidebarlinks: NavLinkProps[] = [
-  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/', label: 'Dashboard' },
   { href: '/pedidos', label: 'Pedidos' },
   { href: '/clientes', label: 'Clientes' },
   { href: '/enderecos', label: 'Endereços' },

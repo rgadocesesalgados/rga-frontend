@@ -1,5 +1,5 @@
 import { GetBolos } from './bolos/get'
-import { GetToppers } from '../relatorios'
+import { GetProdutos, GetToppers } from '../relatorios'
 
 export interface GetRelatorio {
   // client: string
@@ -14,10 +14,7 @@ export interface GetRelatorio {
   // } | null
   bolos: GetBolos[]
   toppers: GetToppers[]
-  // products: {
-  //   name: string
-  //   quantity: number
-  // }[]
+  produtos: GetProdutos[]
   // cor_forminhas: string
   // observations: string
   // total: number

@@ -1,4 +1,6 @@
-import { Payment } from '@prisma/client'
-
-export interface PaymentCreate
-  extends Pick<Payment, 'type' | 'value' | 'paid' | 'date'> {}
+export interface PaymentCreate {
+  type: 'DINHEIRO' | 'PIX' | 'CARTAO_DE_CREDITO' | 'CARTAO_DE_DEBITO' | 'DUPLICATA'
+  value: number
+  paid: boolean
+  date: Date
+}

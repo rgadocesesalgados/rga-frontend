@@ -28,7 +28,7 @@ export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {children}
-      <DataTable columns={columns} data={orders} inputFilter="client_name" />
+      <DataTable columns={columns} data={orders} inputFilter="client_name" inputFilterLabel="cliente" />
     </>
   )
 }

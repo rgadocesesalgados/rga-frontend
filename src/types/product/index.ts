@@ -1,2 +1,1 @@
-export { ProductCreate } from './create'
-export { GetProduct } from './get'
+export type { GetProduct } from './get'

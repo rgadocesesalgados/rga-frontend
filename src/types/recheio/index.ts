@@ -1,1 +1,1 @@
-export { GetRecheio } from './get'
+export type { GetRecheio } from './get'

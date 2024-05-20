@@ -1,1 +1,1 @@
-export { GetClient } from './get'
+export type { GetClient } from './get'

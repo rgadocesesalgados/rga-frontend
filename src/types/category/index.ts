@@ -1,1 +1,1 @@
-export { GetCategory } from './get'
+export type { GetCategory } from './get'

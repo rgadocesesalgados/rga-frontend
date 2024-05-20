@@ -1,1 +1,1 @@
-export { GetAddress } from './get'
+export type { GetAddress } from './get'

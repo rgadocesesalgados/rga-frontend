@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, SquareMenu, SquarePen, XCircle } from 'lucide-react'
+import { MoreHorizontal, Printer, SquareMenu, SquarePen, XCircle } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
@@ -21,6 +21,7 @@ import { Badge, BadgeProps } from '@/components/ui/badge'
 import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useContextOrders'
 import { useView } from '@/contexts/view'
 import { GetOrder } from '@/types/order'
+import { useModalPrint } from '@/contexts/modalPrint'
 
 export const columns: ColumnDef<GetOrder>[] = [
   {
@@ -139,6 +140,7 @@ export const columns: ColumnDef<GetOrder>[] = [
 
       const { handleOpenOrder } = useModal()
       const { handleOpen, setId } = useView()
+      const { handleOpen: handleOpenPrint } = useModalPrint()
 
       return (
         <DropdownMenu>
@@ -151,6 +153,16 @@ export const columns: ColumnDef<GetOrder>[] = [
 
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+            <DropdownMenuItem
+              onClick={() => {
+                setId(linha.id)
+                handleOpenPrint()
+              }}
+            >
+              Imprimir
+              <Printer className="ml-2 h-4 w-4" />
+            </DropdownMenuItem>
 
             <DropdownMenuItem
               onClick={() => {

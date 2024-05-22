@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
-      router.push('/dashboard')
+      router.push('/')
       toast.success('Login efetuado com sucesso!')
     } catch (error) {
       if (error instanceof AxiosError) {

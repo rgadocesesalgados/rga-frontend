@@ -3,7 +3,6 @@ import tw from 'tailwind-styled-components'
 export const container = tw.div`
 fixed
 top-0
-min-h-screen
 w-screen
 justify-center
 bg-white

@@ -200,7 +200,7 @@ export const ModalPedidos = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-screen  max-w-6xl overflow-y-scroll rounded-2xl">
+      <DialogContent className="my-5 h-[95vh]  max-w-6xl overflow-y-scroll rounded-2xl">
         <Form {...methods}>
           <form className="flex flex-col gap-5" onSubmit={methods.handleSubmit(submit)}>
             <InputForm control={methods.control} name="id" readOnly className="hidden" />

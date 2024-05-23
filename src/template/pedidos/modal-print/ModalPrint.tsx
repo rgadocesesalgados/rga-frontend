@@ -33,16 +33,12 @@ export const ModalPrint = () => {
             <div>{new Date(orderSelected?.date).toLocaleDateString()}</div>
           </div>
           <div>{orderSelected?.client.tel}</div>
-          <div className="mt-5">
-            {orderSelected?.delivery ? orderSelected.address.address_complete : 'Retirada no local'}
-          </div>
-          <div>{orderSelected?.hour}</div>
         </div>
 
         <S.containerCakes>
           {orderSelected?.bolo.map((cake) => {
             return (
-              <div key={cake.id} className="flex flex-col gap-1">
+              <div key={cake.id} className="flex flex-col gap-1 py-5">
                 <div className="flex gap-2">
                   <div>{cake.peso}kg</div> {cake.recheio.map((recheio) => recheio.name).join(', ')}
                 </div>
@@ -81,7 +77,7 @@ export const ModalPrint = () => {
         <div>
           {categories?.map((category) => {
             return (
-              <div key={category}>
+              <div key={category} className="py-8">
                 {filterCategory(orderSelected?.orderProduct, category).map((product) => {
                   return (
                     <div key={product.id} className="flex gap-2">
@@ -104,7 +100,7 @@ export const ModalPrint = () => {
         </div>
 
         {orderSelected?.delivery && (
-          <div className="flex items-baseline">
+          <div className="flex items-baseline font-bold">
             <div>Entrega</div>
             <Divider />
             <div>{toBRL(orderSelected.address.value_frete)}</div>
@@ -146,6 +142,11 @@ export const ModalPrint = () => {
             })}
           </div>
         )}
+
+        <div className="mt-5">
+          {orderSelected?.delivery ? orderSelected.address.address_complete : 'Retirada no local'}
+        </div>
+        <div className="font-bold">{orderSelected?.hour}</div>
       </div>
       {showButtonPrint && (
         <Button type="button" variant="outline" className="text-red-500" onClick={() => handleOpen()}>

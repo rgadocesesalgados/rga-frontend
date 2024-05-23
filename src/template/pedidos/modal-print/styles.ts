@@ -1,13 +1,14 @@
 import tw from 'tailwind-styled-components'
 
 export const container = tw.div`
-fixed
+absolute
 top-0
 w-screen
 justify-center
 bg-white
 data-[open=true]:flex
 hidden
+min-h-screen
 `
 
 export const content = tw.div`

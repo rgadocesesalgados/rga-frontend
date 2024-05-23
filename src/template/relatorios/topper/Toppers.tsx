@@ -1,17 +1,7 @@
-'use client'
 import { DataTable } from '@/components/ui-componets/data-table'
 import { columns } from './columns'
-import { useRelatorios } from '@/contexts/relatorios'
-import { useEffect } from 'react'
+import { GetRelatorio } from '@/types/relatorios/get'
 
-export const Toppers = () => {
-  const { relatorios, getRelatorios } = useRelatorios()
-
-  useEffect(() => {
-    getRelatorios()
-  }, [])
-
-  return (
-    <DataTable columns={columns} data={relatorios?.toppers || []} inputFilter="client" inputFilterLabel="cliente" />
-  )
+export const Toppers = ({ data = [] }: { data: GetRelatorio['toppers'] }) => {
+  return <DataTable columns={columns} data={data} inputFilter="client" inputFilterLabel="cliente" />
 }

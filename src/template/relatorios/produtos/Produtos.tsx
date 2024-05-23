@@ -1,14 +1,13 @@
-// 'use client'
+import { DataTable } from '@/components/ui-componets/data-table'
+import { columns } from './columns'
+import { GetRelatorio } from '@/types/relatorios/get'
 
-// import { DataTable } from '@/components/ui-componets/data-table'
-// import { useRelatorios } from '@/contexts/relatorios'
-// import { useEffect } from 'react'
+export const Produtos = ({ data = [] }: { data: GetRelatorio['produtos'] }) => {
+  const categorys = data.map((item) => item.category_name)
 
-// export const Produtos = () => {
-//   const { relatorios, getRelatorios } = useRelatorios()
+  return categorys.map((category) => {
+    const dataProdutos = data.filter((item) => item.category_name === category)
 
-//   useEffect(() => {
-//     getRelatorios()
-//   }, [])
-//   // return <DataTable columns={columns} data={relatorios?.produtos || []} inputFilter="name" inputFilterLabel="nome" />
-// }
+    return <DataTable key={category} columns={columns} data={dataProdutos} inputFilter="name" inputFilterLabel="nome" />
+  })
+}

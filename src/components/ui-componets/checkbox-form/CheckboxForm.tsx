@@ -11,6 +11,7 @@ interface CheckboxFormProps<Tdata> {
   description?: string
   showMessageError?: boolean
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  children?: React.ReactNode
 }
 
 export function CheckboxForm<Tdata>({
@@ -20,6 +21,7 @@ export function CheckboxForm<Tdata>({
   showMessageError,
   description,
   onChange,
+  children,
 }: CheckboxFormProps<Tdata>) {
   return (
     <FormField
@@ -33,6 +35,7 @@ export function CheckboxForm<Tdata>({
               <FormControl>
                 <Checkbox checked={field.value as CheckedState} onCheckedChange={field.onChange} />
               </FormControl>
+              {children}
               {label}
             </div>
             {description && <FormDescription>{description}</FormDescription>}

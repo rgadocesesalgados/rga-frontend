@@ -13,13 +13,27 @@ import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { PrintBolos } from '@/template/relatorios/bolos/PrintBolos'
 import { useModalPrint } from '@/contexts/modalPrint'
+import { GetOrder } from '@/types/order'
+import { Badge, BadgeProps } from '@/components/ui/badge'
+import { CheckboxForm } from '@/components/ui-componets/checkbox-form/CheckboxForm'
+
+const status: GetOrder['status'][] = ['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'CANCELADO']
 
 export default function Relatorios() {
-  const schema = z.object({ dateInitial: z.coerce.date(), dateFinal: z.coerce.date() })
+  const schema = z.object({
+    dateInitial: z.coerce.date(),
+    dateFinal: z.coerce.date(),
+    RASCUNHO: z.boolean(),
+    ANOTADO: z.boolean(),
+    EM_PRODUCAO: z.boolean(),
+    CANCELADO: z.boolean(),
+  })
 
   type FormData = z.infer<typeof schema>
 
-  const form = useForm<FormData>()
+  const form = useForm<FormData>({
+    defaultValues: { RASCUNHO: true, ANOTADO: true, EM_PRODUCAO: false, CANCELADO: false },
+  })
   const { control, handleSubmit } = form
   const { getRelatorios, relatorios } = useRelatorios()
 
@@ -40,6 +54,15 @@ export default function Relatorios() {
           >
             <DatePickerForm control={control} name="dateInitial" label="Data inicial" showMessageError />
             <DatePickerForm control={control} name="dateFinal" label="Data final" showMessageError />
+
+            {status.map((s) => {
+              const ativo = form.getValues(s as keyof FormData)
+              return (
+                <CheckboxForm key={s} control={control} label="" name={s as keyof FormData}>
+                  <Badge variant={ativo ? (s.toLocaleLowerCase() as BadgeProps['variant']) : 'secondary'}>{s}</Badge>
+                </CheckboxForm>
+              )
+            })}
             <Button type="submit">Buscar</Button>
 
             <Button
@@ -52,6 +75,7 @@ export default function Relatorios() {
             </Button>
           </form>
         </Form>
+
         <Bolos data={relatorios?.bolos} />
 
         <Toppers data={relatorios?.toppers} />

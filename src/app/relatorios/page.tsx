@@ -12,7 +12,7 @@ export default function Relatorios() {
 
   useEffect(() => {
     getRelatorios()
-  })
+  }, [])
   return (
     <Layout>
       <Wrap className="space-y-10">

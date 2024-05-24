@@ -35,6 +35,7 @@ export const DataTable = <TData, TValue>({
   const table = useReactTable({
     columns,
     data,
+    initialState: { pagination: { pageSize: 30 } },
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(), // como a tanstack é modular, nem toda logica por debaixo dos panos é inclusa no metodo de criação, então devemos inicializalo

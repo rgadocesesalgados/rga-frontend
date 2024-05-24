@@ -6,16 +6,16 @@ import { createContext, useContext, useState } from 'react'
 
 interface RelatoriosContextData {
   relatorios: GetRelatorio
-  getRelatorios: () => Promise<void>
+  getRelatorios: (dateInicial?: Date, dateFinal?: Date) => Promise<void>
 }
 const RelatoriosContext = createContext({} as RelatoriosContextData)
 
 export const ProviderRelatorios = ({ children }: { children: React.ReactNode }) => {
   const [relatorios, setRelatorios] = useState<GetRelatorio>()
 
-  const getRelatorios = async () => {
+  const getRelatorios = async (dateInicial?: Date, dateFinal?: Date) => {
     await api
-      .get('/relatorios')
+      .post('/relatorios', { dateInicial, dateFinal })
       .then((response) => {
         setRelatorios(response.data)
         console.log({ relatorios: response.data })

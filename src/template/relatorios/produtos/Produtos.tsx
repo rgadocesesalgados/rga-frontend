@@ -3,7 +3,12 @@ import { columns } from './columns'
 import { GetRelatorio } from '@/types/relatorios/get'
 
 export const Produtos = ({ data = [] }: { data: GetRelatorio['produtos'] }) => {
-  const categorys = data.map((item) => item.category_name)
+  const categorys = data.reduce((acc, item) => {
+    if (!acc.includes(item.category_name)) {
+      acc.push(item.category_name)
+    }
+    return acc
+  }, [])
 
   return categorys.map((category) => {
     const dataProdutos = data.filter((item) => item.category_name === category)

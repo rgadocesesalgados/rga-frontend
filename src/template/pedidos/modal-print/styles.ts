@@ -8,7 +8,7 @@ justify-center
 bg-white
 data-[open=true]:flex
 hidden
-min-h-screen
+h-screen
 `
 
 export const content = tw.div`

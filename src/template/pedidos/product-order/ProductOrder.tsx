@@ -33,6 +33,19 @@ export const ProductOrder = ({ category, index: categoryIndex }: ProductOrderPro
       {orderProducts?.fields.map((field, productIndex) => {
         return (
           <S.containerProduct key={field.id}>
+            <InputForm
+              control={methods.control}
+              name={`orderProduct.${categoryIndex}.${productIndex}.quantity`}
+              label="Quatidade"
+              type="number"
+              typeof="numeric"
+              min={0}
+              onChange={() => {
+                setProductTotalPrice({ productIndex, value: getProductTotalPrice(productIndex) })
+                executeCalculateTotal()
+              }}
+            />
+
             <SelectSearch
               label="Produto"
               control={methods.control}
@@ -44,19 +57,6 @@ export const ProductOrder = ({ category, index: categoryIndex }: ProductOrderPro
                   productIndex,
                   value: products.find((product) => product.id === value)?.price,
                 })
-                setProductTotalPrice({ productIndex, value: getProductTotalPrice(productIndex) })
-                executeCalculateTotal()
-              }}
-            />
-
-            <InputForm
-              control={methods.control}
-              name={`orderProduct.${categoryIndex}.${productIndex}.quantity`}
-              label="Quatidade"
-              type="number"
-              typeof="numeric"
-              min={0}
-              onChange={() => {
                 setProductTotalPrice({ productIndex, value: getProductTotalPrice(productIndex) })
                 executeCalculateTotal()
               }}

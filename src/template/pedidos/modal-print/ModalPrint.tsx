@@ -28,7 +28,7 @@ export const ModalPrint = () => {
     <S.container data-open={open}>
       <div className="flex flex-col gap-14 md:w-1/3">
         <div>
-          <div className="flex gap-5 font-bold">
+          <div className="flex gap-5 font-semibold">
             <div>{orderSelected?.client.name}</div>
             <div>{new Date(orderSelected?.date).toLocaleDateString()}</div>
           </div>
@@ -47,7 +47,7 @@ export const ModalPrint = () => {
 
                 <div className="flex items-baseline capitalize">
                   <div>{cake.formato.toLocaleLowerCase()}</div> <Divider />
-                  <div className="font-bold">{toBRL(cake.price)}</div>
+                  <div className="font-semibold">{toBRL(cake.price)}</div>
                 </div>
 
                 <div>Cobertura: {cake.cobertura}</div>
@@ -59,7 +59,7 @@ export const ModalPrint = () => {
                     <div className="flex items-baseline">
                       <div className="text-nowrap">Tem topper</div>
                       <Divider />
-                      <div className="font-bold">{toBRL(cake.topper.price)}</div>
+                      <div className="font-semibold">{toBRL(cake.topper.price)}</div>
                     </div>
 
                     <div>{cake.topper.tema}</div>
@@ -86,7 +86,7 @@ export const ModalPrint = () => {
                   )
                 })}
 
-                <div className="flex flex-nowrap items-baseline font-bold">
+                <div className="flex flex-nowrap items-baseline font-semibold">
                   <div className="flex flex-nowrap gap-2">
                     <div>{quantityProduct(filterCategory(orderSelected?.orderProduct, category))}</div>
                     <div className="text-nowrap">{category}</div>
@@ -100,14 +100,14 @@ export const ModalPrint = () => {
         </div>
 
         {orderSelected?.delivery && (
-          <div className="flex items-baseline font-bold">
+          <div className="flex items-baseline font-semibold">
             <div>Entrega</div>
             <Divider />
             <div>{toBRL(orderSelected.address.value_frete)}</div>
           </div>
         )}
 
-        <div className="flex items-baseline font-bold">
+        <div className="flex items-baseline font-semibold">
           <div>Total</div>
           <Divider />
           <div>{toBRL(orderSelected?.total)}</div>
@@ -146,7 +146,7 @@ export const ModalPrint = () => {
         <div className="mt-5">
           {orderSelected?.delivery ? orderSelected.address.address_complete : 'Retirada no local'}
         </div>
-        <div className="font-bold">{orderSelected?.hour}</div>
+        <div className="font-semibold">{orderSelected?.hour}</div>
       </div>
       {showButtonPrint && (
         <Button type="button" variant="outline" className="text-red-500" onClick={() => handleOpen()}>
@@ -164,7 +164,7 @@ export const ModalPrint = () => {
               setShowButtonPrint(true)
             }, 10)
           }}
-          className="font-bold"
+          className="font-semibold"
         >
           Imprimir
         </Button>

@@ -9,6 +9,8 @@ bg-white
 data-[open=true]:flex
 hidden
 h-screen
+
+text-sm
 `
 
 export const content = tw.div`

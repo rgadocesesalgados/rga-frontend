@@ -16,6 +16,7 @@ import { useModalPrint } from '@/contexts/modalPrint'
 import { GetOrder } from '@/types/order'
 import { Badge, BadgeProps } from '@/components/ui/badge'
 import { CheckboxForm } from '@/components/ui-componets/checkbox-form/CheckboxForm'
+import { PrintToppers } from '@/template/relatorios/topper/PrintToppers'
 
 const status: GetOrder['status'][] = ['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'CANCELADO']
 
@@ -38,17 +39,24 @@ export default function Relatorios() {
   const { getRelatorios, relatorios } = useRelatorios()
 
   useEffect(() => {
-    getRelatorios()
+    getRelatorios({ dateFinal: null, dateInicial: null, status: ['RASCUNHO', 'ANOTADO'] })
   }, [])
 
-  const { open, handleOpen } = useModalPrint()
+  const { open, openTopper } = useModalPrint()
   return (
     <Layout>
-      <Wrap data-open={open} className="space-y-10 data-[open=true]:hidden">
+      <Wrap data-open={open || openTopper} className="space-y-10 data-[open=true]:hidden">
         <Form {...form}>
           <form
             onSubmit={handleSubmit((data) => {
-              getRelatorios(data.dateInitial, data.dateFinal)
+              const status = Object.keys(data).filter((status) => {
+                if (data[status] === true) return status
+              })
+              getRelatorios({
+                dateInicial: data.dateInitial,
+                dateFinal: data.dateFinal,
+                status: status as GetOrder['status'][],
+              })
             })}
             className="flex flex-wrap items-end gap-5 text-xs"
           >
@@ -64,15 +72,6 @@ export default function Relatorios() {
               )
             })}
             <Button type="submit">Buscar</Button>
-
-            <Button
-              variant="outline"
-              onClick={() => {
-                handleOpen()
-              }}
-            >
-              Imprimir Bolos
-            </Button>
           </form>
         </Form>
 
@@ -84,6 +83,8 @@ export default function Relatorios() {
       </Wrap>
 
       {open && <PrintBolos data={relatorios?.bolos} />}
+
+      {openTopper && <PrintToppers data={relatorios?.toppers} />}
     </Layout>
   )
 }

@@ -8,4 +8,5 @@ export interface GetToppers {
   price: number
   description: string
   banner: string
+  peso: number
 }

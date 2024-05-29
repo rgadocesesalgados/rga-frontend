@@ -7,34 +7,24 @@ import { useRelatorios } from '@/contexts/relatorios'
 import { useEffect } from 'react'
 import { Produtos } from '@/template/relatorios/produtos/Produtos'
 import { DatePickerForm } from '@/components/ui-componets/date-picker'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useFieldArray } from 'react-hook-form'
 import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { PrintBolos } from '@/template/relatorios/bolos/PrintBolos'
 import { useModalPrint } from '@/contexts/modalPrint'
 import { GetOrder } from '@/types/order'
 import { Badge, BadgeProps } from '@/components/ui/badge'
-import { CheckboxForm } from '@/components/ui-componets/checkbox-form/CheckboxForm'
 import { PrintToppers } from '@/template/relatorios/topper/PrintToppers'
+import { useFormRelatorio } from './useFormRelatorio'
+import { FormData } from './types'
+import { CirclePlus, CircleX } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
-const status: GetOrder['status'][] = ['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'CANCELADO']
+const status: GetOrder['status'][] = ['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'CANCELADO', 'ENTREGUE']
 
 export default function Relatorios() {
-  const schema = z.object({
-    dateInitial: z.coerce.date(),
-    dateFinal: z.coerce.date(),
-    RASCUNHO: z.boolean(),
-    ANOTADO: z.boolean(),
-    EM_PRODUCAO: z.boolean(),
-    CANCELADO: z.boolean(),
-  })
+  const form = useFormRelatorio()
 
-  type FormData = z.infer<typeof schema>
-
-  const form = useForm<FormData>({
-    defaultValues: { RASCUNHO: true, ANOTADO: true, EM_PRODUCAO: false, CANCELADO: false },
-  })
   const { control, handleSubmit } = form
   const { getRelatorios, relatorios } = useRelatorios()
 
@@ -43,43 +33,59 @@ export default function Relatorios() {
   }, [])
 
   const { open, openTopper } = useModalPrint()
+  const { append, fields, remove } = useFieldArray<FormData>({ control, name: 'status' })
   return (
     <Layout>
       <Wrap data-open={open || openTopper} className="space-y-10 data-[open=true]:hidden">
-        <Form {...form}>
-          <form
-            onSubmit={handleSubmit((data) => {
-              const status = Object.keys(data).filter((status) => {
-                if (data[status] === true) return status
-              })
-              getRelatorios({
-                dateInicial: data.dateInitial,
-                dateFinal: data.dateFinal,
-                status: status as GetOrder['status'][],
-              })
-            })}
-            className="flex flex-wrap items-end gap-5 text-xs"
-          >
-            <DatePickerForm control={control} name="dateInitial" label="Data inicial" showMessageError />
-            <DatePickerForm control={control} name="dateFinal" label="Data final" showMessageError />
+        <FormProvider {...form}>
+          <Form {...form}>
+            <form
+              onSubmit={handleSubmit((data) => {
+                getRelatorios({
+                  dateInicial: data.dateInitial,
+                  dateFinal: data.dateFinal,
+                  status: data.status?.map((s) => s.value) || [],
+                })
+              })}
+              className="flex flex-wrap items-end gap-5 text-xs"
+            >
+              <DatePickerForm control={control} name="dateInitial" label="Data inicial" showMessageError />
+              <DatePickerForm control={control} name="dateFinal" label="Data final" showMessageError />
 
-            {status.map((s) => {
-              const ativo = form.getValues(s as keyof FormData)
-              return (
-                <CheckboxForm key={s} control={control} label="" name={s as keyof FormData}>
-                  <Badge variant={ativo ? (s.toLocaleLowerCase() as BadgeProps['variant']) : 'secondary'}>{s}</Badge>
-                </CheckboxForm>
-              )
-            })}
-            <Button type="submit">Buscar</Button>
-          </form>
-        </Form>
+              <div className="flex flex-wrap gap-2 rounded-2xl border bg-white p-1">
+                {fields.map((field, index) => {
+                  return (
+                    <Badge key={field.id} variant={field.value?.toLocaleLowerCase() as BadgeProps['variant']}>
+                      {field.value} <CircleX onClick={() => remove(index)} className="ml-2 h-4 w-4" />
+                    </Badge>
+                  )
+                })}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button type="button" variant="ghost">
+                      Filtro <CirclePlus className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {status.map((s) => (
+                      <DropdownMenuItem key={s} onClick={() => append({ value: s })}>
+                        {s}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
 
-        <Bolos data={relatorios?.bolos} />
+              <Button type="submit">Buscar</Button>
+            </form>
+          </Form>
 
-        <Toppers data={relatorios?.toppers} />
+          <Bolos data={relatorios?.bolos} />
 
-        <Produtos data={relatorios?.produtos} />
+          <Toppers data={relatorios?.toppers} />
+
+          <Produtos data={relatorios?.produtos} />
+        </FormProvider>
       </Wrap>
 
       {open && <PrintBolos data={relatorios?.bolos} />}

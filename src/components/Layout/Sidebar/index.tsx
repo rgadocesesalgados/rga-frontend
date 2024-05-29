@@ -13,7 +13,7 @@ export default function Sidebar() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="left" className="flex flex-col pt-10">
+      <SheetContent side="left" className="flex flex-col overflow-scroll pt-10">
         {configSidebarlinks.map((link) => (
           <Button
             key={link.href}

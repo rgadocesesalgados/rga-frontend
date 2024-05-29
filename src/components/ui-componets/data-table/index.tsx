@@ -32,6 +32,8 @@ export const DataTable = <TData, TValue>({
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([])
 
+  const [rowSelection, setRowSelection] = useState({})
+
   const table = useReactTable({
     columns,
     data,
@@ -41,9 +43,11 @@ export const DataTable = <TData, TValue>({
     getCoreRowModel: getCoreRowModel(), // como a tanstack é modular, nem toda logica por debaixo dos panos é inclusa no metodo de criação, então devemos inicializalo
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
 
     state: {
       sorting,
+      rowSelection,
     },
   })
   return (

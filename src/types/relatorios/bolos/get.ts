@@ -1,6 +1,7 @@
 import { GetOrder } from '@/types/order'
 
 export interface GetBolos {
+  order_id: string
   client: string
   status_order: GetOrder['status']
   date: Date

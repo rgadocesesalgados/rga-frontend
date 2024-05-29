@@ -177,7 +177,7 @@ export const ModalPedidos = () => {
           id: '',
           client: { id: '' },
           date: new Date(),
-          hour: '07:30',
+          hour: '00:00',
           cakes: [],
           orderProduct: [],
           cor_forminhas: '',
@@ -200,7 +200,7 @@ export const ModalPedidos = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="my-5 h-[95vh]  max-w-6xl overflow-y-scroll rounded-2xl">
+      <DialogContent className="my-5 h-full max-w-6xl overflow-y-scroll rounded-2xl pb-10">
         <Form {...methods}>
           <form className="flex flex-col gap-5" onSubmit={methods.handleSubmit(submit)}>
             <InputForm control={methods.control} name="id" readOnly className="hidden" />

@@ -1,11 +1,13 @@
-import { DataTable } from '@/components/ui-componets/data-table'
-import { columns } from './columns'
 import { GetRelatorio } from '@/types/relatorios/get'
 import { Button } from '@/components/ui/button'
 import { useModalPrint } from '@/contexts/modalPrint'
+import { DataTable } from '@/components/data-table'
+import { useTable } from './useTable'
+import { Input } from '@/components/ui/input'
 
 export const Bolos = ({ data = [] }: { data: GetRelatorio['bolos'] }) => {
   const { handleOpen } = useModalPrint()
+  const table = useTable(data)
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
@@ -19,7 +21,16 @@ export const Bolos = ({ data = [] }: { data: GetRelatorio['bolos'] }) => {
           Imprimir Bolos
         </Button>
       </div>
-      <DataTable columns={columns} data={data} inputFilter="client" inputFilterLabel="cliente" />
+      <div className="space-y-5 rounded-2xl border bg-white p-5">
+        <Input
+          placeholder={`Filtrar por cliente`}
+          className="max-w-sm"
+          value={(table.getColumn(`client`)?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn(`client`)?.setFilterValue(event.target.value)}
+        />
+
+        <DataTable table={table} />
+      </div>
     </div>
   )
 }

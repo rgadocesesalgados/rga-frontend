@@ -60,7 +60,7 @@ export const View = () => {
         setId('')
       }}
     >
-      <DialogContent className="max-h-screen overflow-y-scroll rounded-2xl">
+      <DialogContent className="mt-5 max-h-screen overflow-y-scroll rounded-2xl pb-10">
         <DialogHeader>
           <DialogTitle>Pedido</DialogTitle>
         </DialogHeader>

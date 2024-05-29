@@ -1,10 +1,21 @@
 'use client'
+import { FormData } from '@/app/relatorios/types'
 import { Badge, BadgeProps } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { useRelatorios } from '@/contexts/relatorios'
+import { api } from '@/services/api/apiClient'
 import { GetBolos } from '@/types/relatorios/bolos/get'
 import { ColumnDef } from '@tanstack/react-table'
+import { CheckCircle, Circle } from 'lucide-react'
+import { useWatch } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 export const columns: ColumnDef<GetBolos>[] = [
-  { accessorKey: 'date', header: 'Data', cell: ({ cell }) => new Date(cell.getValue<Date>()).toLocaleDateString() },
+  {
+    accessorKey: 'date',
+    header: 'Data',
+    cell: ({ cell }) => new Date(cell.getValue<Date>()).toLocaleDateString(),
+  },
   { accessorKey: 'peso', header: 'Peso', cell: ({ cell }) => `${cell.getValue<number>()}kg` },
   {
     accessorKey: 'formato',
@@ -64,6 +75,45 @@ export const columns: ColumnDef<GetBolos>[] = [
       <Badge variant={getValue<GetBolos['status_order']>().toLocaleLowerCase() as BadgeProps['variant']}>
         {getValue<GetBolos['status_order']>()}
       </Badge>
+    ),
+  },
+  {
+    id: 'handleStatus',
+    header: ({ table }) => {
+      const { getRelatorios } = useRelatorios()
+      const selectedRowIds = table.getSelectedRowModel().rows.map((row) => row.original.order_id)
+
+      const { status, dateFinal, dateInitial } = useWatch<FormData>()
+      return (
+        <Button
+          size="sm"
+          variant="link"
+          disabled={selectedRowIds.length === 0}
+          onClick={async () => {
+            await api
+              .patch('/relatorios', { ids: selectedRowIds })
+              .catch((error) => {
+                toast.error(error.response.data?.error)
+              })
+              .then(() => table.resetRowSelection())
+
+            await getRelatorios({
+              dateFinal: dateFinal || null,
+              dateInicial: dateInitial || null,
+              status: status.map((s) => s.value) || [],
+            })
+          }}
+        >
+          Produzir
+        </Button>
+      )
+    },
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <Button variant="link" className="w-full" onClick={() => row.toggleSelected()}>
+          {row.getIsSelected() ? <CheckCircle className="h-5 w-5" /> : <Circle className="h-5 w-5" />}
+        </Button>
+      </div>
     ),
   },
 ]

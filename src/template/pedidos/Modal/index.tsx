@@ -24,6 +24,9 @@ import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useConte
 import { toast } from 'react-toastify'
 import { CreateCake } from '@/types/cake/create'
 import { EditCake } from '@/types/cake'
+import { ModalClient } from '@/app/pedidos/client/ModalClient'
+import { useState } from 'react'
+import { ModalAddress } from '@/app/pedidos/address/ModalAddress'
 
 export const ModalPedidos = () => {
   const { openOrder, handleOpenOrder } = useModal()
@@ -169,6 +172,8 @@ export const ModalPedidos = () => {
     }
   }
 
+  const [openModalClient, setOpenModalClient] = useState(false)
+  const [openModalAddress, setOpenModalAddress] = useState(false)
   return (
     <Dialog
       open={openOrder}
@@ -213,6 +218,12 @@ export const ModalPedidos = () => {
               onSelect={(value) => {
                 methods.setValue('client.id', value)
               }}
+              commandEmpty={
+                <ModalClient
+                  onOpenClient={openModalClient}
+                  handleOpenClient={() => setOpenModalClient(!openModalClient)}
+                />
+              }
             />
 
             <DatePickerForm control={methods.control} name="date" label="Data" />
@@ -263,6 +274,12 @@ export const ModalPedidos = () => {
                     methods.setValue('address', value)
                     methods.setValue('value_frete', addressSelect[typeFrete.toLowerCase()])
                   }}
+                  commandEmpty={
+                    <ModalAddress
+                      openAddress={openModalAddress}
+                      handleOpenAddress={() => setOpenModalAddress(!openModalAddress)}
+                    />
+                  }
                 />
 
                 <SelectForm
@@ -323,7 +340,9 @@ export const ModalPedidos = () => {
             <FormPayment />
 
             <DialogFooter>
-              <Button type="submit">Salvar</Button>
+              <Button type="submit" disabled={openModalClient || openModalAddress}>
+                Salvar
+              </Button>
             </DialogFooter>
           </form>
         </Form>

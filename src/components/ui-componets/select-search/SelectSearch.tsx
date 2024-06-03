@@ -15,6 +15,7 @@ interface SelectSearchProps<Tdata> {
   description?: string
   showMessageError?: boolean
   className?: string
+  commandEmpty?: React.ReactNode
 }
 
 interface Option {
@@ -30,6 +31,7 @@ export function SelectSearch<Tdata>({
   description,
   className,
   showMessageError = false,
+  commandEmpty,
   onSelect,
 }: SelectSearchProps<Tdata>) {
   const [open, setOpen] = useState(false)
@@ -58,7 +60,7 @@ export function SelectSearch<Tdata>({
               <PopoverContent align="start">
                 <Command>
                   <CommandInput placeholder="Procuar" />
-                  <CommandEmpty>Não encontrado</CommandEmpty>
+                  <CommandEmpty>{commandEmpty ? commandEmpty : 'Não encontrado'}</CommandEmpty>
 
                   <CommandList>
                     {data?.map((item) => (

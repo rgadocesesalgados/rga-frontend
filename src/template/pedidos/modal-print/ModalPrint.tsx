@@ -13,7 +13,7 @@ import { Courier_Prime } from 'next/font/google'
 const courierPrime = Courier_Prime({ weight: ['400', '700'], subsets: ['latin'] })
 
 export const ModalPrint = () => {
-  const [showButtonPrint, setShowButtonPrint] = useState(!true)
+  const [showButtonPrint, setShowButtonPrint] = useState(true)
   const { orders } = useContextOrders()
   const { id } = useView()
 

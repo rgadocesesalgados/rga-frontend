@@ -6,9 +6,12 @@ import { useModalPrint } from '@/contexts/modalPrint'
 import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useContextOrders'
 import { toBRL } from '@/app/utils/toBRL'
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { GetOrderProduct } from '@/types/order-product'
 import { Courier_Prime } from 'next/font/google'
+
+import html2canvas from 'html2canvas'
+import { Camera } from 'lucide-react'
 
 const courierPrime = Courier_Prime({ weight: ['400', '700'], subsets: ['latin'] })
 
@@ -27,10 +30,26 @@ export const ModalPrint = () => {
     return [...acc, product.category.name]
   }, [] as string[])
 
+  const modalPrintScreen = useRef<HTMLDivElement>()
+
+  const handlePrintScreen = async () => {
+    const modalPrint = modalPrintScreen.current
+
+    const canvas = await html2canvas(modalPrint, { height: modalPrint.scrollHeight + 15 })
+
+    const dataURL = canvas.toDataURL('image/png')
+
+    return dataURL
+  }
+
+  const [dataURL, setDataURL] = useState('')
+
   return (
     <S.container data-open={open} className={courierPrime.className}>
-      <div className="flex w-11/12 flex-col gap-14 md:w-1/3">
+      <div className="flex w-11/12 flex-col gap-14 p-5 md:w-96" ref={modalPrintScreen}>
         <div>
+          {dataURL && <img src={dataURL} alt="" className="rounded-2xl border shadow-2xl" />}
+
           <div className="flex gap-5 font-bold">
             <div>{orderSelected?.client.name}</div>
             <div>{new Date(orderSelected?.date).toLocaleDateString()}</div>
@@ -152,25 +171,54 @@ export const ModalPrint = () => {
         <div className="font-bold">{orderSelected?.hour}</div>
       </div>
       {showButtonPrint && (
-        <Button type="button" variant="outline" className="text-red-500" onClick={() => handleOpen()}>
-          voltar
-        </Button>
-      )}
-      {showButtonPrint && (
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => {
-            setShowButtonPrint(false)
-            setTimeout(() => {
-              window.print()
-              setShowButtonPrint(true)
-            }, 10)
-          }}
-          className="font-bold"
-        >
-          Imprimir
-        </Button>
+        <div className="fixed right-5 top-5 flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="text-red-500"
+            onClick={() => {
+              handleOpen()
+              setDataURL('')
+            }}
+          >
+            voltar
+          </Button>
+
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              setShowButtonPrint(false)
+              setDataURL('')
+              setTimeout(() => {
+                window.print()
+                setShowButtonPrint(true)
+              }, 10)
+            }}
+            className="font-bold"
+          >
+            Imprimir
+          </Button>
+
+          <Button
+            type="button"
+            onClick={async () => {
+              setShowButtonPrint(false)
+              setDataURL('')
+
+              setTimeout(async () => {
+                const urlImage = await handlePrintScreen()
+                setDataURL(urlImage)
+              }, 1000)
+
+              setTimeout(async () => {
+                setShowButtonPrint(true)
+              }, 1000)
+            }}
+          >
+            Tirar print <Camera className="ml-2 h-5 w-5" />
+          </Button>
+        </div>
       )}
     </S.container>
   )

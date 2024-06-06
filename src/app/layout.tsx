@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={poppins.className}>
         <ProvidersContext>{children}</ProvidersContext>
 
-        <ToastContainer autoClose={3000} />
+        <ToastContainer autoClose={300} />
       </body>
     </html>
   )

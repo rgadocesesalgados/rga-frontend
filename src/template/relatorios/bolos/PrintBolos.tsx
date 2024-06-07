@@ -16,8 +16,10 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
           </div>
           <div className="mb-5 font-bold">{bolo.client}</div>
           <div className="font-bold">{bolo.peso}kg</div> {bolo.recheio.map((r) => r.name).join(', ')}
+          <div>{bolo.formato}</div>
           <div className="capitalize">{bolo.cobertura.toLocaleLowerCase()}</div>
           <div className="py-5">{bolo.description}</div>
+          <div>{bolo.hour}</div>
           {bolo.banner && <img src={bolo.banner} alt="imagem do bolo" className="w-full rounded-2xl" />}
         </div>
       ))}

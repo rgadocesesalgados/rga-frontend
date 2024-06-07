@@ -40,7 +40,9 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
             <div className="flex justify-between">
               {bolo.hour} <span className="text-red-500">{day[new Date(bolo.date).getDay()]}</span>
             </div>
-            {bolo.banner && <img src={bolo.banner} alt="imagem do bolo" className="w-full rounded-2xl" />}
+            {bolo.banner && (
+              <img src={bolo.banner} alt="imagem do bolo" className="aspect-square rounded-2xl object-cover" />
+            )}
           </div>
         )
       })}

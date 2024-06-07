@@ -9,10 +9,10 @@ import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 interface DatePicker {
-  value: Date
-  onChange: () => void
+  onChange: (date: Date) => void
+  value?: Date
 }
-export function DatePickerDemo({ value, onChange }: DatePicker) {
+export function DatePicker({ onChange, value }: DatePicker) {
   return (
     <Popover>
       <PopoverTrigger asChild>

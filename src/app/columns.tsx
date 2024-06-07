@@ -20,9 +20,15 @@ export const columns: ColumnDef<DeliveryProps>[] = [
     filterFn: (row, columnId, value) => {
       const dateValue = new Date(row.original[columnId])
 
-      const filterDate = new Date(value)
+      const filterDateInitial = new Date(value)
 
-      return filterDate <= dateValue
+      const filterDateEnd = new Date(value)
+
+      filterDateInitial.setHours(0, 0, 0, 0)
+
+      filterDateEnd.setHours(23, 59, 59, 999)
+
+      return filterDateInitial <= dateValue && filterDateEnd >= dateValue
     },
   },
 ]

@@ -1,4 +1,4 @@
-import { DatePickerDemo } from '@/components/ui/date-picker'
+import { DatePicker } from '@/components/ui/date-picker'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Control, Path } from 'react-hook-form'
 
@@ -18,7 +18,7 @@ export function DatePickerForm<Tdata>({ control, name, label, description, showM
         <FormItem className="flex flex-col gap-2">
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <DatePickerDemo value={field.value as Date} onChange={field.onChange} />
+            <DatePicker value={field.value as Date} onChange={field.onChange} />
           </FormControl>
           {description && <FormDescription>{description}.</FormDescription>}
           {showMessageError && <FormMessage />}

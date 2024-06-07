@@ -25,20 +25,21 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
       {dataSorted?.map((bolo, index) => {
         const date = new Date(bolo.date)
         return (
-          <div key={index} className="h-min bg-white p-5">
+          <div key={index} className="h-min break-inside-avoid break-after-auto bg-white p-5 text-sm">
             <div className="flex justify-between">
               <div>
                 {`${date.getDate()}`.length === 1 ? `0${date.getDate()}` : `${date.getDate()}`}/
                 {`${date.getMonth()}`.length === 1 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`}
               </div>
-              <div className="font-bold text-red-500">{day[new Date(bolo.date).getDay()]}</div>
             </div>
             <div className="mb-5 font-bold">{bolo.client}</div>
             <div className="font-bold">{bolo.peso}kg</div> {bolo.recheio.map((r) => r.name).join(', ')}
             <div>{bolo.formato}</div>
             <div className="capitalize">{bolo.cobertura.toLocaleLowerCase()}</div>
             <div className="py-5">{bolo.description}</div>
-            <div>{bolo.hour}</div>
+            <div className="flex justify-between">
+              {bolo.hour} <span className="text-red-500">{day[new Date(bolo.date).getDay()]}</span>
+            </div>
             {bolo.banner && <img src={bolo.banner} alt="imagem do bolo" className="w-full rounded-2xl" />}
           </div>
         )

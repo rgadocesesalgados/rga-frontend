@@ -209,11 +209,9 @@ export const ModalPrint = () => {
               setTimeout(async () => {
                 const urlImage = await handlePrintScreen()
                 setDataURL(urlImage)
-              }, 1000)
+              }, 1)
 
-              setTimeout(async () => {
-                setShowButtonPrint(true)
-              }, 1000)
+              setShowButtonPrint(true)
             }}
           >
             Tirar print <Camera className="ml-2 h-5 w-5" />

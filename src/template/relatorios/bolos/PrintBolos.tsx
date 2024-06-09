@@ -1,11 +1,28 @@
 'use client'
+
+import * as S from './styles'
+
 import { Button } from '@/components/ui/button'
 import { useModalPrint } from '@/contexts/modalPrint'
 import { GetRelatorio } from '@/types/relatorios/get'
+import { Noto_Sans } from 'next/font/google'
 import { useState } from 'react'
 
 const day = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'] as const
+const massa = {
+  MASSA_MESCLADA: 'Massa mesclada',
+  BRANCA: 'Massa branca',
+  CHOCOLATE: 'Massa chocolate',
+} as const
 
+const cobertura = {
+  AVELA_BATIDO: 'Avelã batido',
+  CLARA_QUEIMADA: 'Clara queimada',
+  CHANTILLY: 'Chantilly',
+  NATA: 'Nata',
+} as const
+
+const noto_sans = Noto_Sans({ subsets: ['latin'], weight: '400' })
 export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
   const { handleOpen } = useModalPrint()
   const [showButton, setShowButton] = useState(true)
@@ -21,29 +38,71 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
   )
 
   return (
-    <div className="absolute top-0 grid w-full border-collapse grid-cols-4 divide-x divide-y bg-white text-sm">
+    <S.container className={noto_sans.className}>
       {dataSorted?.map((bolo, index) => {
         const date = new Date(bolo.date)
+
         return (
-          <div key={index} className="h-min break-inside-avoid break-after-auto bg-white p-5 text-sm">
-            <div className="flex justify-between">
-              <div>
+          <S.cake key={index}>
+            <div>
+              <S.day>
                 {`${date.getDate()}`.length === 1 ? `0${date.getDate()}` : `${date.getDate()}`}/
                 {`${date.getMonth()}`.length === 1 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`}
-              </div>
+              </S.day>
+
+              <S.customer>{bolo.client}</S.customer>
             </div>
-            <div className="mb-5 font-bold">{bolo.client}</div>
-            <div className="font-bold">{bolo.peso}kg</div> {bolo.recheio.map((r) => r.name).join(', ')}
-            <div>{bolo.formato}</div>
-            <div className="capitalize">{bolo.cobertura.toLocaleLowerCase()}</div>
-            <div className="py-5">{bolo.description}</div>
-            <div className="flex justify-between">
-              {bolo.hour} <span className="text-red-500">{day[new Date(bolo.date).getDay()]}</span>
+
+            <S.cakeBatterContainer>
+              {bolo.massa !== 'BRANCA' && (
+                <S.cakeBatter>
+                  {massa[bolo.massa]}
+                  <S.atention>*</S.atention>
+                </S.cakeBatter>
+              )}
+
+              <S.noWrap>
+                <S.weight>{bolo.peso}kg</S.weight>
+
+                <S.shape>{bolo.formato.toLocaleLowerCase()}</S.shape>
+              </S.noWrap>
+            </S.cakeBatterContainer>
+
+            <div>
+              {bolo.recheio.map((r) => (
+                <S.filling key={r.name}>{r.name}</S.filling>
+              ))}
             </div>
-            {bolo.banner && (
-              <img src={bolo.banner} alt="imagem do bolo" className="aspect-square rounded-2xl object-cover" />
-            )}
-          </div>
+
+            <div>
+              {bolo.cobertura === 'CHANTILLY' && !bolo.description && !bolo.banner && (
+                <S.cover>
+                  Normal
+                  <S.model>
+                    NTM<S.atention>*</S.atention>
+                  </S.model>
+                </S.cover>
+              )}
+
+              {bolo.cobertura !== 'CHANTILLY' && <S.cover>{cobertura[bolo.cobertura]}</S.cover>}
+
+              {bolo.cobertura === 'CHANTILLY' && bolo.description && <S.description>{bolo.description}</S.description>}
+
+              {bolo.cobertura !== 'CHANTILLY' && bolo.description && <S.description>{bolo.description}</S.description>}
+
+              {bolo.cobertura === 'CHANTILLY' && bolo.banner && (
+                <S.model>
+                  TM<S.atention>*</S.atention>
+                </S.model>
+              )}
+            </div>
+
+            <S.dayAndHourContainer>
+              {bolo.hour} <S.atention>{day[new Date(bolo.date).getDay()]}</S.atention>
+            </S.dayAndHourContainer>
+
+            {bolo.banner && <S.banner src={bolo.banner} alt="imagem do bolo" />}
+          </S.cake>
         )
       })}
 
@@ -72,6 +131,6 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
           </Button>
         </div>
       )}
-    </div>
+    </S.container>
   )
 }

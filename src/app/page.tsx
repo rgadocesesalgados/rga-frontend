@@ -49,7 +49,7 @@ export default function Home() {
         <div className="flex justify-between gap-2 py-5">
           <h1 className="text-xl font-bold">Entregas</h1>
           <DatePicker
-            value={(table.getColumn(`date`)?.getFilterValue() as Date) ?? new Date()}
+            value={table.getColumn(`date`)?.getFilterValue() as Date}
             onChange={(date) => {
               table.getColumn(`date`)?.setFilterValue(date)
             }}

@@ -10,7 +10,7 @@ grid-cols-4
 divide-x
 divide-y
 bg-white
-text-xs
+text-[0.5rem]
 `
 
 export const cake = tw.div`
@@ -18,7 +18,7 @@ flex
 break-inside-avoid
 break-after-auto
 flex-col
-gap-5
+gap-3
 bg-white
 p-5
 `

@@ -75,24 +75,19 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
             </div>
 
             <div>
-              {bolo.cobertura === 'CHANTILLY' && !bolo.description && !bolo.banner && (
-                <S.cover>
-                  Normal
-                  <S.model>
-                    NTM<S.atention>*</S.atention>
-                  </S.model>
-                </S.cover>
-              )}
+              {bolo.cobertura === 'CHANTILLY' && !bolo.description && !bolo.banner && <S.cover>Normal</S.cover>}
 
               {bolo.cobertura !== 'CHANTILLY' && <S.cover>{cobertura[bolo.cobertura]}</S.cover>}
 
-              {bolo.cobertura === 'CHANTILLY' && bolo.description && <S.description>{bolo.description}</S.description>}
+              {bolo.description && <S.description>{bolo.description}</S.description>}
 
-              {bolo.cobertura !== 'CHANTILLY' && bolo.description && <S.description>{bolo.description}</S.description>}
-
-              {bolo.cobertura === 'CHANTILLY' && bolo.banner && (
+              {bolo.banner ? (
                 <S.model>
                   TM<S.atention>*</S.atention>
+                </S.model>
+              ) : (
+                <S.model>
+                  NTM<S.atention>*</S.atention>
                 </S.model>
               )}
             </div>

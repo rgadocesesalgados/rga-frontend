@@ -14,8 +14,8 @@ export const useFormAddress = () => {
       bairro: '',
       ponto_de_referencia: '',
       cidade: '',
-      frete_moto: 0,
-      frete_carro: 0,
+      frete_moto: 5,
+      frete_carro: 10,
     },
   })
   return methods

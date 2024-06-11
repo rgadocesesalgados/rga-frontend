@@ -112,21 +112,42 @@ const status = z.enum(['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'ENTREGUE', 'CANCEL
 
 export type StatusProps = z.infer<typeof status>
 
-export const schema = z.object({
-  id: z.string().optional(),
-  date: z.coerce.date(),
-  hour: z.string(),
-  cor_forminhas: z.string().optional(),
-  observations: z.string(),
-  total: z.coerce.number().step(0.01),
-  delivery: z.boolean(),
-  status,
-  client: z.object({ id: z.string() }),
+export const schema = z
+  .object({
+    id: z.string().optional(),
+    date: z.coerce.date(),
+    hour: z.string(),
+    cor_forminhas: z.string().optional(),
+    observations: z.string(),
+    total: z.coerce.number().step(0.01),
+    delivery: z.boolean(),
+    status,
+    client: z.object({ id: z.string() }),
 
-  cakes,
-  orderProduct,
-  logistic: z.enum(['FRETE_CARRO', 'FRETE_MOTO']).optional(),
-  value_frete: z.coerce.number().step(0.01).optional(),
-  address: z.string().optional(),
-  payment,
-})
+    cakes,
+    orderProduct,
+    logistic: z.enum(['FRETE_CARRO', 'FRETE_MOTO']).optional(),
+    value_frete: z.coerce.number().step(0.01).optional(),
+    address: z.string().optional(),
+    payment,
+  })
+  .refine(
+    (fields) => {
+      if (fields.delivery) {
+        return !!fields.logistic
+      }
+
+      return true
+    },
+    { message: 'Logística deve ser preenchida.', path: ['logistic'] },
+  )
+  .refine(
+    (fields) => {
+      if (fields.cakes?.length > 0 && fields.delivery) {
+        return fields.logistic === 'FRETE_CARRO'
+      }
+
+      return true
+    },
+    { message: 'Se bolo for para entrega, a logística deve ser FRETE_CARRO', path: ['logistic'] },
+  )

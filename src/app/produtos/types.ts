@@ -10,6 +10,7 @@ export type ProductProps = {
   min_quantity: number
   banner: string
   category_name: string
+  size: 'PP' | 'P' | 'M' | 'G' | 'GG' | 'UNIT' | 'NOT'
   stock: number
   category_id: string
   stock_id: string

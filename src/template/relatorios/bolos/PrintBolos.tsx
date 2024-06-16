@@ -84,7 +84,7 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
               <div className="flex gap-2">
                 {bolo.banner ? (
                   <S.model>
-                    TM<S.atention>*</S.atention>
+                    NTM<S.atention>*</S.atention>
                   </S.model>
                 ) : (
                   <S.model>

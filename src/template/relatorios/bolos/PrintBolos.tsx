@@ -81,15 +81,27 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
 
               {bolo.description && <S.description>{bolo.description}</S.description>}
 
-              {bolo.banner ? (
-                <S.model>
-                  TM<S.atention>*</S.atention>
-                </S.model>
-              ) : (
-                <S.model>
-                  NTM<S.atention>*</S.atention>
-                </S.model>
-              )}
+              <div className="flex gap-2">
+                {bolo.banner ? (
+                  <S.model>
+                    TM<S.atention>*</S.atention>
+                  </S.model>
+                ) : (
+                  <S.model>
+                    TM<S.atention>*</S.atention>
+                  </S.model>
+                )}
+
+                {bolo.topper ? (
+                  <S.model>
+                    TT<S.atention>*</S.atention>
+                  </S.model>
+                ) : (
+                  <S.model>
+                    ST<S.atention>*</S.atention>
+                  </S.model>
+                )}
+              </div>
             </div>
 
             <S.dayAndHourContainer>

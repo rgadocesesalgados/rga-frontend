@@ -48,7 +48,7 @@ export const columns: ColumnDef<GetOrder>[] = [
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Retirada/Entrega" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Delivery" />
     },
     cell: ({ cell }) => (cell.getValue<boolean>() ? 'Entrega' : 'Retirada'),
   },

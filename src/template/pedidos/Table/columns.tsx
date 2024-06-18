@@ -40,7 +40,7 @@ export const columns: ColumnDef<GetOrder>[] = [
 
       return <Column.SortingHead label="Nome" toggleSorting={toggleSorting} />
     },
-    cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
+    cell: ({ cell }) => cell.getValue<string>(),
   },
 
   {

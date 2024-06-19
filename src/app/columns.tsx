@@ -3,11 +3,26 @@
 import { ColumnDef } from '@tanstack/react-table'
 
 import { DeliveryProps } from './page'
+import { Bike, Truck } from 'lucide-react'
 
 export const columns: ColumnDef<DeliveryProps>[] = [
   {
     accessorKey: 'hour',
     header: 'Horário',
+  },
+  {
+    accessorKey: 'type_delivery',
+    header: 'Frete',
+    cell: ({ getValue }) =>
+      getValue<DeliveryProps['type_delivery']>() === 'FRETE_CARRO' ? (
+        <div className="w-min rounded-xl bg-yellow-400 p-2">
+          <Truck className="h-4 w-4" />
+        </div>
+      ) : (
+        <div className="w-min rounded-xl bg-violet-700 p-2 text-white">
+          <Bike className="h-4 w-4" />
+        </div>
+      ),
   },
   {
     accessorKey: 'address_complete',

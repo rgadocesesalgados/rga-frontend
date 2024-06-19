@@ -14,6 +14,7 @@ export interface DeliveryProps {
   hour: string
   client_name: string
   address_complete: string
+  type_delivery: 'FRETE_CARRO' | 'FRETE_MOTO'
 }
 
 const getDelivery = async () => {

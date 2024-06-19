@@ -40,7 +40,7 @@ export const columns: ColumnDef<GetOrder>[] = [
 
       return <Column.SortingHead label="Nome" toggleSorting={toggleSorting} />
     },
-    cell: ({ cell }) => <div className="text-nowrap">{cell.getValue<string>()}</div>,
+    cell: ({ cell }) => cell.getValue<string>(),
   },
 
   {
@@ -48,7 +48,7 @@ export const columns: ColumnDef<GetOrder>[] = [
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
 
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Retirada/Entrega" />
+      return <Column.SortingHead toggleSorting={toggleSorting} label="Delivery" />
     },
     cell: ({ cell }) => (cell.getValue<boolean>() ? 'Entrega' : 'Retirada'),
   },

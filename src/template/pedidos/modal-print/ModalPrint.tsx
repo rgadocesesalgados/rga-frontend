@@ -96,6 +96,30 @@ export const ModalPrint = () => {
             )
           })}
         </S.containerCakes>
+
+        <div>
+          {
+            <div className="py-8">
+              {orderSelected?.docesPP.map((product) => {
+                return (
+                  <div key={product.id} className="flex gap-2">
+                    <div>{product.quantity}</div> <div>{product.name}</div>
+                  </div>
+                )
+              })}
+
+              <div className="flex flex-nowrap items-baseline font-bold">
+                <div className="flex flex-nowrap gap-2">
+                  <div>{quantityProduct(orderSelected?.docesPP)}</div>
+                  <div className="text-nowrap">doces</div>
+                </div>
+                <Divider />
+                <div>{toBRL(priceProduct(orderSelected?.docesPP))}</div>
+              </div>
+            </div>
+          }
+        </div>
+
         <div>
           {categories?.map((category) => {
             return (

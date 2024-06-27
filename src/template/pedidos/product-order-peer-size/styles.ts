@@ -15,13 +15,10 @@ capitalize
 `
 
 export const containerProduct = tw.div`
-grid
-grid-cols-2
+flex
 gap-3
 rounded-xl
 p-5
 even:bg-slate-50
-md:grid-cols-5
-sm:grid-cols-3
 items-end
 `

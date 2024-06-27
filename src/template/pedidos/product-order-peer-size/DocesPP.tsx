@@ -27,9 +27,9 @@ export const DocesPP = () => {
         return (
           <S.containerProduct key={field.id}>
             <InputForm
+              placeholder="10"
               control={control}
               name={`docesPP.${productIndex}.quantity`}
-              label="Quatidade"
               type="number"
               typeof="numeric"
               min={0}
@@ -40,7 +40,6 @@ export const DocesPP = () => {
             />
 
             <SelectSearch
-              label="Produto"
               control={control}
               name={`docesPP.${productIndex}.product_id`}
               data={getProducts(products)}
@@ -56,9 +55,9 @@ export const DocesPP = () => {
             />
 
             <InputForm
+              placeholder="Preço"
               control={control}
               name={`docesPP.${productIndex}.price`}
-              label="Preço/R$"
               type="number"
               typeof="numeric"
               step={0.01}
@@ -70,9 +69,9 @@ export const DocesPP = () => {
             />
 
             <InputForm
+              className="hidden"
               control={control}
               name={`docesPP.${productIndex}.total`}
-              label="Total/R$"
               type="number"
               typeof="numeric"
               min={0}
@@ -81,8 +80,7 @@ export const DocesPP = () => {
             />
 
             <Button type="button" variant="ghost" onClick={() => docesPP.remove(productIndex)} className="text-red-500">
-              Remover produto
-              <Trash2 className="ml-3 h-4 w-4" />
+              <Trash2 className="h-4 w-4" />
             </Button>
           </S.containerProduct>
         )

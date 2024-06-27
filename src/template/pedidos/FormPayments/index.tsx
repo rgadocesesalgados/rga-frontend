@@ -19,7 +19,7 @@ export const FormPayment = () => {
         const methods = useFormContext<FormDataPedidos>()
         return (
           <div key={field.id} className="rounded-xl even:bg-slate-50">
-            <div key={field.id} className="flex flex-wrap gap-3 py-3">
+            <div key={field.id} className="flex gap-3 py-3">
               <SelectForm
                 control={methods.control}
                 name={`payment.${index}.formPayment`}
@@ -54,7 +54,7 @@ export const FormPayment = () => {
                 label="Pago"
               />
 
-              <DatePickerForm control={methods.control} name={`payment.${index}.date`} label="Data" />
+              <DatePickerForm control={methods.control} name={`payment.${index}.date`} label="Data" className="w-min" />
 
               <Button
                 type="button"

@@ -85,8 +85,9 @@ export default function Relatorios() {
 
           <Toppers data={relatorios?.toppers} />
 
-          <div>
-            <Button onClick={handleOpenDocesPP}>Imprimir Doces PP</Button>
+          <div className="flex justify-between gap-5">
+            <p className="ml-2 text-lg font-bold">Doces genericos</p>
+            <Button onClick={handleOpenDocesPP}>Imprimir doces genericos</Button>
           </div>
           <Produtos data={relatorios?.produtos} />
         </FormProvider>

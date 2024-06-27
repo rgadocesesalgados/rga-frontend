@@ -11,17 +11,18 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 interface DatePicker {
   onChange: (date: Date) => void
   value?: Date
+  className?: string
 }
-export function DatePicker({ onChange, value }: DatePicker) {
+export function DatePicker({ onChange, value, className }: DatePicker) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={'outline'}
-          className={cn('w-[280px] justify-start text-left font-normal', !value && 'text-muted-foreground')}
+          className={cn('w-[280px] justify-start text-left font-normal', !value && 'text-muted-foreground', className)}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? value.toLocaleDateString() : <span>Selecione uma data</span>}
+          {value ? value.toLocaleDateString() : <span>Data</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

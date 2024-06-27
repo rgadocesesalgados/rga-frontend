@@ -15,6 +15,7 @@ export function InputForm<Tdata>({
   label,
   description,
   showMessageError = false,
+  className,
   onChange,
   ...props
 }: InputProps<Tdata>) {
@@ -24,7 +25,7 @@ export function InputForm<Tdata>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={className}>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl {...field}>
             <Input {...props} />

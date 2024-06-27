@@ -8,8 +8,16 @@ interface DatePickerProps<Tdata> {
   label?: string
   description?: string
   showMessageError?: boolean
+  className?: string
 }
-export function DatePickerForm<Tdata>({ control, name, label, description, showMessageError }: DatePickerProps<Tdata>) {
+export function DatePickerForm<Tdata>({
+  control,
+  name,
+  label,
+  description,
+  showMessageError,
+  className,
+}: DatePickerProps<Tdata>) {
   return (
     <FormField
       control={control}
@@ -18,7 +26,7 @@ export function DatePickerForm<Tdata>({ control, name, label, description, showM
         <FormItem className="flex flex-col gap-2">
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <DatePicker value={field.value as Date} onChange={field.onChange} />
+            <DatePicker value={field.value as Date} onChange={field.onChange} className={className} />
           </FormControl>
           {description && <FormDescription>{description}.</FormDescription>}
           {showMessageError && <FormMessage />}

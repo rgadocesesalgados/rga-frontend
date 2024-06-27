@@ -75,7 +75,6 @@ export const ModalCategory = () => {
               showMessageError
               type="number"
               typeof="numeric"
-              min={0}
               label="Prioriade"
               description="Esse campo irá definir qual categia tem prioriade no pedido"
             />

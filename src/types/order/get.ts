@@ -11,6 +11,7 @@ export interface GetOrder {
   address: GetAddressOrder
   bolo: GetCake[]
   orderProduct: GetOrderProduct[]
+  docesPP: GetOrderProduct[]
   payment: GetPayment[]
   date: Date
   hour: string

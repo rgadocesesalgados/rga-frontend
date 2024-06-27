@@ -19,6 +19,7 @@ import { useFormRelatorio } from './useFormRelatorio'
 import { FormData } from './types'
 import { CirclePlus, CircleX } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { PrintDocesPP } from '@/template/relatorios/produtos/PrintDocesPP'
 
 const status: GetOrder['status'][] = ['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'CANCELADO', 'ENTREGUE']
 
@@ -32,11 +33,11 @@ export default function Relatorios() {
     getRelatorios({ dateFinal: null, dateInicial: null, status: ['RASCUNHO', 'ANOTADO'] })
   }, [])
 
-  const { open, openTopper } = useModalPrint()
+  const { open, openTopper, openDocesPP, handleOpenDocesPP } = useModalPrint()
   const { append, fields, remove } = useFieldArray<FormData>({ control, name: 'status' })
   return (
     <Layout>
-      <Wrap data-open={open || openTopper} className="space-y-10 data-[open=true]:hidden">
+      <Wrap data-open={open || openTopper || openDocesPP} className="space-y-10 data-[open=true]:hidden">
         <FormProvider {...form}>
           <Form {...form}>
             <form
@@ -84,6 +85,9 @@ export default function Relatorios() {
 
           <Toppers data={relatorios?.toppers} />
 
+          <div>
+            <Button onClick={handleOpenDocesPP}>Imprimir Doces PP</Button>
+          </div>
           <Produtos data={relatorios?.produtos} />
         </FormProvider>
       </Wrap>
@@ -91,6 +95,8 @@ export default function Relatorios() {
       {open && <PrintBolos data={relatorios?.bolos} />}
 
       {openTopper && <PrintToppers data={relatorios?.toppers} />}
+
+      {openDocesPP && <PrintDocesPP data={relatorios?.docesPP} />}
     </Layout>
   )
 }

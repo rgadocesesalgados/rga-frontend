@@ -86,7 +86,7 @@ export const columns: ColumnDef<GetOrder>[] = [
       const methods = useFormContext<FormDataPedidos>()
       const linha = row.original
 
-      const { address, orderProduct, date, bolo, payment, ...rest } = linha
+      const { address, orderProduct, date, bolo, payment, docesPP, ...rest } = linha
 
       const order: FormDataPedidos = {
         address: address?.id,
@@ -114,6 +114,9 @@ export const columns: ColumnDef<GetOrder>[] = [
         })),
         orderProduct: orderProduct.reduce(
           (acc, item) => {
+            if (item.category.priority < 0) {
+              return acc
+            }
             if (typeof acc[item.category.priority] === 'undefined') {
               acc[item.category.priority] = [item]
 
@@ -126,6 +129,7 @@ export const columns: ColumnDef<GetOrder>[] = [
           },
           [] as FormDataPedidos['orderProduct'],
         ),
+        docesPP,
         date: new Date(date),
         payment: payment.map((pay) => {
           return {

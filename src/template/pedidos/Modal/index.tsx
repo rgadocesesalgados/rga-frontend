@@ -27,6 +27,7 @@ import { EditCake } from '@/types/cake'
 import { ModalClient } from '@/app/pedidos/client/ModalClient'
 import { useState } from 'react'
 import { ModalAddress } from '@/app/pedidos/address/ModalAddress'
+import { DocesPP } from '../product-order-peer-size'
 
 export const ModalPedidos = () => {
   const { openOrder, handleOpenOrder } = useModal()
@@ -45,11 +46,19 @@ export const ModalPedidos = () => {
 
   executeCalculateTotal()
 
-  const submit = async ({ orderProduct, ...data }: FormDataPedidos) => {
+  const submit = async ({ orderProduct, docesPP, ...data }: FormDataPedidos) => {
+    const docesListPP = docesPP.map((product) => {
+      return {
+        product_id: product.product_id,
+        price: product.price,
+        quantity: product.quantity,
+        total: product.total,
+      }
+    })
     const productsList = orderProduct
       .reduce((acc, category) => {
         return [...acc, ...category]
-      })
+      }, [])
       .map((product) => {
         return {
           product_id: product.product_id,
@@ -93,13 +102,14 @@ export const ModalPedidos = () => {
           tem_topper: cake.tem_topper,
         }
       })
+
       editOrder({
         id: data.id,
         client_id: data.client.id,
         date: data.date,
         hour: data.hour,
         bolo: editCakes,
-        orderProduct: productsList,
+        orderProduct: [...productsList, ...docesListPP],
         cor_forminhas: data.cor_forminhas,
         observations: data.observations,
         delivery: data.delivery,
@@ -157,7 +167,7 @@ export const ModalPedidos = () => {
         total: data.total,
         status: data.status,
         cakes,
-        products: productsList,
+        products: [...productsList, ...docesListPP],
         payments,
       })
         .then(() => {
@@ -174,6 +184,7 @@ export const ModalPedidos = () => {
 
   const [openModalClient, setOpenModalClient] = useState(false)
   const [openModalAddress, setOpenModalAddress] = useState(false)
+
   return (
     <Dialog
       open={openOrder}
@@ -232,9 +243,13 @@ export const ModalPedidos = () => {
 
             <CakesFullForm />
 
-            {categorys?.map((category) => (
-              <ProductOrder key={category.id} index={category.priority} category={category} />
-            ))}
+            <DocesPP />
+
+            {categorys
+              .filter((category) => category.priority >= 0)
+              .map((category) => (
+                <ProductOrder key={category.id} index={category.priority} category={category} />
+              ))}
 
             <InputForm
               control={methods.control}

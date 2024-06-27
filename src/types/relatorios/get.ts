@@ -15,6 +15,13 @@ export interface GetRelatorio {
   bolos: GetBolos[]
   toppers: GetToppers[]
   produtos: GetProdutos[]
+  docesPP: {
+    client: string
+    date: Date
+    hour: string
+    type_frete?: 'FRETE_CARRO' | 'FRETE_MOTO'
+    products: { name: string; quantity: number }[]
+  }[]
   // cor_forminhas: string
   // observations: string
   // total: number

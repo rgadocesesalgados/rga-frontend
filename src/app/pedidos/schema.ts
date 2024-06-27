@@ -126,6 +126,29 @@ export const schema = z
 
     cakes,
     orderProduct,
+    docesPP: z
+      .array(
+        z.object({
+          id: z.string().optional(),
+          product_id: z.string(),
+          quantity: z.coerce.number(),
+          price: z.coerce.number(),
+          total: z.coerce.number(),
+        }),
+      )
+      .refine(
+        (fields) => {
+          const count = fields.reduce((acc, item) => {
+            if (item.quantity > 0) {
+              return acc + item.quantity
+            }
+            return acc
+          }, 0)
+
+          return count % 25 === 0
+        },
+        { message: 'A quantidade de doces está fora do padrão', path: ['0.quantity'] },
+      ),
     logistic: z.enum(['FRETE_CARRO', 'FRETE_MOTO']).optional(),
     value_frete: z.coerce.number().step(0.01).optional(),
     address: z.string().optional(),

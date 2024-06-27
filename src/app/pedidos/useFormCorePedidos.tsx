@@ -91,7 +91,7 @@ export const useOrderProduct = (categoryIndex: number) => {
     setValue(`orderProduct.${categoryIndex}.${productIndex}.total`, value)
 
   const filterProducts = (products: ProductProps[], category: CategoryProps) => {
-    return products.filter((product) => product.category_id === category.id)
+    return products.filter((product) => product.category_id === category.id && product.size !== 'PP')
   }
 
   const convertProductData = (products: ProductProps[]) => {
@@ -118,16 +118,83 @@ export const useOrderProduct = (categoryIndex: number) => {
   }
 }
 
+export const useDocesPP = () => {
+  const { setValue, getValues } = useFormContext<FormDataPedidos>()
+
+  const orderProduct = getValues('docesPP')
+
+  const getProduct = (productIndex: number) => orderProduct[productIndex]
+
+  const getProductQuantity = (productIndex: number) => getProduct(productIndex).quantity
+
+  const getProductPrice = (productIndex: number) => getProduct(productIndex).price
+
+  const getProductTotalPrice = (productIndex: number) => {
+    if (getProductQuantityValidation(productIndex)) return 0
+
+    return getProductPrice(productIndex) * getProductQuantity(productIndex)
+  }
+
+  const getProductQuantityValidation = (productIndex: number) => {
+    if (!getProductPrice(productIndex)) return true
+
+    if (getProductPrice(productIndex) < 0) return true
+
+    if (!getProductQuantity(productIndex)) return true
+
+    if (getProductQuantity(productIndex) < 0) return true
+  }
+
+  const setProductId = ({ productIndex, value }: useOrderProductProps<string>) =>
+    setValue(`docesPP.${productIndex}.product_id`, value)
+
+  const setProductPrice = ({ productIndex, value }: useOrderProductProps<number>) =>
+    setValue(`docesPP.${productIndex}.price`, value)
+
+  const setProductTotalPrice = ({ productIndex, value }: useOrderProductProps<number>) =>
+    setValue(`docesPP.${productIndex}.total`, value)
+
+  const filterProducts = (products: ProductProps[]) => {
+    return products.filter((product) => product.size === 'PP')
+  }
+
+  const convertProductData = (products: ProductProps[]) => {
+    return products.map((product) => ({
+      label: product.name,
+      value: product.id,
+    }))
+  }
+
+  const getProducts = (products: ProductProps[]) => {
+    const filteredProducts = filterProducts(products)
+
+    return convertProductData(filteredProducts)
+  }
+
+  return {
+    getProductQuantity,
+    getProductPrice,
+    getProductTotalPrice,
+    getProducts,
+    setProductId,
+    setProductPrice,
+    setProductTotalPrice,
+  }
+}
+
 export const useOrder = () => {
   const { getValues, setValue } = useFormContext<FormDataPedidos>()
 
   const products = getValues('orderProduct')
+  const docesPP = getValues('docesPP') || []
   const cakes = getValues('cakes')
 
   const getProducts = () => {
-    return products?.reduce((acc, category) => {
+    const allProducts = products?.reduce((acc, category) => {
       return [...acc, ...category]
     }, [])
+
+    return [...allProducts, ...docesPP]
   }
 
   const getProductsPrice = () => {

@@ -98,7 +98,7 @@ export const ModalPrint = () => {
         </S.containerCakes>
 
         <div>
-          {orderSelected?.docesPP.length && (
+          {!!orderSelected?.docesPP.length && (
             <div className="py-8">
               {orderSelected?.docesPP.map((product) => {
                 return (

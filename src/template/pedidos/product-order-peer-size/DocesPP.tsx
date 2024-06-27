@@ -69,9 +69,10 @@ export const DocesPP = () => {
             />
 
             <InputForm
-              className="hidden"
+              className="hidden sm:block"
               control={control}
               name={`docesPP.${productIndex}.total`}
+              placeholder="Total"
               type="number"
               typeof="numeric"
               min={0}

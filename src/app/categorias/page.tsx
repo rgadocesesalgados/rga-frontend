@@ -14,6 +14,9 @@ export default function Categorias() {
       <FormProvider {...methods}>
         <Wrap className="space-y-5">
           <TableCategory>
+            <p className="rounded-2xl border border-yellow-600 bg-white p-5  text-xs text-yellow-600">
+              Categorias com prioridades menors que zero serão ocultadas
+            </p>
             <ModalCategory />
           </TableCategory>
         </Wrap>

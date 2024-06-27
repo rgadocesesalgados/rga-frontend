@@ -110,11 +110,11 @@ export const ModalPrint = () => {
 
               <div className="flex flex-nowrap items-baseline font-bold">
                 <div className="flex flex-nowrap gap-2">
-                  <div>{quantityProduct(orderSelected?.docesPP)}</div>
+                  <div>{quantityProduct(orderSelected?.docesPP || [])}</div>
                   <div className="text-nowrap">doces</div>
                 </div>
                 <Divider />
-                <div>{toBRL(priceProduct(orderSelected?.docesPP))}</div>
+                <div>{toBRL(priceProduct(orderSelected?.docesPP || []))}</div>
               </div>
             </div>
           }

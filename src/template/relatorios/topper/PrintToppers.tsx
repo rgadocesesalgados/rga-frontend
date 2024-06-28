@@ -10,7 +10,11 @@ export const PrintToppers = ({ data }: { data: GetRelatorio['toppers'] }) => {
   return (
     <div className="absolute top-0 grid w-full border-collapse grid-cols-4 divide-x divide-y bg-white text-sm">
       {data?.map((topper, index) => (
-        <div key={index} className="h-min bg-white p-5">
+        <div
+          key={index}
+          className="h-min break-inside-avoid break-after-auto bg-white
+p-5"
+        >
           <div className="mb-5 flex gap-5 font-bold">
             <div>{topper.client}</div>
             {new Date(topper.date).getDate()}/0{new Date(topper.date).getMonth()}

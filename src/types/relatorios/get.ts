@@ -16,6 +16,7 @@ export interface GetRelatorio {
   toppers: GetToppers[]
   produtos: GetProdutos[]
   docesPP: {
+    id: string
     client: string
     date: Date
     hour: string

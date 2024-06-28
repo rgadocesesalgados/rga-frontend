@@ -29,7 +29,7 @@ import { useState } from 'react'
 import { ModalAddress } from '@/app/pedidos/address/ModalAddress'
 import { DocesPP } from '../product-order-peer-size'
 
-export const ModalPedidos = () => {
+export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
   const { openOrder, handleOpenOrder } = useModal()
   const { clients } = useContextClient()
   const { categorys } = useContextCategory()
@@ -119,7 +119,7 @@ export const ModalPedidos = () => {
         status: data.status,
       })
         .then(() => {
-          getAllOrders()
+          getAllOrders(all)
           handleOpenOrder()
           toast.success('Pedido editado com sucesso!')
         })
@@ -171,7 +171,7 @@ export const ModalPedidos = () => {
         payments,
       })
         .then(() => {
-          getAllOrders()
+          getAllOrders(all)
           handleOpenOrder()
           toast.success('Pedido criado com sucesso!')
         })

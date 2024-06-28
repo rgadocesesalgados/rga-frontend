@@ -7,9 +7,9 @@ import { useState } from 'react'
 export const useOrders = () => {
   const [orders, setOrders] = useState<GetOrder[]>([])
 
-  const getAllOrders = async () => {
+  const getAllOrders = async (all = false) => {
     api
-      .get('/order')
+      .get('/order', { params: { all } })
       .then((response) => {
         setOrders(response.data)
         console.log('pedidos: ', response.data)

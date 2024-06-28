@@ -20,13 +20,19 @@ import { FormData } from './types'
 import { CirclePlus, CircleX } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { PrintDocesPP } from '@/template/relatorios/produtos/PrintDocesPP'
+import { api } from '@/services/api/apiClient'
+import { toast } from 'react-toastify'
 
 const status: GetOrder['status'][] = ['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'CANCELADO', 'ENTREGUE']
 
 export default function Relatorios() {
   const form = useFormRelatorio()
 
-  const { control, handleSubmit } = form
+  const { control, handleSubmit, watch } = form
+
+  const statusFilter = watch('status')
+  const dateFinal = watch('dateFinal')
+  const dateInitial = watch('dateInitial')
   const { getRelatorios, relatorios } = useRelatorios()
 
   useEffect(() => {
@@ -85,10 +91,32 @@ export default function Relatorios() {
 
           <Toppers data={relatorios?.toppers} />
 
-          <div className="flex justify-between gap-5">
-            <p className="ml-2 text-lg font-bold">Doces genericos</p>
-            <Button onClick={handleOpenDocesPP}>Imprimir doces genericos</Button>
-          </div>
+          {relatorios?.docesPP.length > 0 && (
+            <div className="flex justify-between gap-5">
+              <p className="ml-2 text-lg font-bold">Doces genericos</p>
+
+              <Button
+                variant="link"
+                onClick={async () => {
+                  const ids = relatorios?.docesPP?.map((docesPP) => docesPP.id) || []
+
+                  await api
+                    .patch('/relatorios', { ids })
+                    .then(() => toast.success('Doces colocados para produção'))
+                    .catch(() => toast.error('Erro ao colocar doces para produção'))
+
+                  await getRelatorios({
+                    dateFinal: dateFinal || null,
+                    dateInicial: dateInitial || null,
+                    status: statusFilter.map((s) => s.value) || [],
+                  }).catch(() => toast.error('Erro ao buscar relatorios'))
+                }}
+              >
+                Produzir
+              </Button>
+              <Button onClick={handleOpenDocesPP}>Imprimir doces genericos</Button>
+            </div>
+          )}
           <Produtos data={relatorios?.produtos} />
         </FormProvider>
       </Wrap>

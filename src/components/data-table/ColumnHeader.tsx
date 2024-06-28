@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Button } from '../ui/button'
-import { ArrowDownIcon, ArrowUpIcon, EyeOff, SortAscIcon } from 'lucide-react'
+import { ArrowDownIcon, ArrowDownUp, ArrowUpIcon, EyeOff } from 'lucide-react'
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>
@@ -36,7 +36,7 @@ export function DataTableColumnHeader<TData, TValue>({
             ) : column.getIsSorted() === 'asc' ? (
               <ArrowUpIcon className="ml-2 h-4 w-4" />
             ) : (
-              <SortAscIcon className="ml-2 h-4 w-4" />
+              <ArrowDownUp className="ml-2 h-4 w-4" />
             )}
           </Button>
         </DropdownMenuTrigger>

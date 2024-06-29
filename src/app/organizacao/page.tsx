@@ -17,6 +17,7 @@ import { useContextProduct } from '@/contexts/dataContexts/productsContext/useCo
 import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
 import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
 import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
+import { DataTablePagination } from '@/components/data-table/Pagination'
 
 export default function Organizacao() {
   const { orders, getAllOrders } = useContextOrders()
@@ -65,6 +66,8 @@ export default function Organizacao() {
               </div>
 
               <DataTable table={table} />
+
+              <DataTablePagination table={table} />
             </div>
           </FormProvider>
         </Wrap>

@@ -98,7 +98,7 @@ export const ModalPrint = () => {
         </S.containerCakes>
 
         <div>
-          {
+          {orderSelected?.docesPP.length > 0 && (
             <div className="py-8">
               {orderSelected?.docesPP.map((product) => {
                 return (
@@ -117,7 +117,7 @@ export const ModalPrint = () => {
                 <div>{toBRL(priceProduct(orderSelected?.docesPP || []))}</div>
               </div>
             </div>
-          }
+          )}
         </div>
 
         <div>

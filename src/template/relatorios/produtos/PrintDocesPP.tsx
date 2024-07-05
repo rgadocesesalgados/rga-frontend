@@ -15,7 +15,7 @@ export const PrintDocesPP = ({ data }: { data: GetRelatorio['docesPP'] }) => {
   const [showButton, setShowButton] = useState(true)
   return (
     <div
-      className={`absolute top-0 grid w-full border-collapse grid-cols-4 divide-x divide-y bg-white text-xs ${noto_sans.className}`}
+      className={`absolute top-0 grid w-full border-collapse grid-cols-4 divide-x divide-y bg-white text-[0.5rem] text-xs ${noto_sans.className}`}
     >
       {data?.map((docesPP, index) => (
         <div

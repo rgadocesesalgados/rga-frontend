@@ -34,7 +34,7 @@ export default function Toppers() {
   }, [])
 
   return (
-    <div className="grid grid-cols-4 divide-x divide-y">
+    <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y">
       {data?.map((topper) => {
         const date = new Date(topper.date)
         return (

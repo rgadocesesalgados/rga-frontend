@@ -39,9 +39,13 @@ export default function Toppers() {
         const date = new Date(topper.date)
         return (
           <div key={topper.id} className="p-10">
-            <div>{date.toLocaleDateString()}</div>
-
-            <div>{topper.client_name}</div>
+            <div className="mb-5 flex justify-between gap-1 font-bold">
+              <div>
+                {`${date.getDate()}`.length === 1 ? `0${date.getDate()}` : `${date.getDate()}`}/
+                {`${date.getMonth()}`.length === 1 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`}
+              </div>
+              <div>{topper.client_name}</div>
+            </div>
 
             <div>Tema: {topper.tema}</div>
 

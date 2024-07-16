@@ -74,7 +74,15 @@ export const ModalPrint = () => {
 
                 <div>Cobertura: {cake.cobertura}</div>
 
-                {cake.description && <div>Descrição: {cake.description}</div>}
+                {cake.cobertura === 'CHANTILLY' && !cake.description && !cake.banner && <div>Descoração Normal</div>}
+
+                {cake.description && (
+                  <div>
+                    <pre>Descrição: {cake.description}</pre>
+                  </div>
+                )}
+
+                <div>{cake.banner ? 'Tem Modelo' : 'Não tem modelo'}</div>
 
                 {cake.topper && (
                   <div className="flex flex-col gap-1 pt-5">
@@ -86,10 +94,15 @@ export const ModalPrint = () => {
 
                     <div>{cake.topper.tema}</div>
                     <div>
-                      {cake.topper.name} - {cake.topper.idade}
+                      {cake.topper.name ? cake.topper.name : 'Sem nome'} -{' '}
+                      {cake.topper.idade ? cake.topper.idade : 'Sem idade'}
                     </div>
 
-                    {cake.topper.description && <div>{cake.topper.description}</div>}
+                    {cake.topper.description && (
+                      <div>
+                        <pre>{cake.topper.description}</pre>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

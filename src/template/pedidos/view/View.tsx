@@ -28,7 +28,7 @@ export const View = () => {
 
   if (!order) return null
 
-  const { client, date, hour, delivery, address, bolo, orderProduct, payment } = order
+  const { client, date, hour, delivery, address, bolo, orderProduct, payment, docesPP } = order
 
   const productsPeerCategory = orderProduct.reduce(
     (acc, product) => {
@@ -192,6 +192,34 @@ export const View = () => {
                 </Table>
               ))}
             </TableBody>
+          </Table>
+        )}
+
+        {docesPP.length > 0 && (
+          <Table className="mt-5">
+            <TableCaption>Doces</TableCaption>
+            <TableHeader>
+              <TableHead>Produto</TableHead>
+              <TableHead>Qtd</TableHead>
+              <TableHead>Preço</TableHead>
+              <TableHead>Total</TableHead>
+            </TableHeader>
+            <TableBody>
+              {docesPP.map((product) => (
+                <TableRow key={product.id}>
+                  <TableHead>{product.name}</TableHead>
+                  <TableCell>{product.quantity}</TableCell>
+                  <TableCell>{toBRL(product.price)}</TableCell>
+                  <TableCell>{toBRL(product.total)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableHead colSpan={3}>Total</TableHead>
+                <TableCell>{toBRL(docesPP.reduce((acc, product) => acc + product.total, 0))}</TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         )}
 

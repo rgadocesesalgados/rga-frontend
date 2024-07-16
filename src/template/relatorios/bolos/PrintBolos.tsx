@@ -79,7 +79,11 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
 
               {bolo.cobertura !== 'CHANTILLY' && <S.cover>{cobertura[bolo.cobertura]}</S.cover>}
 
-              {bolo.description && <S.description>{bolo.description}</S.description>}
+              {bolo.description && (
+                <S.description>
+                  <pre>{bolo.description}</pre>
+                </S.description>
+              )}
 
               <div className="flex gap-2">
                 {bolo.banner ? (

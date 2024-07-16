@@ -12,6 +12,7 @@ interface Tooper {
   name: string
   idade: number
   banner: string
+  description: string
 }
 
 const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
@@ -47,6 +48,10 @@ export default function Toppers() {
 
             <div className="flex gap-2">
               {topper.name && <div>{topper.name}</div>} - {topper.idade && <div>{topper.idade}</div>}
+            </div>
+
+            <div className="py-2">
+              <pre>{topper.description}</pre>
             </div>
 
             <div className="flex justify-between py-2 text-red-600">

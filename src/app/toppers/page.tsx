@@ -39,10 +39,9 @@ export default function Toppers() {
         const date = new Date(topper.date)
         return (
           <div key={topper.id} className="p-10">
-            <div className="flex justify-between font-bold">
-              <div>{topper.client_name}</div>
-              <div>{date.toLocaleDateString()}</div>
-            </div>
+            <div>{date.toLocaleDateString()}</div>
+
+            <div>{topper.client_name}</div>
 
             <div>Tema: {topper.tema}</div>
 

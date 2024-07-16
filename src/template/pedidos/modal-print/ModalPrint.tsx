@@ -78,7 +78,7 @@ export const ModalPrint = () => {
 
                 {cake.description && (
                   <div>
-                    <pre>Descrição: {cake.description}</pre>
+                    <p className="text-wrap">Descrição: {cake.description}</p>
                   </div>
                 )}
 
@@ -100,7 +100,7 @@ export const ModalPrint = () => {
 
                     {cake.topper.description && (
                       <div>
-                        <pre>{cake.topper.description}</pre>
+                        <p>{cake.topper.description}</p>
                       </div>
                     )}
                   </div>

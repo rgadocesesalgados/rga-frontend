@@ -81,7 +81,7 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
 
               {bolo.description && (
                 <S.description>
-                  <pre>{bolo.description}</pre>
+                  <p>{bolo.description}</p>
                 </S.description>
               )}
 

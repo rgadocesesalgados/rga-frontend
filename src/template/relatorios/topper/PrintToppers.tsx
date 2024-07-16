@@ -29,7 +29,7 @@ p-5"
             <div className="font-bold">{topper.peso}kg</div>
             <div>{topper.tema}</div>
             <div className="py-5">
-              <pre>{topper.description}</pre>
+              <p>{topper.description}</p>
             </div>
             <div>
               {topper.name} - {topper.idade}

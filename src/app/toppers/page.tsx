@@ -51,7 +51,7 @@ export default function Toppers() {
             </div>
 
             <div className="py-2">
-              <pre>{topper.description}</pre>
+              <p>{topper.description}</p>
             </div>
 
             <div className="flex justify-between py-2 text-red-600">

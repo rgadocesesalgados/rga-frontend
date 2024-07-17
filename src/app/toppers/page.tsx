@@ -7,6 +7,7 @@ interface Tooper {
   id: string
   client_name: string
   date: Date
+  peso: string
   hour: string
   tema: string
   name: string
@@ -34,7 +35,7 @@ export default function Toppers() {
   }, [])
 
   return (
-    <div className="grid grid-cols-4 divide-x divide-y">
+    <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y text-xs">
       {data?.map((topper) => {
         const date = new Date(topper.date)
         return (
@@ -46,6 +47,8 @@ export default function Toppers() {
               </div>
               <div>{topper.client_name}</div>
             </div>
+
+            <div>{topper.peso}kg</div>
 
             <div>Tema: {topper.tema}</div>
 

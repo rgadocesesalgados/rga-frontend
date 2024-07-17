@@ -207,7 +207,7 @@ export const columns: ColumnDef<GetOrder>[] = [
                 removeOrder(linha.id)
                   .then(() => {
                     toast(`Pedido de ${linha.client.name} removido com sucesso`)
-                    getAllOrders()
+                    getAllOrders(true)
                   })
                   .catch((error) => toast.error(error.response.data?.error))
               }

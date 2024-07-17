@@ -7,6 +7,7 @@ interface Tooper {
   id: string
   client_name: string
   date: Date
+  peso: string
   hour: string
   tema: string
   name: string
@@ -46,6 +47,8 @@ export default function Toppers() {
               </div>
               <div>{topper.client_name}</div>
             </div>
+
+            <div>{topper.peso}kg</div>
 
             <div>Tema: {topper.tema}</div>
 

@@ -53,9 +53,7 @@ export const columns: ColumnDef<Tooper>[] = [
   },
   {
     accessorKey: 'date',
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Data" />
-    },
+    header: 'Data',
     cell: ({ cell }) => <div className="text-nowrap">{new Date(cell.getValue<string>()).toLocaleDateString()}</div>,
   },
   {

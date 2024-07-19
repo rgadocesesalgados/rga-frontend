@@ -36,7 +36,15 @@ export const CakesFullForm = () => {
       })}
       <Button
         type="button"
-        onClick={() => append({ formato: 'REDONDO', massa: 'BRANCA', cobertura: 'CHANTILLY', topper: { price: 15 } })}
+        onClick={() =>
+          append({
+            formato: 'REDONDO',
+            massa: 'BRANCA',
+            cobertura: 'CHANTILLY',
+            topper: { price: 15 },
+            recheios: [{}, {}],
+          })
+        }
       >
         Adicionar bolo <PlusCircle className="ml-2 h-4 w-4" />
       </Button>

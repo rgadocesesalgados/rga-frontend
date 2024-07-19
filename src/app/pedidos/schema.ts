@@ -57,6 +57,7 @@ const topper = z
     price: z.coerce.number().optional(),
     description: z.string().optional(),
     banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).optional(),
+    recebido: z.boolean().optional(),
   })
   .optional()
 

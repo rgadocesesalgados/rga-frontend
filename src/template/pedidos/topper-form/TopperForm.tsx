@@ -1,12 +1,14 @@
 import { FormDataPedidos } from '@/app/pedidos/types'
 import { InputForm } from '@/components/ui-componets/input-form'
+import { InputToggle } from '@/components/ui-componets/input-toggle'
 import { TextareaForm } from '@/components/ui-componets/textarea-form'
 import { useFormContext } from 'react-hook-form'
 
 export const TopperForm = ({ CakeIndex }: { CakeIndex: number }) => {
-  const { control, watch } = useFormContext<FormDataPedidos>()
+  const { control, watch, setValue } = useFormContext<FormDataPedidos>()
 
   const imageUrl = watch(`cakes.${CakeIndex}.topper.banner`)
+  const id = watch('id')
 
   return (
     <div className="flex flex-wrap gap-5 rounded-xl border bg-white p-5">
@@ -40,6 +42,15 @@ export const TopperForm = ({ CakeIndex }: { CakeIndex: number }) => {
       {imageUrl && <img src={imageUrl} alt="Foto do topper" className="rounded-2xl" width={200} height={200} />}
 
       <InputForm control={control} name={`cakes.${CakeIndex}.topper.id`} className="hidden" />
+
+      {!!id && (
+        <InputToggle
+          label="Recebido"
+          control={control}
+          name={`cakes.${CakeIndex}.topper.recebido`}
+          onChange={(value) => setValue(`cakes.${CakeIndex}.topper.recebido`, value)}
+        />
+      )}
     </div>
   )
 }

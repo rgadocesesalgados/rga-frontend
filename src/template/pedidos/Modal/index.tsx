@@ -86,6 +86,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
           description: cake.topper?.description,
           banner: cake.topper?.banner,
           tem_topper: cake.tem_topper,
+          recebido: cake.topper?.recebido,
         }
 
         return {
@@ -141,6 +142,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
           price: cake.topper?.price,
           description: cake.topper?.description,
           banner: cake.topper?.banner,
+          recebido: cake.topper?.recebido,
         }
 
         return {

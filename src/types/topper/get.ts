@@ -6,4 +6,5 @@ export interface GetTopper {
   price: number
   description: string
   banner: string
+  recebido: boolean
 }

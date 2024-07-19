@@ -6,4 +6,5 @@ export interface EditTopper {
   description: string
   banner: string
   tem_topper: boolean
+  recebido: boolean
 }

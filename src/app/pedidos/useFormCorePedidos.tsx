@@ -43,6 +43,9 @@ export const useFormCorePedidos = () => {
   const getPriceCake = (index: number) => {
     const mediaPriceRecheio = getMediaPriceRecheios(index)
     const peso = getPesoCake(index)
+
+    if (peso == 0.6) return 30
+
     return Number(Math.round(mediaPriceRecheio * peso).toFixed(2)) || 0
   }
 

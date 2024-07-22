@@ -42,6 +42,11 @@ export const columns: ColumnDef<RecheiosProps>[] = [
       }),
   },
   {
+    accessorKey: 'price_fixed',
+    header: 'Fixo',
+    cell: ({ cell }) => (cell.getValue<boolean>() ? 'Sim' : 'Não'),
+  },
+  {
     accessorKey: 'is_pesado',
     header: ({ column }) => {
       const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
@@ -51,15 +56,6 @@ export const columns: ColumnDef<RecheiosProps>[] = [
     cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
   },
 
-  {
-    accessorKey: 'to_bento_cake',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Bento cake" />
-    },
-    cell: ({ cell }) => (cell.getValue() ? 'Sim' : 'Não'),
-  },
   {
     id: 'actions',
     cell: ({ row }) => {

@@ -10,7 +10,7 @@ export interface RecheiosProps {
   is_pesado: boolean
   to_bento_cake: boolean
   banner?: string
-  // bolos
+  price_fixed: boolean
 }
 
 export interface RecheioPropsRequestToCreate extends Omit<RecheiosProps, 'id'> {}

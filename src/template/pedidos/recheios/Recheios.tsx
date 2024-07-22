@@ -27,10 +27,13 @@ export const Recheios = ({ cakeIndex, recheioIndex, remove }: RecheiosProps) => 
         data={recheios.map((recheio) => ({ value: recheio.id, label: recheio.name }))}
         onSelect={(recheioId) => {
           methods.setValue(`cakes.${cakeIndex}.recheios.${recheioIndex}.id`, recheioId)
-          methods.setValue(
-            `cakes.${cakeIndex}.recheios.${recheioIndex}.price`,
-            recheios.find(({ id }) => id === recheioId)?.price,
-          )
+
+          const recheio = recheios.find(({ id }) => id === recheioId)
+
+          methods.setValue(`cakes.${cakeIndex}.recheios.${recheioIndex}.price`, recheio?.price)
+
+          methods.setValue(`cakes.${cakeIndex}.recheios.${recheioIndex}.price_fixed`, recheio?.price_fixed)
+
           methods.setValue(`cakes.${cakeIndex}.price`, cake.getPriceCake(cakeIndex))
         }}
         className="flex-1"

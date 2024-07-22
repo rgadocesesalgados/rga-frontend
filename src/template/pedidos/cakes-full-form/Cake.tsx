@@ -96,7 +96,11 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
           { label: 'Avela batido', value: 'AVELA_BATIDO' },
           { label: 'Nata', value: 'NATA' },
           { label: 'Clara queimada', value: 'CLARA_QUEIMADA' },
+          { label: 'KitKat', value: 'KIT_KAT' },
         ]}
+        onChange={() => {
+          methods.setValue(`cakes.${cakeIndex}.price`, cake.getPriceCake(cakeIndex))
+        }}
       />
 
       <TextareaForm control={methods.control} name={`cakes.${cakeIndex}.decoracao`} label="Descricão" />

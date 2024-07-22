@@ -46,7 +46,7 @@ const orderProduct = z.array(
   ),
 )
 
-const recheios = z.array(z.object({ id: z.string(), price: z.coerce.number() }))
+const recheios = z.array(z.object({ id: z.string(), price: z.coerce.number(), price_fixed: z.coerce.boolean() }))
 
 const topper = z
   .object({
@@ -69,7 +69,7 @@ const cakes = z.array(
       recheios,
       formato: z.enum(['REDONDO', 'QUADRADO']),
       massa: z.enum(['BRANCA', 'CHOCOLATE', 'MASSA_MESCLADA']).optional(),
-      cobertura: z.enum(['CHANTILLY', 'AVELA_BATIDO', 'NATA', 'CLARA_QUEIMADA']).optional(),
+      cobertura: z.enum(['CHANTILLY', 'AVELA_BATIDO', 'NATA', 'CLARA_QUEIMADA', 'KIT_KAT']).optional(),
       decoracao: z.string().optional(),
       banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).optional(),
       topper,

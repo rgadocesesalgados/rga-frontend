@@ -33,9 +33,31 @@ export const useFormCorePedidos = () => {
     return price
   }
 
+  const isPriceFixed = (index: number) => {
+    const recheios = getRecheios(index)
+
+    const recheiosWithPriceFixed = recheios.filter((recheio) => recheio.price_fixed)
+
+    if (recheiosWithPriceFixed.length > 0) {
+      recheiosWithPriceFixed.sort((a, b) => b.price - a.price)
+
+      return recheiosWithPriceFixed[0].price
+    }
+
+    return false
+  }
+
+  const getCobertura = (index: number) => getCake(index).cobertura
+
   const getMediaPriceRecheios = (index: number) => {
     const lengthRecheios = getLengthRecheios(index)
     const totalPriceRecheios = getTotalPriceRecheios(index)
+
+    if (getCobertura(index) === 'KIT_KAT') return 50
+
+    const priceFixed = isPriceFixed(index)
+
+    if (priceFixed) return priceFixed
 
     return Number(Math.round(totalPriceRecheios / lengthRecheios).toFixed(2))
   }

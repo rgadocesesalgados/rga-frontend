@@ -27,9 +27,9 @@ export const Modal = () => {
     await getAllRecheios()
   }
 
-  const submit = async ({ id, name, price, is_pesado, to_bento_cake, banner }: FormDataRecheios) => {
+  const submit = async ({ id, name, price, is_pesado, to_bento_cake, banner, price_fixed }: FormDataRecheios) => {
     if (id) {
-      await editRecheio({ id, name, price, is_pesado, to_bento_cake, banner })
+      await editRecheio({ id, name, price, is_pesado, to_bento_cake, banner, price_fixed })
         .then(() => {
           toast.success(`${name} editado com sucesso!`)
           methods.reset({})
@@ -46,6 +46,7 @@ export const Modal = () => {
       is_pesado,
       to_bento_cake,
       banner,
+      price_fixed,
     })
       .then(() => {
         toast.success(`${name} adicionado com sucesso!`)
@@ -95,6 +96,13 @@ export const Modal = () => {
               name="to_bento_cake"
               label="Bento cake"
               description="Se o recheio pode ir no bento cake"
+            />
+
+            <CheckboxForm
+              control={methods.control}
+              name="price_fixed"
+              label="Valor fixo"
+              description="O valor do recheio é fixo e independente de outros recheios"
             />
 
             <InputForm control={methods.control} name="banner" label="Foto" placeholder="https://link-da-foto.com.br" />

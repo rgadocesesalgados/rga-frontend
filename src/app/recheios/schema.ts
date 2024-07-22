@@ -4,6 +4,7 @@ export const schema = z.object({
   id: z.string().optional(),
   name: z.string().min(4, 'O nome deve ter pelo menos 4 caracteres.'),
   price: z.coerce.number().min(0.01, 'O preço deve ser maior que 0.'),
+  price_fixed: z.boolean().default(false),
   is_pesado: z.boolean().default(false),
   to_bento_cake: z.boolean().default(true),
   banner: z.string().optional(),

@@ -7,7 +7,7 @@ export interface EditCake {
   massa: 'BRANCA' | 'CHOCOLATE' | 'MASSA_MESCLADA'
   recheio: { id: string }[]
   price: number
-  cobertura: 'CHANTILLY' | 'NATA' | 'CLARA_QUEIMADA' | 'AVELA_BATIDO'
+  cobertura: 'CHANTILLY' | 'NATA' | 'CLARA_QUEIMADA' | 'AVELA_BATIDO' | 'KIT_KAT'
   description: string
   banner: string
   topper: EditTopper

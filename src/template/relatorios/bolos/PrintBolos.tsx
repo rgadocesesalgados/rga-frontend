@@ -62,7 +62,7 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
               )}
 
               <S.noWrap>
-                <S.weight>{bolo.peso}kg</S.weight>
+                <S.weight>{bolo.peso == 0.6 ? 'Bento cake' : `${bolo.peso}kg`}</S.weight>
 
                 <S.shape>{bolo.formato.toLocaleLowerCase()}</S.shape>
               </S.noWrap>

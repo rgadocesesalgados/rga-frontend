@@ -45,6 +45,7 @@ export const Recheios = ({ cakeIndex, recheioIndex, remove }: RecheiosProps) => 
         type="button"
         onClick={() => {
           remove(recheioIndex)
+          methods.setValue(`cakes.${cakeIndex}.price`, cake.getPriceCake(cakeIndex))
         }}
       >
         <Trash2 className="h-4 w-4" />

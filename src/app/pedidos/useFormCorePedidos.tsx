@@ -10,7 +10,7 @@ export const useFormCorePedidos = () => {
 
   const getCake = (index: number) => cakes[index]
 
-  const getPesoCake = (index: number) => getCake(index).peso
+  const getPesoCake = (index: number) => Number(getCake(index).peso)
 
   const getRecheios = (index: number) => getCake(index).recheios
 
@@ -62,11 +62,19 @@ export const useFormCorePedidos = () => {
     return Number(Math.round(totalPriceRecheios / lengthRecheios).toFixed(2))
   }
 
+  const getStatus = () => getValues('status')
+
   const getPriceCake = (index: number) => {
     const mediaPriceRecheio = getMediaPriceRecheios(index)
-    const peso = getPesoCake(index)
+
+    let peso = getPesoCake(index)
 
     if (peso == 0.6) return 30
+
+    if (getStatus() != 'EM_PRODUCAO') {
+      peso += 0.35
+      console.log(peso)
+    }
 
     return Number(Math.round(mediaPriceRecheio * peso).toFixed(2)) || 0
   }

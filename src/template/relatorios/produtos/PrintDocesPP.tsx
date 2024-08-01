@@ -25,7 +25,7 @@ p-5"
         >
           <div className="mb-5 flex gap-5 font-bold">
             <div>{docesPP.client}</div>
-            {new Date(docesPP.date).getDate()}/0{new Date(docesPP.date).getMonth()}
+            {new Date(docesPP.date).getDate()}/0{new Date(docesPP.date).getMonth() + 1}
           </div>
           {docesPP.products.map((product) => (
             <div key={product.name}>

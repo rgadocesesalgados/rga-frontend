@@ -15,4 +15,5 @@ export const configSidebarlinks: NavLinkProps[] = [
   { href: '/relatorios', label: 'Relatórios' },
   { href: '/organizacao', label: 'Organização' },
   { href: '/topper', label: 'Topper' },
+  { href: '/financeiro', label: 'Financeiro' },
 ]

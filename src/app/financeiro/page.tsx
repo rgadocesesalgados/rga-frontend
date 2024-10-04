@@ -62,7 +62,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useState } from 'react'
 import { Wrap } from '@/components/comum/Wrap'
 
-export function DatePickerWithRange({
+function DatePickerWithRange({
   className,
   date,
   onChange,

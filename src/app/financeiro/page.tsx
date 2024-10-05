@@ -41,7 +41,7 @@ export default function Financeiro() {
         <DatePickerWithRange
           date={date}
           setDate={setDate}
-          onChange={() => mutation.mutate({ startDate: date.from.getTime(), endDate: date.to.getTime() })}
+          onChange={() => mutation.mutate({ startDate: date.from?.getTime(), endDate: date.to?.getTime() })}
         />
         <div className="mt-5 text-3xl font-bold">
           {query.data && Intl.NumberFormat('pt-BR', { currency: 'BRL', style: 'currency' }).format(query.data.value)}

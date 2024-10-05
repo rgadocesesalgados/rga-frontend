@@ -5,12 +5,12 @@ import Layout from '../dashboard/layout'
 import { api } from '@/services/api/apiClient'
 
 interface FinanceiroResponse {
-  today_end: number
-  today_start: number
+  end_date: number
+  start_date: number
   value: number
 }
-const getFinacialReport = async () => {
-  const response = await api.get('/financial-report')
+const getFinacialReport = async ({ endDate, startDate }: { startDate: number; endDate: number }) => {
+  const response = await api.get('/financial-report', { params: { startDate, endDate } })
 
   return response.data
 }
@@ -22,10 +22,13 @@ const getFinacialReportForDate = async (data: { startDate: number; endDate: numb
 }
 export default function Financeiro() {
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(),
+    to: addDays(new Date(), 7),
   })
-  const query = useQuery<FinanceiroResponse>({ queryKey: ['financial'], queryFn: getFinacialReport })
+  const query = useQuery<FinanceiroResponse>({
+    queryKey: ['financial'],
+    queryFn: async () => await getFinacialReport({ endDate: date?.to?.getTime(), startDate: date?.from?.getTime() }),
+  })
 
   const queryClient = useQueryClient()
 
@@ -41,7 +44,7 @@ export default function Financeiro() {
         <DatePickerWithRange
           date={date}
           setDate={setDate}
-          onChange={() => mutation.mutate({ startDate: date.from?.getTime(), endDate: date.to?.getTime() })}
+          onChange={() => mutation.mutate({ startDate: date?.from?.getTime(), endDate: date?.to?.getTime() })}
         />
         <div className="mt-5 text-3xl font-bold">
           {query.data && Intl.NumberFormat('pt-BR', { currency: 'BRL', style: 'currency' }).format(query.data.value)}

@@ -34,7 +34,7 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
         <InputForm
           type="number"
           min={0}
-          step={0.01}
+          step={0.001}
           typeof="numeric"
           control={methods.control}
           name={`cakes.${cakeIndex}.peso`}

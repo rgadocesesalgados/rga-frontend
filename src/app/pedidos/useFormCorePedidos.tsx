@@ -59,24 +59,23 @@ export const useFormCorePedidos = () => {
 
     if (priceFixed) return priceFixed
 
-    return Number(Math.round(totalPriceRecheios / lengthRecheios).toFixed(2))
+    return Number((totalPriceRecheios / lengthRecheios).toFixed(2))
   }
-
-  const getStatus = () => getValues('status')
 
   const getPriceCake = (index: number) => {
     const mediaPriceRecheio = getMediaPriceRecheios(index)
 
-    let peso = getPesoCake(index)
+    const peso = getPesoCake(index)
 
     if (peso == 0.6) return 30
 
-    if (getStatus() != 'EM_PRODUCAO') {
-      peso += 0.35
-      console.log(peso)
-    }
+    const preco = Number((mediaPriceRecheio * peso).toFixed(2)) || 0
 
-    return Number(Math.round(mediaPriceRecheio * peso).toFixed(2)) || 0
+    if (preco === 0) return 0
+
+    const precoInteiro = Math.floor(preco * 4)
+
+    return +(precoInteiro / 4).toFixed(2)
   }
 
   return { recheios: { getLengthRecheios, getTotalPriceRecheios, getMediaPriceRecheios }, getPriceCake }

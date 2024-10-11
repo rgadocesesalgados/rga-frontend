@@ -21,6 +21,7 @@ interface SelectSearchProps<Tdata> {
 interface Option {
   label: string
   value: string
+  complement?: string
 }
 
 export function SelectSearch<Tdata>({
@@ -72,7 +73,11 @@ export function SelectSearch<Tdata>({
                         }}
                       >
                         <Check className={`mr-2 h-4 w-4 ${item.value === field.value ? 'opacity-100' : 'opacity-0'}`} />
-                        {item.label}
+
+                        <div className="flex flex-col gap-2">
+                          <div>{item.label}</div>
+                          <div>{item?.complement}</div>
+                        </div>
                       </CommandItem>
                     ))}
                   </CommandList>

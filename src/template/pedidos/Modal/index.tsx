@@ -28,6 +28,7 @@ import { ModalClient } from '@/app/pedidos/client/ModalClient'
 import { useState } from 'react'
 import { ModalAddress } from '@/app/pedidos/address/ModalAddress'
 import { DocesPP } from '../product-order-peer-size'
+import { maskTel } from '@/app/utils/masks/maskTel'
 
 export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
   const { openOrder, handleOpenOrder } = useModal()
@@ -227,7 +228,11 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
               name="client.id"
               label="Cliente"
               control={methods.control}
-              data={clients.map((client) => ({ label: client.name, value: client.id }))}
+              data={clients.map((client) => ({
+                label: client.name,
+                value: client.id,
+                complement: maskTel(client.tel),
+              }))}
               onSelect={(value) => {
                 methods.setValue('client.id', value)
               }}

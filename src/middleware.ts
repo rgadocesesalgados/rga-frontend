@@ -24,5 +24,12 @@ export const config = {
     '/pedidos/:path*',
     '/produtos/:path*',
     '/',
+    '/recheios/:path*',
+    '/categorias/:path*',
+    '/relatorios/:path*',
+    '/organizacao/:path*',
+    '/topper/:path*',
+    '/financeiro/:path*',
+    '/fornecedores/:path*',
   ],
 }

@@ -50,16 +50,23 @@ export default function Financeiro() {
           }}
         />
 
-        <div className="my-5 flex divide-x rounded-xl border bg-white">
-          <Incoming>
-            <TrendingUp />
-            {entradas.data && toBRL(entradas.data.value)}
-          </Incoming>
+        <div className="flex flex-col rounded-xl border bg-white px-2">
+          <div className="mb-2 flex border-b">
+            <Incoming>
+              <TrendingUp />
+              {entradas.data && toBRL(entradas.data.value)}
+            </Incoming>
+            <Outs>
+              <TrendingDown />
+              {saidas.data && toBRL(saidas.data.total)}
+            </Outs>
+          </div>
 
-          <Outs>
-            <TrendingDown />
-            {saidas.data && toBRL(saidas.data.total)}
-          </Outs>
+          {entradas.data && saidas.data && (
+            <div className="mx-auto pb-2 font-bold opacity-50 md:text-2xl">
+              {toBRL(entradas.data.value - saidas.data.total)}
+            </div>
+          )}
         </div>
 
         <Modal />

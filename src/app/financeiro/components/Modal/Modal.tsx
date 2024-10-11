@@ -97,7 +97,7 @@ export const Modal = () => {
               showMessageError
             />
 
-            <div className="flex gap-5">
+            <div className="flex flex-col gap-5 sm:flex-row">
               <InputForm
                 control={control}
                 name="value"

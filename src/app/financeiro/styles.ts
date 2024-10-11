@@ -1,7 +1,9 @@
 import tw from 'tailwind-styled-components'
 
 export const Incoming = tw.div`
-  text-3xl
+  text-lg
+  sm:text-2xl
+  md:text-3xl
   font-bold
   flex-1
   p-5

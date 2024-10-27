@@ -12,14 +12,35 @@ export const useFormCorePedidos = () => {
 
   const getPesoCake = (index: number) => Number(getCake(index).peso)
 
-  const getRecheios = (index: number) => getCake(index).recheios
+  const getRecheios = (index: number) => {
+    const recheiosSorted = getCake(index).recheios.sort((a, b) => b.price - a.price)
+    console.log(recheiosSorted)
 
-  const getLengthRecheios = (index: number) =>
-    getRecheios(index).reduce((acc, recheio) => {
+    const recheios: {
+      id?: string
+      price?: number
+      price_fixed?: boolean
+    }[] = []
+
+    recheiosSorted.forEach((_, index) => {
+      if (index > 1) return
+      recheios.push(recheiosSorted[index])
+    })
+
+    return recheios
+  }
+
+  const getLengthRecheios = (index: number) => {
+    const recheios = getRecheios(index)
+
+    const length = recheios.reduce((acc, recheio) => {
       if (recheio.id) return acc + 1
 
       return acc
     }, 0)
+
+    return length
+  }
 
   const getTotalPriceRecheios = (index: number) => {
     const price = getRecheios(index).reduce((acc, recheio) => {

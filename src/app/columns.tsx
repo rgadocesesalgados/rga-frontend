@@ -27,6 +27,15 @@ export const columns: ColumnDef<DeliveryProps>[] = [
   {
     accessorKey: 'address_complete',
     header: 'Endereço',
+    cell: ({ row }) => {
+      const original = row.original
+      return (
+        <div className="flex flex-col gap-2">
+          <div>{original.address_complete}</div>
+          <div>{original.client_name}</div>
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'date',

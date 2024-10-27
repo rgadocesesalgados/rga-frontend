@@ -20,7 +20,6 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
     name: `cakes.${cakeIndex}.recheios`,
-    rules: { minLength: 1, maxLength: 3 },
   })
 
   const imageCake = methods.watch(`cakes.${cakeIndex}.banner`)

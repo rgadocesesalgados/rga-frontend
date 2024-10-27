@@ -54,24 +54,15 @@ export const columns: ColumnDef<Tooper>[] = [
   {
     accessorKey: 'date',
     header: 'Data',
-    cell: ({ cell }) => <div className="text-nowrap">{new Date(cell.getValue<string>()).toLocaleDateString()}</div>,
-  },
-  {
-    id: 'cliente',
-    accessorKey: 'client_name',
-    header: 'Cliente',
-  },
-  {
-    accessorKey: 'name',
-    header: 'Nome',
-  },
-  {
-    accessorKey: 'idade',
-    header: 'Idade',
-  },
-  {
-    accessorKey: 'hour',
-    header: 'Hora',
+    cell: ({ cell, row }) => {
+      const origin = row.original
+      return (
+        <div className="">
+          <div>{new Date(cell.getValue<string>()).toLocaleDateString()}</div>
+          <div>{origin.client_name}</div>
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'banner',
@@ -80,6 +71,26 @@ export const columns: ColumnDef<Tooper>[] = [
       const image = cell.getValue<string>()
       return image ? <img src={image} className="h-24 w-24 rounded-xl object-cover" /> : '---'
     },
+  },
+  {
+    accessorKey: 'name',
+    header: 'Nome e idade',
+    cell: ({ row }) => {
+      const origin = row.original
+
+      return (
+        <div>
+          <div>{origin.name}</div>
+          <div>{origin.idade}</div>
+          <div>{origin.description}</div>
+        </div>
+      )
+    },
+  },
+
+  {
+    accessorKey: 'hour',
+    header: 'Hora',
   },
 
   {

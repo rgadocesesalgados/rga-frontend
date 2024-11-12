@@ -29,7 +29,14 @@ export const ModalClient = ({
 
   const submit = async ({ name, tel, address_id }: FormDataCliente) => {
     console.log({ name, tel, address_id })
-    addClient({ name, tel, address_id })
+    addClient({
+      name: name
+        .toLocaleLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, ''),
+      tel,
+      address_id,
+    })
       .then(() => {
         handleOpenClient()
         methods.reset({})

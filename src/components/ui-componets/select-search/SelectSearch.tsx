@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Check } from 'lucide-react'
+import { Check, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { Control, Path } from 'react-hook-form'
 
@@ -16,6 +16,9 @@ interface SelectSearchProps<Tdata> {
   showMessageError?: boolean
   className?: string
   commandEmpty?: React.ReactNode
+  shouldFilter?: boolean
+  onValueChange?: (value: string) => void
+  isLoading?: boolean
 }
 
 interface Option {
@@ -34,6 +37,9 @@ export function SelectSearch<Tdata>({
   showMessageError = false,
   commandEmpty,
   onSelect,
+  shouldFilter,
+  onValueChange,
+  isLoading,
 }: SelectSearchProps<Tdata>) {
   const [open, setOpen] = useState(false)
   return (
@@ -59,10 +65,14 @@ export function SelectSearch<Tdata>({
               </PopoverTrigger>
 
               <PopoverContent align="start">
-                <Command>
-                  <CommandInput placeholder="Procuar" />
-                  <CommandEmpty>{commandEmpty ? commandEmpty : 'Não encontrado'}</CommandEmpty>
-
+                <Command shouldFilter={shouldFilter}>
+                  <CommandInput placeholder="Procuar" onValueChange={onValueChange} />
+                  {!isLoading && <CommandEmpty>{commandEmpty ? commandEmpty : 'Não encontrado'}</CommandEmpty>}
+                  {isLoading && (
+                    <div className="mx-auto py-2">
+                      <Loader2 className="animate-spin" />
+                    </div>
+                  )}
                   <CommandList>
                     {data?.map((item) => (
                       <CommandItem

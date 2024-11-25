@@ -2,7 +2,6 @@ import { FormDataPedidos } from '@/app/pedidos/types'
 
 import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
 import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
-import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
 import { useFormContext } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 
@@ -25,14 +24,20 @@ import { toast } from 'react-toastify'
 import { CreateCake } from '@/types/cake/create'
 import { EditCake } from '@/types/cake'
 import { ModalClient } from '@/app/pedidos/client/ModalClient'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ModalAddress } from '@/app/pedidos/address/ModalAddress'
 import { DocesPP } from '../product-order-peer-size'
 import { maskTel } from '@/app/utils/masks/maskTel'
+import { api } from '@/services/api/apiClient'
+import { useQuery } from '@tanstack/react-query'
+import { ClientProps } from '@/app/clientes/types'
+import { debounce } from 'lodash'
+
+const fetchDebounce = debounce((func: () => void) => func(), 500)
 
 export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
   const { openOrder, handleOpenOrder } = useModal()
-  const { clients } = useContextClient()
+
   const { categorys } = useContextCategory()
   const { address } = useContextAddress()
   const { addOrder, editOrder, getAllOrders } = useContextOrders()
@@ -42,6 +47,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
   const isDelivery = methods.watch('delivery')
   const typeFrete = methods.watch('logistic')
   const addess_id = methods.watch('address')
+  const [client, setClient] = useState('a')
 
   const { executeCalculateTotal } = useOrder()
 
@@ -187,6 +193,28 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
 
   const [openModalClient, setOpenModalClient] = useState(false)
   const [openModalAddress, setOpenModalAddress] = useState(false)
+  const [enebleSearch, setEnableSearch] = useState(false)
+  const {
+    data: dataFetch,
+    refetch,
+    isLoading,
+  } = useQuery<ClientProps[]>({
+    queryKey: ['search-clients', client],
+    queryFn: async () => {
+      const response = await api.get(`/search-client/${client}`)
+      console.log(response.data)
+      return response.data
+    },
+    enabled: enebleSearch && client.length > 2,
+  })
+
+  useEffect(() => {
+    fetchDebounce(() => {
+      setEnableSearch(true)
+      refetch().finally(() => setEnableSearch(false))
+      console.log('debounce')
+    })
+  }, [client])
 
   return (
     <Dialog
@@ -228,7 +256,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
               name="client.id"
               label="Cliente"
               control={methods.control}
-              data={clients.map((client) => ({
+              data={dataFetch?.map((client) => ({
                 label: client.name,
                 value: client.id,
                 complement: maskTel(client.tel),
@@ -242,6 +270,9 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
                   handleOpenClient={() => setOpenModalClient(!openModalClient)}
                 />
               }
+              isLoading={isLoading}
+              shouldFilter={false}
+              onValueChange={(val) => setClient(val)}
             />
 
             <DatePickerForm control={methods.control} name="date" label="Data" />

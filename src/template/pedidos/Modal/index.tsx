@@ -32,6 +32,7 @@ import { api } from '@/services/api/apiClient'
 import { useQuery } from '@tanstack/react-query'
 import { ClientProps } from '@/app/clientes/types'
 import { debounce } from 'lodash'
+import { useQueryState } from 'nuqs'
 
 const fetchDebounce = debounce((func: () => void) => func(), 500)
 
@@ -216,10 +217,13 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
     })
   }, [client])
 
+  const [clientName, setClientName] = useQueryState('client')
+
   return (
     <Dialog
       open={openOrder}
       onOpenChange={() => {
+        setClientName('')
         methods.reset({
           id: '',
           client: { id: '' },
@@ -273,6 +277,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
               isLoading={isLoading}
               shouldFilter={false}
               onValueChange={(val) => setClient(val)}
+              displayValue={clientName}
             />
 
             <DatePickerForm control={methods.control} name="date" label="Data" />

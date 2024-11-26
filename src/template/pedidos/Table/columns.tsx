@@ -22,6 +22,8 @@ import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useConte
 import { useView } from '@/contexts/view'
 import { GetOrder } from '@/types/order'
 import { useModalPrint } from '@/contexts/modalPrint'
+import { api } from '@/services/api/apiClient'
+import { useQueryState } from 'nuqs'
 
 export const columns: ColumnDef<GetOrder>[] = [
   {
@@ -146,7 +148,7 @@ export const columns: ColumnDef<GetOrder>[] = [
       const { handleOpenOrder } = useModal()
       const { handleOpen, setId } = useView()
       const { handleOpen: handleOpenPrint } = useModalPrint()
-
+      const [, setClientName] = useQueryState('client')
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -182,8 +184,11 @@ export const columns: ColumnDef<GetOrder>[] = [
             <DropdownMenuSeparator />
 
             <DropdownMenuItem
-              onClick={() => {
-                console.log(order)
+              onClick={async () => {
+                const response = await api.get(`search-client/${linha.client.tel}`)
+                const client = response.data[0]
+
+                setClientName(client.name)
                 methods.reset(order)
                 handleOpenOrder()
               }}

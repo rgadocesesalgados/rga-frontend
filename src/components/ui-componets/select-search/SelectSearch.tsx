@@ -19,6 +19,7 @@ interface SelectSearchProps<Tdata> {
   shouldFilter?: boolean
   onValueChange?: (value: string) => void
   isLoading?: boolean
+  displayValue?: string
 }
 
 interface Option {
@@ -40,6 +41,7 @@ export function SelectSearch<Tdata>({
   shouldFilter,
   onValueChange,
   isLoading,
+  displayValue,
 }: SelectSearchProps<Tdata>) {
   const [open, setOpen] = useState(false)
   return (
@@ -60,7 +62,9 @@ export function SelectSearch<Tdata>({
                   aria-expanded={open}
                   onClick={() => setOpen(true)}
                 >
-                  {field.value ? data?.find((item) => item.value === field.value)?.label : 'Procurar'}
+                  {!!displayValue && displayValue}
+                  {!displayValue &&
+                    (field.value ? data?.find((item) => item.value === field.value)?.label : 'Procurar')}
                 </Button>
               </PopoverTrigger>
 

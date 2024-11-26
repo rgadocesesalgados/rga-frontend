@@ -149,6 +149,9 @@ export const columns: ColumnDef<GetOrder>[] = [
       const { handleOpen, setId } = useView()
       const { handleOpen: handleOpenPrint } = useModalPrint()
       const [, setClientName] = useQueryState('client')
+      const [, setAddressComplete] = useQueryState('address_complete')
+      const [, setFreteCarro] = useQueryState('frete_carro')
+      const [, setFreteMoto] = useQueryState('frete_moto')
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -189,6 +192,10 @@ export const columns: ColumnDef<GetOrder>[] = [
                 const client = response.data[0]
 
                 setClientName(client.name)
+                setFreteCarro(`${address.frete_carro}`)
+                setFreteMoto(`${address.frete_moto}`)
+
+                setAddressComplete(address.address_complete)
                 methods.reset(order)
                 handleOpenOrder()
               }}

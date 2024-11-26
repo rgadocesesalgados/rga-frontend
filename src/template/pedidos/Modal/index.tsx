@@ -1,6 +1,5 @@
 import { FormDataPedidos } from '@/app/pedidos/types'
 
-import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
 import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
 import { useFormContext } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
@@ -33,14 +32,18 @@ import { useQuery } from '@tanstack/react-query'
 import { ClientProps } from '@/app/clientes/types'
 import { debounce } from 'lodash'
 import { useQueryState } from 'nuqs'
+import { AddressProps } from '@/app/enderecos/types'
 
 const fetchDebounce = debounce((func: () => void) => func(), 500)
 
 export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
+  const [clientName, setClientName] = useQueryState('client')
+  const [addressComplete, setAddressComplete] = useQueryState('address_complete')
+
   const { openOrder, handleOpenOrder } = useModal()
 
   const { categorys } = useContextCategory()
-  const { address } = useContextAddress()
+
   const { addOrder, editOrder, getAllOrders } = useContextOrders()
 
   const methods = useFormContext<FormDataPedidos>()
@@ -49,6 +52,9 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
   const typeFrete = methods.watch('logistic')
   const addess_id = methods.watch('address')
   const [client, setClient] = useState('a')
+  const [address, setAddress] = useState(addressComplete || 'rua')
+  const [freteCarro, setFreteCarro] = useQueryState('frete_carro')
+  const [freteMoto, setFreteMoto] = useQueryState('frete_moto')
 
   const { executeCalculateTotal } = useOrder()
 
@@ -195,6 +201,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
   const [openModalClient, setOpenModalClient] = useState(false)
   const [openModalAddress, setOpenModalAddress] = useState(false)
   const [enebleSearch, setEnableSearch] = useState(false)
+
   const {
     data: dataFetch,
     refetch,
@@ -209,6 +216,20 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
     enabled: enebleSearch && client.length > 2,
   })
 
+  const {
+    data: dataFetchAddress,
+    refetch: refetchAddress,
+    isLoading: isLoadingAddress,
+  } = useQuery<AddressProps[]>({
+    queryKey: ['search-address', address],
+    queryFn: async () => {
+      const response = await api.get(`/search-address/${address}`)
+      console.log(response.data)
+      return response.data
+    },
+    enabled: enebleSearch && client.length > 2,
+  })
+
   useEffect(() => {
     fetchDebounce(() => {
       setEnableSearch(true)
@@ -217,13 +238,22 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
     })
   }, [client])
 
-  const [clientName, setClientName] = useQueryState('client')
+  useEffect(() => {
+    fetchDebounce(() => {
+      setEnableSearch(true)
+      refetchAddress().finally(() => setEnableSearch(false))
+      console.log('debounce:address')
+    })
+  }, [address])
 
   return (
     <Dialog
       open={openOrder}
       onOpenChange={() => {
+        setFreteCarro('')
+        setFreteMoto('')
         setClientName('')
+        setAddressComplete('')
         methods.reset({
           id: '',
           client: { id: '' },
@@ -325,12 +355,18 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
                   name="address"
                   label="Endereço"
                   showMessageError
-                  data={address.map((addressItem) => ({ label: addressItem.address_complete, value: addressItem.id }))}
+                  data={dataFetchAddress?.map((addressItem) => ({
+                    label: addressItem.address_complete,
+                    value: addressItem.id,
+                  }))}
                   onSelect={(value) => {
-                    const addressSelect = address.find((address) => address.id === value)
+                    const addressSelect = dataFetchAddress.find((address) => address.id === value)
+                    console.log(addressSelect)
 
                     methods.setValue('address', value)
-                    methods.setValue('value_frete', addressSelect[typeFrete.toLowerCase()])
+                    methods.setValue('value_frete', addressSelect[typeFrete?.toLowerCase()])
+                    setFreteCarro(`${addressSelect?.frete_carro}`)
+                    setFreteMoto(`${addressSelect?.frete_moto}`)
                   }}
                   commandEmpty={
                     <ModalAddress
@@ -338,6 +374,10 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
                       handleOpenAddress={() => setOpenModalAddress(!openModalAddress)}
                     />
                   }
+                  shouldFilter={false}
+                  onValueChange={(val) => setAddress(val)}
+                  displayValue={addressComplete}
+                  isLoading={isLoadingAddress}
                 />
 
                 <SelectForm
@@ -350,8 +390,17 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
                   label="Tipo do frete"
                   onChange={(e) => {
                     const value: string = e.target.value
-                    const addressSelect = address.find((address) => address.id === addess_id)
-                    methods.setValue('value_frete', addressSelect ? addressSelect[value.toLocaleLowerCase()] : 0)
+                    const addressSelect = dataFetchAddress.find((address) => address.id === addess_id)
+
+                    const paramsFrete = {
+                      FRETE_CARRO: +freteCarro,
+                      FRETE_MOTO: +freteMoto,
+                    }
+
+                    methods.setValue(
+                      'value_frete',
+                      addressSelect ? addressSelect[value.toLocaleLowerCase()] || paramsFrete[value] : 0,
+                    )
                   }}
                 />
 

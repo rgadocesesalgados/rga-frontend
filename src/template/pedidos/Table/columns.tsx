@@ -192,10 +192,10 @@ export const columns: ColumnDef<GetOrder>[] = [
                 const client = response.data[0]
 
                 setClientName(client.name)
-                setFreteCarro(`${address.frete_carro}`)
-                setFreteMoto(`${address.frete_moto}`)
+                setFreteCarro(`${address?.frete_carro}`)
+                setFreteMoto(`${address?.frete_moto}`)
 
-                setAddressComplete(address.address_complete)
+                setAddressComplete(address?.address_complete)
                 methods.reset(order)
                 handleOpenOrder()
               }}

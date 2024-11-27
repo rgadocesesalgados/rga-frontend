@@ -390,17 +390,13 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
                   label="Tipo do frete"
                   onChange={(e) => {
                     const value: string = e.target.value
-                    const addressSelect = dataFetchAddress.find((address) => address.id === addess_id)
 
                     const paramsFrete = {
                       FRETE_CARRO: +freteCarro,
                       FRETE_MOTO: +freteMoto,
                     }
 
-                    methods.setValue(
-                      'value_frete',
-                      addressSelect ? addressSelect[value.toLocaleLowerCase()] || paramsFrete[value] : 0,
-                    )
+                    methods.setValue('value_frete', paramsFrete[value] || 0)
                   }}
                 />
 

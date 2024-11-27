@@ -17,6 +17,7 @@ import { useModal } from '@/contexts/modal'
 import { Column } from '@/template/recheios/Table/columns/components'
 import { ClientProps, FormDataCliente } from '@/app/clientes/types'
 import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
+import { useQueryState } from 'nuqs'
 
 export const columns: ColumnDef<ClientProps>[] = [
   {
@@ -55,6 +56,8 @@ export const columns: ColumnDef<ClientProps>[] = [
 
       const { handleOpenClient } = useModal()
 
+      const [, setAddressComplete] = useQueryState('address_complete')
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -70,6 +73,7 @@ export const columns: ColumnDef<ClientProps>[] = [
             <DropdownMenuItem
               onClick={() => {
                 methods.reset(linha)
+                setAddressComplete(linha.address)
                 handleOpenClient()
               }}
             >

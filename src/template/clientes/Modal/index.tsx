@@ -1,21 +1,27 @@
 import { FormDataCliente } from '@/app/clientes/types'
+import { AddressProps } from '@/app/enderecos/types'
 import { MFooter } from '@/components/comum/Modal/components/MFooter'
 import { InputForm } from '@/components/ui-componets/input-form'
 import { SelectSearch } from '@/components/ui-componets/select-search'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Form } from '@/components/ui/form'
-import { useContextAddress } from '@/contexts/dataContexts/addressContext/useContextAddress'
 import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
 import { useModal } from '@/contexts/modal'
+import { api } from '@/services/api/apiClient'
+import { useQuery } from '@tanstack/react-query'
+import { debounce } from 'lodash'
 import { PlusCircle } from 'lucide-react'
+import { useQueryState } from 'nuqs'
+import { useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { toast } from 'react-toastify'
+
+const fetchDebounce = debounce((func: () => void) => func(), 500)
 
 export const ModalClient = () => {
   const { openClient, handleOpenClient } = useModal()
 
-  const { address } = useContextAddress()
   const { editClient, addClient, getAllClients } = useContextClient()
   const methods = useFormContext<FormDataCliente>()
 
@@ -49,11 +55,33 @@ export const ModalClient = () => {
     }
   }
 
+  const [enebleSearch, setEnableSearch] = useState(false)
+  const [address, setAddress] = useState('rua')
+  const [addressComplete, setAddressComplete] = useQueryState('address_complete')
+
+  const { data, refetch, isLoading } = useQuery<AddressProps[]>({
+    queryKey: ['search-address', address],
+    queryFn: async () => {
+      const response = await api.get(`/search-address/${address}`)
+      console.log(response.data)
+      return response.data
+    },
+    enabled: enebleSearch && address.length > 2,
+  })
+
+  useEffect(() => {
+    fetchDebounce(() => {
+      setEnableSearch(true)
+      refetch().finally(() => setEnableSearch(false))
+      console.log('debounce:address')
+    })
+  }, [address])
   return (
     <Dialog
       open={openClient}
       onOpenChange={() => {
         handleOpenClient()
+        setAddressComplete('')
         methods.reset({})
       }}
     >
@@ -94,8 +122,14 @@ export const ModalClient = () => {
               control={methods.control}
               name="address_id"
               label="Endereço"
-              data={address?.map(({ id, address_complete }) => ({ value: id, label: address_complete }))}
+              data={data?.map(({ id, address_complete }) => ({ value: id, label: address_complete }))}
               onSelect={(value) => methods.setValue('address_id', value)}
+              onValueChange={(value) => {
+                setAddress(value)
+              }}
+              shouldFilter={false}
+              isLoading={isLoading}
+              displayValue={addressComplete}
             />
 
             <MFooter>

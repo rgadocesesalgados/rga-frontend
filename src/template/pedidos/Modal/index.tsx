@@ -341,9 +341,12 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
               description="Se for entrega marque essa caixinha"
               onChange={(e) => {
                 if (!e.target.value) {
-                  methods.resetField('value_frete')
-                  methods.resetField('logistic')
-                  methods.resetField('address')
+                  methods.setValue('value_frete', 0)
+                  methods.setValue('logistic', 'FRETE_MOTO')
+                  methods.setValue('address', '')
+                  setAddressComplete('')
+                  setFreteCarro('')
+                  setFreteMoto('')
                 }
               }}
             />
@@ -367,6 +370,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
                     methods.setValue('value_frete', addressSelect[typeFrete?.toLowerCase()])
                     setFreteCarro(`${addressSelect?.frete_carro}`)
                     setFreteMoto(`${addressSelect?.frete_moto}`)
+                    setAddressComplete(addressSelect?.address_complete)
                   }}
                   commandEmpty={
                     <ModalAddress

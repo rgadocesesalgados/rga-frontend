@@ -367,6 +367,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
                     methods.setValue('value_frete', addressSelect[typeFrete?.toLowerCase()])
                     setFreteCarro(`${addressSelect?.frete_carro}`)
                     setFreteMoto(`${addressSelect?.frete_moto}`)
+                    setAddressComplete(addressSelect?.address_complete)
                   }}
                   commandEmpty={
                     <ModalAddress

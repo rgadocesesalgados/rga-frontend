@@ -81,7 +81,7 @@ export const columns: ColumnDef<GetOrder>[] = [
     accessorKey: 'total',
     header: 'Total',
     cell: ({ cell }) =>
-      cell.getValue<number>().toLocaleString('pt-BR', {
+      cell.getValue<number>()?.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL',
       }),

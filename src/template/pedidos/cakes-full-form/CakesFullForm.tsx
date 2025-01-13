@@ -41,7 +41,7 @@ export const CakesFullForm = () => {
             formato: 'REDONDO',
             massa: 'BRANCA',
             cobertura: 'CHANTILLY',
-            topper: { price: 15 },
+            topper: { price: 18 },
             recheios: [{}, {}],
           })
         }

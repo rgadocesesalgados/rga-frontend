@@ -85,7 +85,7 @@ export const DataTable = <TData, TValue>({
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="flex flex-wrap md:table-row ">
               {headerGroup.headers?.map((header) => (
                 <TableHead key={header.id}>
                   {header.isPlaceholder // indica se o cabecalho é um placeholder
@@ -99,7 +99,11 @@ export const DataTable = <TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
+                className="flex flex-col md:table-row "
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="py-3">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

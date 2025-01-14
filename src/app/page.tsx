@@ -15,6 +15,7 @@ export interface DeliveryProps {
   client_name: string
   address_complete: string
   type_delivery: 'FRETE_CARRO' | 'FRETE_MOTO'
+  payment: number
 }
 
 const getDelivery = async () => {

@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 
 import { DeliveryProps } from './page'
 import { Bike, Truck } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 
 export const columns: ColumnDef<DeliveryProps>[] = [
   {
@@ -40,7 +41,27 @@ export const columns: ColumnDef<DeliveryProps>[] = [
   {
     accessorKey: 'date',
     header: 'Data',
-    cell: ({ cell }) => new Date(cell.getValue<Date>()).toLocaleDateString(),
+    cell: ({ cell, row }) => {
+      const payment = row.original.payment
+      return (
+        <div className="flex justify-between gap-2">
+          <div>{new Date(cell.getValue<Date>()).toLocaleDateString()}</div>
+          {payment && (
+            <Badge>
+              <div>pago:</div>
+              <div>
+                {payment
+                  .toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })
+                  .slice(2)}
+              </div>
+            </Badge>
+          )}
+        </div>
+      )
+    },
     filterFn: (row, columnId, value) => {
       const dateValue = new Date(row.original[columnId])
 

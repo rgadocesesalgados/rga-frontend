@@ -13,7 +13,7 @@ export function DataTable<TData>({ table }: DataTableProps<TData>) {
     <TableContainer>
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
+          <TableRow key={headerGroup.id} className="flex flex-wrap md:table-row">
             {headerGroup.headers.map((header) => {
               return (
                 <TableHead key={header.id}>
@@ -27,7 +27,11 @@ export function DataTable<TData>({ table }: DataTableProps<TData>) {
       <TableBody>
         {table.getRowModel().rows?.length ? (
           table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+            <TableRow
+              key={row.id}
+              data-state={row.getIsSelected() && 'selected'}
+              className="flex flex-col md:table-row"
+            >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
               ))}

@@ -33,7 +33,10 @@ export const columns: ColumnDef<GetOrder>[] = [
 
       return <Column.SortingHead label="Data" toggleSorting={toggleSorting} />
     },
-    cell: ({ cell }) => <div className="text-nowrap">{new Date(cell.getValue<string>()).toLocaleDateString()}</div>,
+    cell: ({ cell }) => {
+      const date = new Date(cell.getValue<string>()).toLocaleDateString()
+      return <div className="text-nowrap">{date.slice(0, 6) + date.slice(8)}</div>
+    },
   },
   {
     accessorKey: 'client.name',
@@ -44,16 +47,6 @@ export const columns: ColumnDef<GetOrder>[] = [
     },
     cell: ({ cell }) => cell.getValue<string>(),
   },
-
-  {
-    accessorKey: 'delivery',
-    header: ({ column }) => {
-      const toggleSorting = () => column.toggleSorting(column.getIsSorted() === 'asc')
-
-      return <Column.SortingHead toggleSorting={toggleSorting} label="Delivery" />
-    },
-    cell: ({ cell }) => (cell.getValue<boolean>() ? 'Entrega' : 'Retirada'),
-  },
   {
     accessorKey: 'total',
     header: ({ column }) => {
@@ -61,11 +54,39 @@ export const columns: ColumnDef<GetOrder>[] = [
 
       return <Column.SortingHead toggleSorting={toggleSorting} label="Total" />
     },
-    cell: ({ cell }) =>
-      cell.getValue<number>().toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      }),
+    cell: ({ cell, row }) => {
+      const payments = row.original.payment?.reduce((acc, item) => {
+        if (item.paid) {
+          return acc + item.value
+        }
+        return acc
+      }, 0)
+
+      return (
+        <div className="flex justify-between gap-2 md:flex-col">
+          <div>
+            {cell.getValue<number>().toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}
+          </div>
+
+          {payments > 0 && (
+            <Badge>
+              <div>pago:</div>
+              <div>
+                {payments
+                  .toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })
+                  .slice(2)}
+              </div>
+            </Badge>
+          )}
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'status',
@@ -78,7 +99,11 @@ export const columns: ColumnDef<GetOrder>[] = [
       const status = cell.getValue<StatusProps>()
 
       const statusNormalized = status === 'EM_PRODUCAO' ? 'EM PRODUÇÃO' : status
-      return <Badge variant={status.toLocaleLowerCase() as BadgeProps['variant']}>{statusNormalized}</Badge>
+      return (
+        <Badge variant={status.toLocaleLowerCase() as BadgeProps['variant']} className="w-full md:w-fit">
+          <div className="mx-auto">{statusNormalized}</div>
+        </Badge>
+      )
     },
   },
   {
@@ -155,8 +180,8 @@ export const columns: ColumnDef<GetOrder>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost">
-              <span className="sr-only">Open menu</span>
+            <Button variant="outline" className="w-full space-x-1 md:w-full md:space-x-0">
+              <span className="md:hidden">Abrir menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -207,14 +232,18 @@ export const columns: ColumnDef<GetOrder>[] = [
 
             <DropdownMenuItem
               className="text-red-600 hover:bg-red-600 hover:text-white"
-              onClick={() =>
+              onClick={() => {
+                const confirm = prompt('Digite SIM para confirmar')
+
+                if (confirm !== 'SIM') return
+
                 removeOrder(linha.id)
                   .then(() => {
                     toast(`Pedido de ${linha.client.name} removido com sucesso`)
                     getAllOrders()
                   })
                   .catch((error) => toast.error(error.response.data?.error))
-              }
+              }}
             >
               Excluir <XCircle className="ml-2 h-4 w-4" />
             </DropdownMenuItem>

@@ -20,6 +20,7 @@ const cobertura = {
   CLARA_QUEIMADA: 'Clara queimada',
   CHANTILLY: 'Chantilly',
   NATA: 'Nata',
+  KIT_KAT: 'Kit Kat'
 } as const
 
 const noto_sans = Noto_Sans({ subsets: ['latin'], weight: '400' })

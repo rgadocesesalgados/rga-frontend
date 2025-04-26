@@ -93,7 +93,6 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
         data={[
           { label: 'Chantilly', value: 'CHANTILLY' },
           { label: 'Avela batido', value: 'AVELA_BATIDO' },
-          { label: 'Nata', value: 'NATA' },
           { label: 'Clara queimada', value: 'CLARA_QUEIMADA' },
           { label: 'KitKat', value: 'KIT_KAT' },
         ]}

@@ -134,7 +134,7 @@ export const columns: ColumnDef<GetOrder>[] = [
             tema: cake.topper?.tema ?? '',
             name: cake.topper?.name ?? '',
             idade: cake.topper?.idade,
-            price: cake.topper?.price ?? 15,
+            price: cake.topper?.price ?? 18,
             description: cake.topper?.description ?? '',
             banner: cake.topper?.banner ?? '',
             recebido: cake.topper?.recebido ?? false,

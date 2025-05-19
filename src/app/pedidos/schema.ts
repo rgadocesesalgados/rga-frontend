@@ -109,7 +109,7 @@ const cakes = z.array(
     ),
 )
 
-const status = z.enum(['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'ENTREGUE', 'CANCELADO'])
+const status = z.enum(['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'ENTREGUE', 'CANCELADO', 'ORCAMENTO'])
 
 export type StatusProps = z.infer<typeof status>
 

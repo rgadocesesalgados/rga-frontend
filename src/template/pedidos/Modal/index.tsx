@@ -439,6 +439,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
                 { label: 'Em produção', value: 'EM_PRODUCAO' },
                 { label: 'Entregue', value: 'ENTREGUE' },
                 { label: 'Cancelado', value: 'CANCELADO' },
+                { label: 'Orçamento', value: 'ORCAMENTO' },
               ]}
               label="Status"
               showMessageError

@@ -46,7 +46,7 @@ export interface OrderProps {
   address_id: string
   frete: 'FRETE_CARRO' | 'FRETE_MOTO'
   value_frete: number
-  status: 'RASCUNHO' | 'ANOTADO' | 'EM_PRODUCAO' | 'ENTREGUE' | 'CANCELADO'
+  status: 'RASCUNHO' | 'ANOTADO' | 'EM_PRODUCAO' | 'ENTREGUE' | 'CANCELADO' | 'ORCAMENTO'
   total: number
 }
 

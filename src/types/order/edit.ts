@@ -16,5 +16,5 @@ export interface EditOrder {
   observations: string
   total: number
   delivery: boolean
-  status: 'RASCUNHO' | 'ANOTADO' | 'EM_PRODUCAO' | 'ENTREGUE' | 'CANCELADO'
+  status: 'RASCUNHO' | 'ANOTADO' | 'EM_PRODUCAO' | 'ENTREGUE' | 'CANCELADO' | 'ORCAMENTO'
 }

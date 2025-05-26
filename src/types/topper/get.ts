@@ -7,4 +7,5 @@ export interface GetTopper {
   description: string
   banner: string
   recebido: boolean
+  fornecedor: 'FORNECEDOR_PRINCIPAL' | 'FORNECEDOR_SECUNDARIO'
 }

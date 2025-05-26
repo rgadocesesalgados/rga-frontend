@@ -1,6 +1,7 @@
 import { FormDataPedidos } from '@/app/pedidos/types'
 import { InputForm } from '@/components/ui-componets/input-form'
 import { InputToggle } from '@/components/ui-componets/input-toggle'
+import { SelectForm } from '@/components/ui-componets/select-form'
 import { TextareaForm } from '@/components/ui-componets/textarea-form'
 import { useFormContext } from 'react-hook-form'
 
@@ -12,6 +13,15 @@ export const TopperForm = ({ CakeIndex }: { CakeIndex: number }) => {
 
   return (
     <div className="flex flex-wrap gap-5 rounded-xl border bg-white p-5">
+      <SelectForm
+        control={control}
+        name={`cakes.${CakeIndex}.topper.fornecedor`}
+        label="Fornecedor"
+        data={[
+          { label: 'Principal', value: 'FORNECEDOR_PRINCIPAL' },
+          { label: 'Secundario', value: 'FORNECEDOR_SECUNDARIO' },
+        ]}
+      />
       <InputForm control={control} name={`cakes.${CakeIndex}.topper.tema`} label="Tema" />
 
       <InputForm control={control} name={`cakes.${CakeIndex}.topper.name`} label="Nome" />

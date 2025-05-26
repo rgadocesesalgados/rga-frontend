@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, SquarePen, XCircle } from 'lucide-react'
+import { List, ListOrdered, MoreHorizontal, SquarePen, XCircle } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
@@ -18,6 +18,7 @@ import { Column } from '@/template/recheios/Table/columns/components'
 import { ClientProps, FormDataCliente } from '@/app/clientes/types'
 import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
 import { useQueryState } from 'nuqs'
+import { redirect, useRouter } from 'next/navigation'
 
 export const columns: ColumnDef<ClientProps>[] = [
   {
@@ -58,6 +59,8 @@ export const columns: ColumnDef<ClientProps>[] = [
 
       const [, setAddressComplete] = useQueryState('address_complete')
 
+      const { push } = useRouter()
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -69,7 +72,15 @@ export const columns: ColumnDef<ClientProps>[] = [
 
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-
+            <DropdownMenuItem
+              onClick={() => {
+                push(`/pedidos/${linha.id}`)
+              }}
+            >
+              Pedidos
+              <List className="ml-2 h-4 w-4" />
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 methods.reset(linha)

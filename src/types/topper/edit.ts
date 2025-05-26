@@ -7,4 +7,5 @@ export interface EditTopper {
   banner: string
   tem_topper: boolean
   recebido: boolean
+  fornecedor: 'FORNECEDOR_PRINCIPAL' | 'FORNECEDOR_SECUNDARIO'
 }

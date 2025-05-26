@@ -1,4 +1,4 @@
-import { Tooper } from '@/app/toppers/page'
+import { Tooper } from '@/app/toppers/[fornecedor]/page'
 import { api } from '@/services/api/apiClient'
 import { useState } from 'react'
 

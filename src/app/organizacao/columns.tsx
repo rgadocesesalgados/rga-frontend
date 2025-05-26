@@ -129,6 +129,7 @@ export const columns: ColumnDef<GetOrder>[] = [
             price: cake.topper?.price ?? 15,
             description: cake.topper?.description ?? '',
             banner: cake.topper?.banner ?? '',
+            fornecedor: cake.topper.fornecedor,
           },
         })),
         orderProduct: orderProduct.reduce(

@@ -10,8 +10,8 @@ import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table/ColumnHeader'
 import { api } from '@/services/api/apiClient'
 
-import { Tooper } from '@/app/toppers/page'
 import { useContextTopper } from '@/contexts/dataContexts/topperContext/useContextTopper'
+import { Tooper } from '../toppers/[fornecedor]/page'
 
 export const columns: ColumnDef<Tooper>[] = [
   {
@@ -83,6 +83,7 @@ export const columns: ColumnDef<Tooper>[] = [
           <div>{origin.name}</div>
           <div>{origin.idade}</div>
           <div>{origin.description}</div>
+          <div>{origin.fornecedor}</div>
         </div>
       )
     },

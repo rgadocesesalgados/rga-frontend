@@ -1,5 +1,6 @@
 'use client'
 import { api } from '@/services/api/apiClient'
+import { redirect, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
@@ -15,16 +16,21 @@ export interface Tooper {
   banner: string
   description: string
   recebido: boolean
+  fornecedor: 'FORNECEDOR_PRINCIPAL' | 'FORNECEDOR_SECUNDARIO'
 }
 
 const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
 
 export default function Toppers() {
+  const { fornecedor } = useParams<{ fornecedor: string }>()
+
+  if (!['FORNECEDOR_PRINCIPAL', 'FORNECEDOR_SECUNDARIO'].includes(fornecedor)) redirect('/not-found')
+
   const [data, setData] = useState<Tooper[]>([])
 
   useEffect(() => {
     api
-      .get('/toppers')
+      .get(`/toppers/${fornecedor}`)
       .then((response) => {
         console.log(response.data)
         setData(response.data)

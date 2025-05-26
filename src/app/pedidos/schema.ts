@@ -58,7 +58,7 @@ const topper = z
     description: z.string().optional(),
     banner: z.string({ required_error: 'A imagem do bolo é obrigatória.' }).optional(),
     recebido: z.boolean().optional(),
-    fornecedor: z.enum(['FORNECEDOR_PRINCIPAL', 'FORNECEDOR_SECUNDARIO']),
+    fornecedor: z.enum(['FORNECEDOR_PRINCIPAL', 'FORNECEDOR_SECUNDARIO']).default('FORNECEDOR_PRINCIPAL'),
   })
   .optional()
 

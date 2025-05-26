@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { List, ListOrdered, MoreHorizontal, SquarePen, XCircle } from 'lucide-react'
+import { List, MoreHorizontal, SquarePen, XCircle } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
@@ -18,7 +18,7 @@ import { Column } from '@/template/recheios/Table/columns/components'
 import { ClientProps, FormDataCliente } from '@/app/clientes/types'
 import { useContextClient } from '@/contexts/dataContexts/clientesContext/useContextClient'
 import { useQueryState } from 'nuqs'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export const columns: ColumnDef<ClientProps>[] = [
   {

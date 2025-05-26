@@ -1,7 +1,5 @@
 'use client'
 import { toBRL } from '@/app/utils/toBRL'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import {
   Table,
@@ -13,8 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useContextOrders'
-import { useView } from '@/contexts/view'
 import { api } from '@/services/api/apiClient'
 import { GetOrder } from '@/types/order'
 import { useQuery } from '@tanstack/react-query'

@@ -9,7 +9,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
   return (
     <Sheader>
       {children}
-      <h1>{pathName}</h1>
+      <h1>/{pathName.split('/').slice(0, 2).join('')}</h1>
     </Sheader>
   )
 }

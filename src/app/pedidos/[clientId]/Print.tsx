@@ -40,7 +40,7 @@ export const Print = ({ order }: { order: GetOrder }) => {
   const [dataURL, setDataURL] = useState('')
 
   return (
-    <S.container data-open={open} className={`${courierPrime.className} fixed bottom-0 left-0 right-0 top-0`}>
+    <S.container data-open={open} className={`${courierPrime.className} absolute left-0 right-0 top-0`}>
       <div className="flex w-full max-w-96 flex-col gap-14 p-5" ref={modalPrintScreen}>
         <div>
           {dataURL && <img src={dataURL} alt="" className="rounded-2xl border shadow-2xl" />}

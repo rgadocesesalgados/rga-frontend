@@ -57,7 +57,9 @@ export default function Home() {
             }}
           />
         </div>
+
         <div className="rounded-2xl border bg-white p-5">
+          <div className="font-bold">{deliveryData.length} Entregas</div>
           <DataTable table={table} />
         </div>
       </Wrap>

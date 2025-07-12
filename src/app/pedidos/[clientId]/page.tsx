@@ -1,5 +1,5 @@
 import Layout from '@/app/dashboard/layout'
-import { View } from './View'
+import { QueryProvider } from './QueryProvider'
 
 interface OrdeForClientProps {
   params: Promise<{ clientId: string }>
@@ -10,7 +10,7 @@ export default async function OrdeForClient({ params }: OrdeForClientProps) {
 
   return (
     <Layout>
-      <View clientId={clientId} />
+      <QueryProvider clientId={clientId} />
     </Layout>
   )
 }

@@ -9,7 +9,6 @@ bg-white
 data-[open=true]:flex
 hidden
 h-screen
-
 text-sm
 `
 

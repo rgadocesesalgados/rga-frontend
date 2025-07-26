@@ -88,7 +88,7 @@ export const useFormCorePedidos = () => {
 
     const peso = getPesoCake(index)
 
-    if (peso == 0.6) return 30
+    if (peso == 0.6) return 35
 
     const preco = Number((mediaPriceRecheio * peso).toFixed(2)) || 0
 

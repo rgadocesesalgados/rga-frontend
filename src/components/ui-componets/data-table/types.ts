@@ -5,4 +5,5 @@ export interface DataTableProps<TData, TValue> {
   data: TData[]
   inputFilter?: string
   inputFilterLabel: string
+  onFocus?: () => void
 }

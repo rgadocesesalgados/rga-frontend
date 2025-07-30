@@ -29,6 +29,7 @@ export const DataTable = <TData, TValue>({
   data,
   inputFilter,
   inputFilterLabel,
+  onFocus = () => {},
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -58,6 +59,7 @@ export const DataTable = <TData, TValue>({
           className="max-w-sm"
           value={(table.getColumn(`${inputFilter}`)?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn(`${inputFilter}`)?.setFilterValue(event.target.value)}
+          onFocus={onFocus}
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

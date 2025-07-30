@@ -28,7 +28,15 @@ export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {children}
-      <DataTable columns={columns} data={orders} inputFilter="client_name" inputFilterLabel="cliente" />
+      <DataTable
+        columns={columns}
+        data={orders}
+        inputFilter="client_name"
+        inputFilterLabel="cliente"
+        onFocus={async () => {
+          await getAllOrders()
+        }}
+      />
     </>
   )
 }

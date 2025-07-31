@@ -4,7 +4,7 @@ import { useContextCategory } from '@/contexts/dataContexts/categorysContext/use
 import { useFormContext } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 
-import { PlusCircle } from 'lucide-react'
+import { Loader2, PlusCircle } from 'lucide-react'
 import { InputForm } from '@/components/ui-componets/input-form'
 import { SelectSearch } from '@/components/ui-componets/select-search'
 import { DatePickerForm } from '@/components/ui-componets/date-picker'
@@ -28,11 +28,13 @@ import { ModalAddress } from '@/app/pedidos/address/ModalAddress'
 import { DocesPP } from '../product-order-peer-size'
 import { maskTel } from '@/app/utils/masks/maskTel'
 import { api } from '@/services/api/apiClient'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { ClientProps } from '@/app/clientes/types'
 import { debounce } from 'lodash'
 import { useQueryState } from 'nuqs'
 import { AddressProps } from '@/app/enderecos/types'
+import { AxiosError } from 'axios'
+import { error } from 'console'
 
 const fetchDebounce = debounce((func: () => void) => func(), 500)
 
@@ -119,7 +121,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
         }
       })
 
-      editOrder({
+      await editOrder({
         id: data.id,
         client_id: data.client.id,
         date: data.date,
@@ -134,15 +136,6 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
         payment: payments,
         status: data.status,
       })
-        .then(() => {
-          getAllOrders(all)
-          handleOpenOrder()
-          toast.success('Pedido editado com sucesso!')
-        })
-        .catch((error) => {
-          console.log(error.response.data.error)
-          toast.error(error.response?.data?.error)
-        })
     } else {
       const cakes: CreateCake[] = data.cakes.map((cake) => {
         const recheio: CreateCake['recheio'] = cake.recheios.map((recheio) => {
@@ -174,7 +167,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
           topper,
         }
       })
-      addOrder({
+      await addOrder({
         client: { id: data.client.id },
         date: data.date,
         hour: data.hour,
@@ -188,15 +181,6 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
         products: [...productsList, ...docesListPP],
         payments,
       })
-        .then(() => {
-          getAllOrders(all)
-          handleOpenOrder()
-          toast.success('Pedido criado com sucesso!')
-        })
-        .catch((error) => {
-          console.log(error.response.data.error)
-          toast.error(error.response?.data?.error)
-        })
     }
   }
 
@@ -248,6 +232,22 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
     })
   }, [address])
 
+  const { isPending, mutate } = useMutation({
+    mutationFn: submit,
+    onSuccess: async () => {
+      await getAllOrders(all)
+      handleOpenOrder()
+      toast.success('Salvo com sucesso!')
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.error)
+      }
+      toast.error('Erro no servidor!')
+      console.log(error)
+    },
+  })
+
   return (
     <Dialog
       open={openOrder}
@@ -285,7 +285,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
 
       <DialogContent className="my-5 h-full max-w-6xl overflow-y-scroll rounded-2xl pb-10">
         <Form {...methods}>
-          <form className="flex flex-col gap-5" onSubmit={methods.handleSubmit(submit)}>
+          <form className="flex flex-col gap-5" onSubmit={methods.handleSubmit((data) => mutate(data))}>
             <InputForm control={methods.control} name="id" readOnly className="hidden" />
 
             <SelectSearch
@@ -450,8 +450,8 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
             <FormPayment />
 
             <DialogFooter>
-              <Button type="submit" disabled={openModalClient || openModalAddress}>
-                Salvar
+              <Button type="submit" disabled={openModalClient || openModalAddress || isPending}>
+                Salvar {isPending && <Loader2 className="animate-spin" />}
               </Button>
             </DialogFooter>
           </form>

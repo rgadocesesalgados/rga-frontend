@@ -34,7 +34,6 @@ import { debounce } from 'lodash'
 import { useQueryState } from 'nuqs'
 import { AddressProps } from '@/app/enderecos/types'
 import { AxiosError } from 'axios'
-import { error } from 'console'
 
 const fetchDebounce = debounce((func: () => void) => func(), 500)
 

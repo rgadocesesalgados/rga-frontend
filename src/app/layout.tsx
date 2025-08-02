@@ -10,7 +10,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'] })
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 export default function RootLayout({
   children,
 }: Readonly<{

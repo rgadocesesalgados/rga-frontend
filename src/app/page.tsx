@@ -19,6 +19,7 @@ export interface DeliveryProps {
   address_complete: string
   type_delivery: 'FRETE_CARRO' | 'FRETE_MOTO'
   payment: number
+  value_frete: number
 }
 
 const getDelivery = async (date = new Date()) => {
@@ -56,7 +57,6 @@ export default function Home() {
   })
 
   const [date, setDate] = useState<Date>()
-  if ((!data && isLoading) || isPending) return <Loader2 className="animate-spin" />
 
   return (
     <Layout>
@@ -73,29 +73,42 @@ export default function Home() {
         </div>
 
         <div className="rounded-2xl border bg-white p-5">
-          <div className="font-bold">{data.length} Entregas</div>
+          {((!data && isLoading) || isPending) && <Loader2 className="animate-spin" />}
+          {!((!data && isLoading) || isPending) && (
+            <>
+              <div className="font-bold">{data.length} Entregas</div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Horário</TableHead>
+                    <TableHead>Frete</TableHead>
+                    <TableHead>Endereço</TableHead>
+                    <TableHead>Pago</TableHead>
+                  </TableRow>
+                </TableHeader>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Horário</TableHead>
-                <TableHead>Frete</TableHead>
-                <TableHead>Endereço</TableHead>
-                <TableHead>Pago</TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {data.map(({ hour, id, type_delivery, address_complete, payment }) => (
-                <TableRow key={id}>
-                  <TableCell>{hour}</TableCell>
-                  <TableCell>{TypeDeliveryIcon[type_delivery]}</TableCell>
-                  <TableCell>{address_complete}</TableCell>
-                  <TableCell>{payment && <Badge>{toBRL(payment)}</Badge>}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                <TableBody>
+                  {data.map(({ hour, id, type_delivery, address_complete, payment, client_name, value_frete }) => (
+                    <TableRow key={id}>
+                      <TableCell className="w-min">{hour}</TableCell>
+                      <TableCell>
+                        <div className="flex w-min flex-col items-center gap-1">
+                          {TypeDeliveryIcon[type_delivery]} <Badge variant="em_producao">{toBRL(value_frete)}</Badge>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-2">
+                          <div>{address_complete}</div>
+                          <div>{client_name}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-min">{payment && <Badge>{toBRL(payment)}</Badge>}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </>
+          )}
         </div>
       </Wrap>
     </Layout>

@@ -10,13 +10,9 @@ export type ProductProps = {
   min_quantity: number
   banner: string
   category_name: string
-  size: 'PP' | 'P' | 'M' | 'G' | 'GG' | 'UNIT' | 'NOT'
-  stock: number
   category_id: string
-  stock_id: string
 }
 
-export interface ProductPropsRequestToCreate
-  extends Omit<ProductProps, 'id' | 'stock_id' | 'stock' | 'category_name'> {}
+export interface ProductPropsRequestToCreate extends Omit<ProductProps, 'id' | 'category_name'> {}
 
-export interface ProductPropsRequestToEdit extends Omit<ProductProps, 'stock_id' | 'stock' | 'category_name'> {}
+export interface ProductPropsRequestToEdit extends Omit<ProductProps, 'category_name'> {}

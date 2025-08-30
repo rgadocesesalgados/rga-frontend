@@ -1,5 +1,6 @@
 export interface GetProdutos {
-  name: string
-  quantity: number
-  category_name: string
+  [key: string]: {
+    name: string
+    count: number
+  }[]
 }

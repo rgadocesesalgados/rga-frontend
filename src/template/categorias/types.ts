@@ -7,4 +7,5 @@ export interface CategoryProps {
   id?: string
   name: string
   priority: number
+  boxes: number[]
 }

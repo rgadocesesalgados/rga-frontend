@@ -15,4 +15,12 @@ export interface CreateOrder
   cakes?: CreateCake[]
   products?: CreateProductOrder[]
   payments?: PaymentCreate[]
+  boxes?: {
+    products?: {
+      product_id?: string
+      quantity?: number
+      price?: number
+      total?: number
+    }[]
+  }[]
 }

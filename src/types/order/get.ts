@@ -11,7 +11,12 @@ export interface GetOrder {
   address: GetAddressOrder
   bolo: GetCake[]
   orderProduct: GetOrderProduct[]
-  docesPP: GetOrderProduct[]
+  boxes: {
+    id: string
+    size: number
+    category_id: string
+    products: { id: string; product_id: string; quantity: number; price: number; total: number; name: string }[]
+  }[]
   payment: GetPayment[]
   date: Date
   hour: string

@@ -25,7 +25,6 @@ import { EditCake } from '@/types/cake'
 import { ModalClient } from '@/app/pedidos/client/ModalClient'
 import { useEffect, useState } from 'react'
 import { ModalAddress } from '@/app/pedidos/address/ModalAddress'
-import { DocesPP } from '../product-order-peer-size'
 import { maskTel } from '@/app/utils/masks/maskTel'
 import { api } from '@/services/api/apiClient'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -34,6 +33,7 @@ import { debounce } from 'lodash'
 import { useQueryState } from 'nuqs'
 import { AddressProps } from '@/app/enderecos/types'
 import { AxiosError } from 'axios'
+import { Boxes } from '../boxes'
 
 const fetchDebounce = debounce((func: () => void) => func(), 500)
 
@@ -58,18 +58,11 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
   const [freteMoto, setFreteMoto] = useQueryState('frete_moto')
 
   const { executeCalculateTotal } = useOrder()
+  useEffect(() => {
+    executeCalculateTotal()
+  })
 
-  executeCalculateTotal()
-
-  const submit = async ({ orderProduct, docesPP, ...data }: FormDataPedidos) => {
-    const docesListPP = docesPP.map((product) => {
-      return {
-        product_id: product.product_id,
-        price: product.price,
-        quantity: product.quantity,
-        total: product.total,
-      }
-    })
+  const submit = async ({ orderProduct, boxes, ...data }: FormDataPedidos) => {
     const productsList = orderProduct
       .reduce((acc, category) => {
         return [...acc, ...category]
@@ -82,6 +75,10 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
           total: product.total,
         }
       })
+
+    const boxList = boxes.reduce((acc, box) => {
+      return [...acc, ...box.map(({ products }) => ({ products }))]
+    }, [])
 
     const payments = data.payment.map((pay) => {
       return { date: pay.date, paid: pay.paid, value: pay.value, type: pay.formPayment }
@@ -126,7 +123,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
         date: data.date,
         hour: data.hour,
         bolo: editCakes,
-        orderProduct: [...productsList, ...docesListPP],
+        orderProduct: productsList,
         cor_forminhas: data.cor_forminhas,
         observations: data.observations,
         delivery: data.delivery,
@@ -134,6 +131,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
         total: data.total,
         payment: payments,
         status: data.status,
+        boxes: boxList,
       })
     } else {
       const cakes: CreateCake[] = data.cakes.map((cake) => {
@@ -177,8 +175,9 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
         total: data.total,
         status: data.status,
         cakes,
-        products: [...productsList, ...docesListPP],
+        products: productsList,
         payments,
+        boxes: boxList,
       })
     }
   }
@@ -241,9 +240,9 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
     onError: (error) => {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data?.error)
+        return
       }
       toast.error('Erro no servidor!')
-      console.log(error)
     },
   })
 
@@ -261,6 +260,7 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
           date: new Date(),
           hour: '00:00',
           cakes: [],
+          boxes: [],
           orderProduct: [],
           cor_forminhas: '',
           observations: '',
@@ -317,12 +317,16 @@ export const ModalPedidos = ({ all = false }: { all?: boolean }) => {
 
             <CakesFullForm />
 
-            <DocesPP />
+            {categorys
+              .filter((category) => !!category.boxes.length)
+              .map((category, i) => (
+                <Boxes key={category.id} index={i} category={category} />
+              ))}
 
             {categorys
-              .filter((category) => category.priority >= 0)
-              .map((category) => (
-                <ProductOrder key={category.id} index={category.priority} category={category} />
+              .filter((category) => !category.boxes.length)
+              .map((category, i) => (
+                <ProductOrder key={category.id} index={i} category={category} />
               ))}
 
             <InputForm

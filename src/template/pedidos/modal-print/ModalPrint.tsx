@@ -46,7 +46,7 @@ export const ModalPrint = () => {
 
   return (
     <S.container data-open={open} className={courierPrime.className}>
-      <div className="flex w-11/12 flex-col gap-14 p-5 md:w-96" ref={modalPrintScreen}>
+      <div className="flex max-w-96 flex-col gap-14 p-5" ref={modalPrintScreen}>
         <div>
           {dataURL && <img src={dataURL} alt="" className="rounded-2xl border shadow-2xl" />}
 
@@ -85,6 +85,10 @@ export const ModalPrint = () => {
 
                 <div>{cake.banner ? 'Tem Modelo' : 'Não tem modelo'}</div>
 
+                {cake.banner && showButtonPrint && (
+                  <img src={cake.banner} width={200} height={200} alt="Foto do modelo do bolo" />
+                )}
+
                 {cake.topper && (
                   <div className="flex flex-col gap-1 pt-5">
                     <div className="flex items-baseline font-bold">
@@ -104,6 +108,10 @@ export const ModalPrint = () => {
                         <p>{cake.topper.description}</p>
                       </div>
                     )}
+
+                    {cake.topper.banner && showButtonPrint && (
+                      <img src={cake.topper.banner} width={200} height={200} alt="Foto do modelo do topper" />
+                    )}
                   </div>
                 )}
               </div>
@@ -112,24 +120,27 @@ export const ModalPrint = () => {
         </S.containerCakes>
 
         <div>
-          {orderSelected?.docesPP.length > 0 && (
-            <div className="py-8">
-              {orderSelected?.docesPP.map((product) => {
+          {orderSelected?.boxes.length > 0 && (
+            <div className="space-y-5 py-2">
+              {orderSelected?.boxes.map((box) => {
                 return (
-                  <div key={product.id} className="flex gap-2">
-                    <div>{product.quantity}</div> <div>{product.name}</div>
+                  <div key={box.id} className="border-2 border-dashed p-1">
+                    {box.products.map((product) => (
+                      <div key={product.id} className="flex flex-nowrap gap-2">
+                        <div>{product.quantity}</div> <div>{product.name}</div>
+                      </div>
+                    ))}
+                    <div className="flex flex-nowrap items-baseline font-bold">
+                      <div className="flex flex-nowrap gap-2">
+                        <div>{box.size}</div>
+                        <div className="text-nowrap">doces</div>
+                      </div>
+                      <Divider />
+                      <div>{toBRL(box.products.reduce((acc, { total }) => acc + total, 0))}</div>
+                    </div>
                   </div>
                 )
               })}
-
-              <div className="flex flex-nowrap items-baseline font-bold">
-                <div className="flex flex-nowrap gap-2">
-                  <div>{quantityProduct(orderSelected?.docesPP || [])}</div>
-                  <div className="text-nowrap">doces</div>
-                </div>
-                <Divider />
-                <div>{toBRL(priceProduct(orderSelected?.docesPP || []))}</div>
-              </div>
             </div>
           )}
         </div>
@@ -247,9 +258,8 @@ export const ModalPrint = () => {
               setTimeout(async () => {
                 const urlImage = await handlePrintScreen()
                 setDataURL(urlImage)
+                setShowButtonPrint(true)
               }, 1)
-
-              setShowButtonPrint(true)
             }}
           >
             Tirar print <Camera className="ml-2 h-5 w-5" />

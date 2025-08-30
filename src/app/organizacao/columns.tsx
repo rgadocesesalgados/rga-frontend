@@ -23,6 +23,7 @@ import { GetOrder } from '@/types/order'
 import { useModalPrint } from '@/contexts/modalPrint'
 import { DataTableColumnHeader } from '@/components/data-table/ColumnHeader'
 import { api } from '@/services/api/apiClient'
+import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
 
 export const columns: ColumnDef<GetOrder>[] = [
   {
@@ -105,7 +106,8 @@ export const columns: ColumnDef<GetOrder>[] = [
       const methods = useFormContext<FormDataPedidos>()
       const linha = row.original
 
-      const { address, orderProduct, date, bolo, payment, docesPP, ...rest } = linha
+      const { address, orderProduct, date, bolo, payment, boxes, ...rest } = linha
+      const { categorys } = useContextCategory()
 
       const order: FormDataPedidos = {
         address: address?.id,
@@ -149,7 +151,16 @@ export const columns: ColumnDef<GetOrder>[] = [
           },
           [] as FormDataPedidos['orderProduct'],
         ),
-        docesPP,
+        boxes: categorys
+          .filter((category) => category.boxes.length > 0)
+          .reduce(
+            (acc, category, index) => {
+              acc[index] = boxes.filter((box) => box.category_id === category.id)
+
+              return acc
+            },
+            [] as FormDataPedidos['boxes'],
+          ),
         date: new Date(date),
         payment: payment.map((pay) => {
           return {

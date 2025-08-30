@@ -18,7 +18,4 @@ export const containerProduct = tw.div`
 flex
 gap-3
 rounded-xl
-p-5
-even:bg-slate-50
-items-end
 `

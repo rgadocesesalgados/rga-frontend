@@ -1,6 +1,5 @@
 import { FormDataProdutos } from '@/app/produtos/types'
 import { InputForm } from '@/components/ui-componets/input-form'
-import { SelectForm } from '@/components/ui-componets/select-form'
 import { SelectSearch } from '@/components/ui-componets/select-search'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -23,9 +22,9 @@ export const ModalProdutos = () => {
 
   const imageValid = imageCake?.includes('https://') || imageCake?.includes('http://') ? imageCake : ''
 
-  const submit = async ({ id, name, min_quantity, price, category_id, banner_url, size }: FormDataProdutos) => {
+  const submit = async ({ id, name, min_quantity, price, category_id, banner_url }: FormDataProdutos) => {
     if (id) {
-      editProduct({ id, name, price, category_id, min_quantity, banner: banner_url, size })
+      editProduct({ id, name, price, category_id, min_quantity, banner: banner_url })
         .then(() => {
           getAllProducts()
           handleOpenProduct()
@@ -34,7 +33,7 @@ export const ModalProdutos = () => {
         })
         .catch((error) => toast.error(error.response.data?.error))
     } else {
-      addProduct({ name, min_quantity, price, category_id, banner: banner_url, size })
+      addProduct({ name, min_quantity, price, category_id, banner: banner_url })
         .then(() => {
           getAllProducts()
           handleOpenProduct()
@@ -78,21 +77,6 @@ export const ModalProdutos = () => {
               name="category_id"
               onSelect={(e) => methods.setValue('category_id', e)}
               showMessageError
-            />
-
-            <SelectForm
-              control={methods.control}
-              name="size"
-              label="Tamanho"
-              data={[
-                { label: 'PP', value: 'PP' },
-                { label: 'P', value: 'P' },
-                { label: 'M', value: 'M' },
-                { label: 'G', value: 'G' },
-                { label: 'GG', value: 'GG' },
-                { label: 'UNIT', value: 'UNIT' },
-                { label: 'NOT', value: 'NOT' },
-              ]}
             />
 
             <InputForm

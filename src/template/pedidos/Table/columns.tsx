@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, Printer, SquareMenu, SquarePen, XCircle } from 'lucide-react'
+import { MoreHorizontal, Printer, SquarePen, XCircle } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useFormContext } from 'react-hook-form'
 import { useModal } from '@/contexts/modal'
@@ -22,8 +22,8 @@ import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useConte
 import { useView } from '@/contexts/view'
 import { GetOrder } from '@/types/order'
 import { useModalPrint } from '@/contexts/modalPrint'
-import { api } from '@/services/api/apiClient'
 import { useQueryState } from 'nuqs'
+import { useContextCategory } from '@/contexts/dataContexts/categorysContext/useContextCategory'
 
 export const columns: ColumnDef<GetOrder>[] = [
   {
@@ -110,10 +110,11 @@ export const columns: ColumnDef<GetOrder>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const { removeOrder, getAllOrders } = useContextOrders()
+      const { categorys } = useContextCategory()
       const methods = useFormContext<FormDataPedidos>()
       const linha = row.original
 
-      const { address, orderProduct, date, bolo, payment, docesPP, ...rest } = linha
+      const { address, orderProduct, date, bolo, payment, boxes, ...rest } = linha
 
       const order: FormDataPedidos = {
         address: address?.id,
@@ -141,24 +142,12 @@ export const columns: ColumnDef<GetOrder>[] = [
             fornecedor: cake.topper?.fornecedor,
           },
         })),
-        orderProduct: orderProduct.reduce(
-          (acc, item) => {
-            if (item.category.priority < 0) {
-              return acc
-            }
-            if (typeof acc[item.category.priority] === 'undefined') {
-              acc[item.category.priority] = [item]
-
-              return acc
-            }
-
-            acc[item.category.priority].push(item)
-
+        orderProduct: categorys
+          .filter((category) => category.boxes.length === 0)
+          .reduce((acc, category, index) => {
+            acc[index] = orderProduct.filter((prod) => prod.category.id === category.id)
             return acc
-          },
-          [] as FormDataPedidos['orderProduct'],
-        ),
-        docesPP,
+          }, []),
         date: new Date(date),
         payment: payment.map((pay) => {
           return {
@@ -168,11 +157,22 @@ export const columns: ColumnDef<GetOrder>[] = [
             formPayment: pay.type,
           }
         }),
+        boxes: categorys
+          .filter((category) => category.boxes.length > 0)
+          .reduce(
+            (acc, category, index) => {
+              acc[index] = boxes.filter((box) => box.category_id === category.id)
+
+              return acc
+            },
+            [] as FormDataPedidos['boxes'],
+          ),
+
         ...rest,
       }
 
       const { handleOpenOrder } = useModal()
-      const { handleOpen, setId } = useView()
+      const { setId } = useView()
       const { handleOpen: handleOpenPrint } = useModalPrint()
       const [, setClientName] = useQueryState('client')
       const [, setAddressComplete] = useQueryState('address_complete')
@@ -200,28 +200,16 @@ export const columns: ColumnDef<GetOrder>[] = [
               <Printer className="ml-2 h-4 w-4" />
             </DropdownMenuItem>
 
-            <DropdownMenuItem
-              onClick={() => {
-                setId(linha.id)
-                handleOpen()
-              }}
-            >
-              Vizualizar
-              <SquareMenu className="ml-2 h-4 w-4" />
-            </DropdownMenuItem>
-
             <DropdownMenuSeparator />
 
             <DropdownMenuItem
               onClick={async () => {
-                const response = await api.get(`search-client/${linha.client.tel}`)
-                const client = response.data[0]
-
-                setClientName(client.name)
+                setClientName(linha.client.name)
                 setFreteCarro(`${address?.frete_carro}`)
                 setFreteMoto(`${address?.frete_moto}`)
 
                 setAddressComplete(address?.address_complete)
+                console.log(order)
                 methods.reset(order)
                 handleOpenOrder()
               }}

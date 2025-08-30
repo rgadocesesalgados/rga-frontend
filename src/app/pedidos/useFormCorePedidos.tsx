@@ -90,13 +90,9 @@ export const useFormCorePedidos = () => {
 
     if (peso == 0.6) return 35
 
-    const preco = Number((mediaPriceRecheio * peso).toFixed(2)) || 0
+    const preco = mediaPriceRecheio * peso || 0
 
-    if (preco === 0) return 0
-
-    const precoInteiro = Math.floor(preco * 4)
-
-    return +(precoInteiro / 4).toFixed(2)
+    return Number((Math.floor(preco * 20) / 20).toFixed(2))
   }
 
   return { recheios: { getLengthRecheios, getTotalPriceRecheios, getMediaPriceRecheios }, getPriceCake }
@@ -144,7 +140,7 @@ export const useOrderProduct = (categoryIndex: number) => {
     setValue(`orderProduct.${categoryIndex}.${productIndex}.total`, value)
 
   const filterProducts = (products: ProductProps[], category: CategoryProps) => {
-    return products.filter((product) => product.category_id === category.id && product.size !== 'PP')
+    return products.filter((product) => product.category_id === category.id)
   }
 
   const convertProductData = (products: ProductProps[]) => {
@@ -171,12 +167,12 @@ export const useOrderProduct = (categoryIndex: number) => {
   }
 }
 
-export const useDocesPP = () => {
+export const useBoxes = (categoryIndex: number, boxIndex: number) => {
   const { setValue, getValues } = useFormContext<FormDataPedidos>()
 
-  const orderProduct = getValues('docesPP')
+  const products = getValues(`boxes.${categoryIndex}.${boxIndex}.products`)
 
-  const getProduct = (productIndex: number) => orderProduct[productIndex]
+  const getProduct = (productIndex: number) => products[productIndex]
 
   const getProductQuantity = (productIndex: number) => getProduct(productIndex).quantity
 
@@ -199,16 +195,16 @@ export const useDocesPP = () => {
   }
 
   const setProductId = ({ productIndex, value }: useOrderProductProps<string>) =>
-    setValue(`docesPP.${productIndex}.product_id`, value)
+    setValue(`boxes.${categoryIndex}.${boxIndex}.products.${productIndex}.product_id`, value)
 
   const setProductPrice = ({ productIndex, value }: useOrderProductProps<number>) =>
-    setValue(`docesPP.${productIndex}.price`, value)
+    setValue(`boxes.${categoryIndex}.${boxIndex}.products.${productIndex}.price`, value)
 
   const setProductTotalPrice = ({ productIndex, value }: useOrderProductProps<number>) =>
-    setValue(`docesPP.${productIndex}.total`, value)
+    setValue(`boxes.${categoryIndex}.${boxIndex}.products.${productIndex}.total`, value)
 
-  const filterProducts = (products: ProductProps[]) => {
-    return products.filter((product) => product.size === 'PP')
+  const filterProducts = (products: ProductProps[], category: CategoryProps) => {
+    return products.filter((product) => product.category_id === category.id)
   }
 
   const convertProductData = (products: ProductProps[]) => {
@@ -218,8 +214,8 @@ export const useDocesPP = () => {
     }))
   }
 
-  const getProducts = (products: ProductProps[]) => {
-    const filteredProducts = filterProducts(products)
+  const getProducts = (products: ProductProps[], category: CategoryProps) => {
+    const filteredProducts = filterProducts(products, category)
 
     return convertProductData(filteredProducts)
   }
@@ -239,19 +235,38 @@ export const useOrder = () => {
   const { getValues, setValue } = useFormContext<FormDataPedidos>()
 
   const products = getValues('orderProduct')
-  const docesPP = getValues('docesPP') || []
+  const boxes = getValues('boxes') ?? []
   const cakes = getValues('cakes')
 
-  const getProducts = () => {
-    const allProducts = products?.reduce((acc, category) => {
+  const getBoxes = () => {
+    const allBoxes = boxes?.reduce((acc, category) => {
+      console.log(category)
       return [...acc, ...category]
     }, [])
 
-    return [...allProducts, ...docesPP]
+    return allBoxes?.reduce(
+      (acc, box) => [...acc, ...box.products],
+      [] as {
+        product_id?: string
+        quantity?: number
+        price?: number
+        total?: number
+      }[],
+    )
+  }
+
+  const getProducts = () => {
+    const allBoxes = getBoxes()
+    const prods = products?.reduce((acc, category) => {
+      return [...acc, ...category]
+    }, [])
+
+    return [...allBoxes, ...prods]
   }
 
   const getProductsPrice = () => {
     const products = getProducts()
+    console.log('products prices: ', products)
 
     return products?.reduce((acc, product) => {
       if (!product.total) return acc

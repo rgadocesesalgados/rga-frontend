@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios'
 export interface CategorysContextData {
   categorys: CategoryProps[]
   getAllCategorys: () => Promise<void>
-  addCategory: (category: string, priority: number) => Promise<AxiosResponse>
+  addCategory: (category: string, priority: number, boxes: number[]) => Promise<AxiosResponse>
   removeCategory: (category: string) => Promise<AxiosResponse>
   editCategory: (category: CategoryProps) => Promise<AxiosResponse>
 }

@@ -105,26 +105,28 @@ export const Print = ({ order }: { order: GetOrder }) => {
             )
           })}
         </S.containerCakes>
-
         <div>
-          {order?.docesPP.length > 0 && (
-            <div className="py-8">
-              {order?.docesPP.map((product) => {
+          {order?.boxes.length > 0 && (
+            <div className="space-y-5 py-2">
+              {order?.boxes.map((box) => {
                 return (
-                  <div key={product.id} className="flex gap-2">
-                    <div>{product.quantity}</div> <div>{product.name}</div>
+                  <div key={box.id} className="border-2 border-dashed p-1">
+                    {box.products.map((product) => (
+                      <div key={product.id} className="flex flex-nowrap gap-2">
+                        <div>{product.quantity}</div> <div>{product.name}</div>
+                      </div>
+                    ))}
+                    <div className="flex flex-nowrap items-baseline font-bold">
+                      <div className="flex flex-nowrap gap-2">
+                        <div>{box.size}</div>
+                        <div className="text-nowrap">doces</div>
+                      </div>
+                      <Divider />
+                      <div>{toBRL(box.products.reduce((acc, { total }) => acc + total, 0))}</div>
+                    </div>
                   </div>
                 )
               })}
-
-              <div className="flex flex-nowrap items-baseline font-bold">
-                <div className="flex flex-nowrap gap-2">
-                  <div>{quantityProduct(order?.docesPP || [])}</div>
-                  <div className="text-nowrap">doces</div>
-                </div>
-                <Divider />
-                <div>{toBRL(priceProduct(order?.docesPP || []))}</div>
-              </div>
             </div>
           )}
         </div>

@@ -38,6 +38,7 @@ export const columns: ColumnDef<CategoryProps>[] = [
       const { removeCategory, getAllCategorys } = useContextCategory()
       const methods = useFormContext<FormDataCategorias>()
       const linha = row.original
+      const { boxes, ...rest } = linha
 
       const { handleOpenCategory } = useModal()
 
@@ -55,7 +56,7 @@ export const columns: ColumnDef<CategoryProps>[] = [
 
             <DropdownMenuItem
               onClick={() => {
-                methods.reset(linha)
+                methods.reset({ boxes: boxes.map((size) => ({ size })), ...rest })
                 handleOpenCategory()
               }}
             >

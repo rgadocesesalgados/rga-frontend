@@ -7,9 +7,6 @@ interface ModalPrintProps {
 
   openTopper: boolean
   handleOpenTopper: () => void
-
-  openDocesPP: boolean
-  handleOpenDocesPP: () => void
 }
 
 const ModalPrint = createContext({} as ModalPrintProps)
@@ -19,8 +16,6 @@ export const ProviderModalPrint = ({ children }: { children: React.ReactNode }) 
 
   const [openTopper, setOpenTopper] = useState(false)
 
-  const [openDocesPP, setOpenDocesPP] = useState(false)
-
   const handleOpen = () => {
     setOpen(!open)
   }
@@ -29,13 +24,8 @@ export const ProviderModalPrint = ({ children }: { children: React.ReactNode }) 
     setOpenTopper(!openTopper)
   }
 
-  const handleOpenDocesPP = () => {
-    setOpenDocesPP(!openDocesPP)
-  }
   return (
-    <ModalPrint.Provider value={{ open, handleOpen, openTopper, handleOpenTopper, openDocesPP, handleOpenDocesPP }}>
-      {children}
-    </ModalPrint.Provider>
+    <ModalPrint.Provider value={{ open, handleOpen, openTopper, handleOpenTopper }}>{children}</ModalPrint.Provider>
   )
 }
 

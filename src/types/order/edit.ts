@@ -17,4 +17,12 @@ export interface EditOrder {
   total: number
   delivery: boolean
   status: 'RASCUNHO' | 'ANOTADO' | 'EM_PRODUCAO' | 'ENTREGUE' | 'CANCELADO' | 'ORCAMENTO'
+  boxes?: {
+    products?: {
+      product_id?: string
+      quantity?: number
+      price?: number
+      total?: number
+    }[]
+  }[]
 }

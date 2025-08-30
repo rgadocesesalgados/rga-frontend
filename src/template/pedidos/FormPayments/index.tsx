@@ -70,7 +70,11 @@ export const FormPayment = () => {
         )
       })}
 
-      <Button variant="outline" type="button" onClick={() => payments.append({})}>
+      <Button
+        variant="outline"
+        type="button"
+        onClick={() => payments.append({ paid: true, formPayment: 'PIX', date: new Date() })}
+      >
         Adiconar forma de pagamento
         <PlusCircle className="ml-2 h-4 w-4" />
       </Button>

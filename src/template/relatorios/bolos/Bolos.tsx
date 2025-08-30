@@ -1,13 +1,10 @@
 import { GetRelatorio } from '@/types/relatorios/get'
-import { Button } from '@/components/ui/button'
-import { useModalPrint } from '@/contexts/modalPrint'
 import { DataTable } from '@/components/data-table'
 import { useTable } from './useTable'
 import { Input } from '@/components/ui/input'
 import { DataTablePagination } from '@/components/data-table/Pagination'
 
 export const Bolos = ({ data = [] }: { data: GetRelatorio['bolos'] }) => {
-  const { handleOpen } = useModalPrint()
   const table = useTable(data)
 
   const rows = table.getRowModel().rows
@@ -15,14 +12,6 @@ export const Bolos = ({ data = [] }: { data: GetRelatorio['bolos'] }) => {
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
         <h1 className="text-xl font-bold">Bolos</h1>
-        <Button
-          variant="outline"
-          onClick={() => {
-            handleOpen()
-          }}
-        >
-          Imprimir Bolos
-        </Button>
       </div>
       <div className="space-y-5 rounded-2xl border bg-white p-5">
         <Input

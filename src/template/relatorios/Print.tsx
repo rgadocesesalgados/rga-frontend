@@ -1,10 +1,11 @@
 'use client'
 
-import * as S from './styles'
+import * as S from './bolos/styles'
 
 import { Button } from '@/components/ui/button'
 import { useModalPrint } from '@/contexts/modalPrint'
 import { GetRelatorio } from '@/types/relatorios/get'
+import { Bike, Truck } from 'lucide-react'
 import { Noto_Sans } from 'next/font/google'
 import { useState } from 'react'
 
@@ -20,15 +21,16 @@ const cobertura = {
   CLARA_QUEIMADA: 'Clara queimada',
   CHANTILLY: 'Chantilly',
   NATA: 'Nata',
-  KIT_KAT: 'Kit Kat'
+  KIT_KAT: 'Kit Kat',
 } as const
 
 const noto_sans = Noto_Sans({ subsets: ['latin'], weight: '400' })
-export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
+export const PrintBolos = ({ cakes, boxes }: { cakes: GetRelatorio['bolos']; boxes: GetRelatorio['boxes'] }) => {
   const { handleOpen } = useModalPrint()
   const [showButton, setShowButton] = useState(true)
+  console.log(boxes)
 
-  const dataSorted = data?.reduce(
+  const cakesSorted = cakes?.reduce(
     (acc, item) => {
       if (item.banner) acc.push(item)
 
@@ -40,7 +42,7 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
 
   return (
     <S.container className={noto_sans.className}>
-      {dataSorted?.map((bolo, index) => {
+      {cakesSorted?.map((bolo, index) => {
         const date = new Date(bolo.date)
 
         return (
@@ -118,6 +120,47 @@ export const PrintBolos = ({ data }: { data: GetRelatorio['bolos'] }) => {
         )
       })}
 
+      {boxes.map(({ client, date, delivery, hour, id, products, type_frete }) => (
+        <div
+          key={id}
+          className="h-min break-inside-avoid break-after-auto bg-white
+p-5"
+        >
+          <div className="mb-5 flex gap-5 font-bold">
+            <div>{client}</div>
+            {new Date(date).getDate()}/0{new Date(date).getMonth() + 1}
+          </div>
+          {products.map((product) => (
+            <div key={product.id}>
+              <div>
+                - {product.quantity} {product.name}
+              </div>
+            </div>
+          ))}
+
+          <div className="flex items-baseline justify-between pt-5">
+            <div>
+              {delivery && (
+                <div>
+                  {type_frete === 'FRETE_CARRO' && (
+                    <div>
+                      <Truck className="h-5 w-5" />
+                    </div>
+                  )}
+
+                  {type_frete === 'FRETE_MOTO' && (
+                    <div>
+                      <Bike className="h-5 w-5" />
+                    </div>
+                  )}
+                </div>
+              )}
+              <div>{hour}</div>
+            </div>
+            <div className="text-red-500">{day[new Date(date).getDay()]}</div>
+          </div>
+        </div>
+      ))}
       {showButton && (
         <div className="fixed right-16 top-10 flex ">
           <Button

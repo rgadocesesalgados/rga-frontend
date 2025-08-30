@@ -23,6 +23,7 @@ export const useFormPedidos = () => {
       total: 0,
       payment: [],
       status: 'RASCUNHO',
+      boxes: [],
     },
   })
 

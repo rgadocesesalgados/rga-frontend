@@ -18,10 +18,11 @@ export const useCategorys = () => {
       })
   }
 
-  const addCategory = async (category: string, priority: number): Promise<AxiosResponse> => {
+  const addCategory = async (category: string, priority: number, boxes: number[]): Promise<AxiosResponse> => {
     const response = await api.post('/category', {
       name: category,
       priority,
+      boxes,
     })
 
     return response
@@ -33,8 +34,8 @@ export const useCategorys = () => {
     return response
   }
 
-  const editCategory = async ({ id, name, priority }: CategoryProps): Promise<AxiosResponse> => {
-    const response = await api.patch('/category', { name, priority }, { params: { id } })
+  const editCategory = async ({ id, name, priority, boxes }: CategoryProps): Promise<AxiosResponse> => {
+    const response = await api.patch('/category', { name, priority, boxes }, { params: { id } })
 
     return response
   }

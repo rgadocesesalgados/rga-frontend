@@ -42,6 +42,7 @@ export const Cake = ({ cakeIndex, children }: { cakeIndex: number; children: Rea
             methods.setValue(`cakes.${cakeIndex}.price`, cake.getPriceCake(cakeIndex))
           }}
           autoFocus
+          showMessageError
         />
         <SelectForm
           control={methods.control}

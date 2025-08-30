@@ -3,129 +3,174 @@ import { Bolos } from '@/template/relatorios/bolos'
 import Layout from '../dashboard/layout'
 import { Wrap } from '@/components/comum/Wrap'
 import { Toppers } from '@/template/relatorios/topper'
-import { useRelatorios } from '@/contexts/relatorios'
-import { useEffect } from 'react'
+import { GetRelatoriosProps } from '@/contexts/relatorios'
 import { Produtos } from '@/template/relatorios/produtos/Produtos'
-import { DatePickerForm } from '@/components/ui-componets/date-picker'
-import { FormProvider, useFieldArray } from 'react-hook-form'
-import { Form } from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
-import { PrintBolos } from '@/template/relatorios/bolos/PrintBolos'
+import { PrintBolos } from '@/template/relatorios/Print'
 import { useModalPrint } from '@/contexts/modalPrint'
 import { GetOrder } from '@/types/order'
 import { Badge, BadgeProps } from '@/components/ui/badge'
 import { PrintToppers } from '@/template/relatorios/topper/PrintToppers'
-import { useFormRelatorio } from './useFormRelatorio'
-import { FormData } from './types'
-import { CirclePlus, CircleX } from 'lucide-react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { PrintDocesPP } from '@/template/relatorios/produtos/PrintDocesPP'
+import { Check, Loader2 } from 'lucide-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { api } from '@/services/api/apiClient'
+import { useDateRange } from '../financeiro/hooks/useDateRange'
+import { DatePickerWithRange } from '@/components/ui-componets/date-picker-range'
+import { parseAsArrayOf, parseAsInteger, parseAsStringEnum, useQueryStates } from 'nuqs'
+import { GetRelatorio } from '@/types/relatorios/get'
+import { AxiosError } from 'axios'
+import { Button } from '@/components/ui/button'
 import { toast } from 'react-toastify'
+import { queryClient } from '../layout'
 
-const status: GetOrder['status'][] = ['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'CANCELADO', 'ENTREGUE']
+const statusList: GetOrder['status'][] = ['RASCUNHO', 'ANOTADO', 'EM_PRODUCAO', 'CANCELADO', 'ENTREGUE']
+const getRelatorios = async ({ dateInicial, dateFinal, status }: GetRelatoriosProps) => {
+  const response = await api.post('/relatorios', { dateInicial, dateFinal, status })
 
+  return response.data as GetRelatorio
+}
 export default function Relatorios() {
-  const form = useFormRelatorio()
+  const { dates, setDates } = useDateRange()
 
-  const { control, handleSubmit, watch } = form
+  const [date, setDate] = useQueryStates({
+    startDate: parseAsInteger.withDefault(new Date().setHours(0, 0, 0, 0)),
+    endDate: parseAsInteger.withDefault(new Date().setHours(23, 59, 59)),
+    status: parseAsArrayOf(parseAsStringEnum(statusList)).withDefault(['ANOTADO']),
+  })
+  const { data, isFetching: isPendingGet } = useQuery<GetRelatorio>({
+    queryKey: ['relatorios', date.startDate, date.endDate, date.status],
+    queryFn: async () =>
+      await getRelatorios({
+        dateInicial: new Date(date.startDate),
+        dateFinal: new Date(date.endDate),
+        status: date.status,
+      }),
+    initialData: { bolos: [], produtos: {}, toppers: [], boxes: [], orders: [] },
+    throwOnError(error) {
+      if (error instanceof AxiosError) {
+        console.log(error.response.data)
+      }
 
-  const statusFilter = watch('status')
-  const dateFinal = watch('dateFinal')
-  const dateInitial = watch('dateInitial')
-  const { getRelatorios, relatorios } = useRelatorios()
+      console.log(error)
+      return false
+    },
+  })
 
-  useEffect(() => {
-    getRelatorios({ dateFinal: null, dateInicial: null, status: ['RASCUNHO', 'ANOTADO'] })
-  }, [])
+  const { open, openTopper, handleOpen } = useModalPrint()
+  console.log(data.produtos)
 
-  const { open, openTopper, openDocesPP, handleOpenDocesPP } = useModalPrint()
-  const { append, fields, remove } = useFieldArray<FormData>({ control, name: 'status' })
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (ids: string[]) => {
+      await api.patch('/relatorios', { ids })
+    },
+    onSuccess() {
+      toast.success('Produtos colocados em produção')
+      queryClient.setQueryData(['relatorios', date.startDate, date.endDate, date.status], {
+        bolos: [],
+        produtos: {},
+        toppers: [],
+        boxes: [],
+        orders: [],
+      })
+    },
+    onError(err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response.data.error)
+        console.log(err.response.data)
+        return
+      }
+
+      console.log(err)
+      toast.error('Error no servidor')
+    },
+  })
+
   return (
     <Layout>
-      <Wrap data-open={open || openTopper || openDocesPP} className="space-y-10 data-[open=true]:hidden">
-        <FormProvider {...form}>
-          <Form {...form}>
-            <form
-              onSubmit={handleSubmit((data) => {
-                getRelatorios({
-                  dateInicial: data.dateInitial,
-                  dateFinal: data.dateFinal,
-                  status: data.status?.map((s) => s.value) || [],
-                })
-              })}
-              className="flex flex-wrap items-end gap-5 text-xs"
-            >
-              <DatePickerForm control={control} name="dateInitial" label="Data inicial" showMessageError />
-              <DatePickerForm control={control} name="dateFinal" label="Data final" showMessageError />
+      <Wrap data-open={open || openTopper} className="space-y-10 data-[open=true]:hidden">
+        <DatePickerWithRange
+          date={dates}
+          setDate={(value) => {
+            setDates(value)
+            console.clear()
 
-              <div className="flex flex-wrap gap-2 rounded-2xl border bg-white p-1">
-                {fields.map((field, index) => {
-                  return (
-                    <Badge key={field.id} variant={field.value?.toLocaleLowerCase() as BadgeProps['variant']}>
-                      {field.value} <CircleX onClick={() => remove(index)} className="ml-2 h-4 w-4" />
-                    </Badge>
-                  )
-                })}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button type="button" variant="ghost">
-                      Filtro <CirclePlus className="ml-2 h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {status.map((s) => (
-                      <DropdownMenuItem key={s} onClick={() => append({ value: s })}>
-                        {s}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+            console.log(value?.from?.toLocaleString(), value?.to?.toLocaleString())
+            const startDate = value?.from?.getTime()
+            const endDate = value?.to?.getTime() ?? value?.from?.getTime()
 
-              <Button type="submit">Buscar</Button>
-            </form>
-          </Form>
+            setDate({ startDate, endDate })
+          }}
+          onChange={() => {}}
+        />
 
-          <Bolos data={relatorios?.bolos} />
+        <div className="flex w-fit flex-wrap gap-2 rounded-2xl">
+          {statusList
+            .filter((stt) => date.status.includes(stt))
+            .map((item) => {
+              return (
+                <Badge
+                  className="py-3"
+                  key={item}
+                  variant={item.toLocaleLowerCase() as BadgeProps['variant']}
+                  onClick={() => {
+                    setDate((prev) => ({ status: prev.status.filter((status) => status !== item) }))
+                  }}
+                >
+                  {item} <Check className="ml-2 h-4 w-4" />
+                </Badge>
+              )
+            })}
 
-          <Toppers data={relatorios?.toppers} />
+          {statusList
+            .filter((stt) => !date.status.includes(stt))
+            .map((item) => {
+              return (
+                <Badge
+                  key={item}
+                  variant="outline"
+                  className="bg-white py-3"
+                  onClick={() => {
+                    setDate((prev) => ({ status: [...prev.status, item] }))
+                  }}
+                >
+                  {item}
+                </Badge>
+              )
+            })}
+        </div>
+        <div className="flex justify-between">
+          <Button
+            size="sm"
+            variant="link"
+            disabled={!data.orders.length || isPending}
+            onClick={async () => mutate(data.orders)}
+          >
+            Produzir {isPending && <Loader2 className="ml-2 animate-spin" />}
+          </Button>
 
-          {relatorios?.docesPP.length > 0 && (
-            <div className="flex flex-wrap justify-between gap-5">
-              <p className="ml-2 text-lg font-bold">Doces genericos</p>
+          <Button
+            onClick={() => {
+              handleOpen()
+            }}
+          >
+            Imprimir tudo
+          </Button>
+        </div>
 
-              <Button
-                variant="link"
-                onClick={async () => {
-                  const ids = relatorios?.docesPP?.map((docesPP) => docesPP.id) || []
+        {isPendingGet && <Loader2 className="animate-spin" />}
+        {!isPendingGet && (
+          <>
+            <Bolos data={data.bolos} />
 
-                  await api
-                    .patch('/relatorios', { ids })
-                    .then(() => toast.success('Doces colocados para produção'))
-                    .catch(() => toast.error('Erro ao colocar doces para produção'))
+            <Toppers data={data.toppers} />
 
-                  await getRelatorios({
-                    dateFinal: dateFinal || null,
-                    dateInicial: dateInitial || null,
-                    status: statusFilter.map((s) => s.value) || [],
-                  }).catch(() => toast.error('Erro ao buscar relatorios'))
-                }}
-              >
-                Produzir
-              </Button>
-              <Button onClick={handleOpenDocesPP}>Imprimir doces genericos</Button>
-            </div>
-          )}
-          <Produtos data={relatorios?.produtos} />
-        </FormProvider>
+            <Produtos data={data.produtos} />
+          </>
+        )}
       </Wrap>
 
-      {open && <PrintBolos data={relatorios?.bolos} />}
+      {open && <PrintBolos cakes={data.bolos} boxes={data.boxes} />}
 
-      {openTopper && <PrintToppers data={relatorios?.toppers} />}
-
-      {openDocesPP && <PrintDocesPP data={relatorios?.docesPP} />}
+      {openTopper && <PrintToppers data={data.toppers} />}
     </Layout>
   )
 }

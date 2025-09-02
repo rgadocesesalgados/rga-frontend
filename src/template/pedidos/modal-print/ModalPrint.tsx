@@ -133,7 +133,7 @@ export const ModalPrint = () => {
                     <div className="flex flex-nowrap items-baseline font-bold">
                       <div className="flex flex-nowrap gap-2">
                         <div>{box.size}</div>
-                        <div className="text-nowrap">doces</div>
+                        <div className="text-nowrap">un</div>
                       </div>
                       <Divider />
                       <div>{toBRL(box.products.reduce((acc, { total }) => acc + total, 0))}</div>

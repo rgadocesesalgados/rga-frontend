@@ -153,19 +153,19 @@ const Box = ({
               }}
               showMessageError
             />
-            {productIndex !== 0 && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  prod.remove(productIndex)
-                }}
-                className="text-red-500"
-              >
-                <XCircle className=" h-4 w-4" />
-              </Button>
-            )}
+
+            <Button
+              disabled={prod.fields.length === 1}
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                prod.remove(productIndex)
+              }}
+              className="text-red-500"
+            >
+              <XCircle className=" h-4 w-4" />
+            </Button>
           </S.containerProduct>
         )
       })}

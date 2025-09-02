@@ -37,7 +37,15 @@ export const Boxes = ({ category, index: categoryIndex }: ProductOrderProps) => 
         </>
       ))}
 
-      <Button type="button" onClick={() => box.append({ products: [{}] })}>
+      <Button
+        type="button"
+        onClick={() =>
+          box.append({
+            products: [{ quantity: category.boxes.length === 1 ? 1 : undefined }],
+            size: `${category.boxes[0]}` as unknown as number,
+          })
+        }
+      >
         Adiconar caixa
         <PlusCircle className="ml-2 h-4 w-4" />
       </Button>
@@ -80,10 +88,14 @@ const Box = ({
     .watch(`boxes.${categoryIndex}.${boxIndex}`)
     ?.products?.reduce((acc, item) => acc + (+item.total || 0), 0)
 
+  const items = methods.watch(`boxes.${categoryIndex}.${boxIndex}.products`)
+
+  const currentSize = methods.watch(`boxes.${categoryIndex}.${boxIndex}.size`)
   return (
     <div className="flex flex-col gap-3 p-5 even:bg-slate-50">
       <div className="self-start">
         <SelectForm
+          showMessageError
           label="Tamanho"
           control={methods.control}
           name={`boxes.${categoryIndex}.${boxIndex}.size`}
@@ -95,6 +107,7 @@ const Box = ({
         return (
           <S.containerProduct key={id}>
             <InputForm
+              readOnly={currentSize === 1}
               autoFocus
               control={methods.control}
               name={`boxes.${categoryIndex}.${boxIndex}.products.${productIndex}.quantity`}
@@ -155,7 +168,7 @@ const Box = ({
             />
 
             <Button
-              disabled={prod.fields.length === 1}
+              disabled={items?.length === 1}
               type="button"
               variant="ghost"
               size="icon"
@@ -171,7 +184,7 @@ const Box = ({
       })}
 
       <div className="flex justify-between gap-2">
-        <Button onClick={() => prod.append({})} type="button" size="sm">
+        <Button onClick={() => prod.append({})} type="button" size="sm" disabled={+currentSize <= quantity}>
           <PlusCircle className="h-4 w-4" />
         </Button>
 

@@ -10,7 +10,7 @@ grid-cols-4
 divide-x
 divide-y
 bg-white
-text-xs
+text-[0.7rem]
 `
 
 export const cake = tw.div`

@@ -6,7 +6,7 @@ import { useOrders } from './useOrders'
 export const OrdersContext = createContext({} as OrdersContextData)
 
 export const ProviderOrders = ({ children }: { children: React.ReactNode }) => {
-  const { orders, addOrder, removeOrder, editOrder, getAllOrders } = useOrders()
+  const { orders, addOrder, removeOrder, editOrder } = useOrders()
   return (
     <OrdersContext.Provider
       value={{
@@ -14,7 +14,6 @@ export const ProviderOrders = ({ children }: { children: React.ReactNode }) => {
         addOrder,
         removeOrder,
         editOrder,
-        getAllOrders,
       }}
     >
       {children}

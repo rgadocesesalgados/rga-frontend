@@ -6,9 +6,6 @@ top-0
 w-screen
 justify-center
 bg-white
-data-[open=true]:flex
-hidden
-h-screen
 text-sm
 `
 

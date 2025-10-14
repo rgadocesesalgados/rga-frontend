@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 
 export interface RecheiosContextData {
   recheios: RecheiosProps[]
-  getAllRecheios: () => Promise<void>
+  getAllRecheios: () => Promise<RecheiosProps>
   addRecheio: (recheio: RecheioPropsRequestToCreate) => Promise<AxiosResponse>
   removeRecheio: (recheio_id: string) => Promise<AxiosResponse>
   editRecheio: (prodcut: RecheioPropsRequestToEdit) => Promise<AxiosResponse>

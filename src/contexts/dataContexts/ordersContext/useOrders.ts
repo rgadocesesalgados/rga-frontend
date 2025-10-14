@@ -1,28 +1,17 @@
 import { api } from '@/services/api/apiClient'
+import { OrdersResponse } from '@/services/orders'
 import { EditOrder, GetOrder } from '@/types/order'
 import { CreateOrder } from '@/types/order/create'
 import { AxiosResponse } from 'axios'
 import { useState } from 'react'
 
 export const useOrders = () => {
-  const [orders, setOrders] = useState<GetOrder[]>([])
+  const [orders] = useState<GetOrder[]>([])
 
-  const getAllOrders = async (all = false) => {
-    api
-      .get('/order', { params: { all } })
-      .then((response) => {
-        setOrders(response.data)
-        console.log('pedidos: ', response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
-
-  const addOrder = async ({ client, ...data }: CreateOrder): Promise<AxiosResponse> => {
+  const addOrder = async ({ client, ...data }: CreateOrder): Promise<OrdersResponse> => {
     const response = await api.post('/order', data, { params: { client_id: client.id, address_id: data.address.id } })
 
-    return response
+    return response.data
   }
 
   const removeOrder = async (order_id: string): Promise<AxiosResponse> => {
@@ -31,15 +20,14 @@ export const useOrders = () => {
     return response
   }
 
-  const editOrder = async (order: EditOrder): Promise<AxiosResponse> => {
+  const editOrder = async (order: EditOrder): Promise<OrdersResponse> => {
     const response = await api.patch('/order', order)
 
-    return response
+    return response.data as OrdersResponse
   }
 
   return {
     orders,
-    getAllOrders,
     addOrder,
     removeOrder,
     editOrder,

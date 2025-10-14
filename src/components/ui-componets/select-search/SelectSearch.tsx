@@ -44,6 +44,7 @@ export function SelectSearch<Tdata>({
   displayValue,
 }: SelectSearchProps<Tdata>) {
   const [open, setOpen] = useState(false)
+  const [labelDisplay, setLabelDisplay] = useState(displayValue)
   return (
     <FormField
       control={control}
@@ -62,9 +63,7 @@ export function SelectSearch<Tdata>({
                   aria-expanded={open}
                   onClick={() => setOpen(true)}
                 >
-                  {!!displayValue && displayValue}
-                  {!displayValue &&
-                    (field.value ? data?.find((item) => item.value === field.value)?.label : 'Procurar')}
+                  {labelDisplay ? labelDisplay : data?.find(({ value }) => value === field.value)?.label ?? 'Procurar'}
                 </Button>
               </PopoverTrigger>
 
@@ -84,6 +83,7 @@ export function SelectSearch<Tdata>({
                         onSelect={() => {
                           setOpen(false)
                           onSelect(item.value)
+                          setLabelDisplay(item.label)
                         }}
                       >
                         <Check className={`mr-2 h-4 w-4 ${item.value === field.value ? 'opacity-100' : 'opacity-0'}`} />

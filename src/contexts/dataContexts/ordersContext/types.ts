@@ -1,11 +1,11 @@
+import { OrdersResponse } from '@/services/orders'
 import { EditOrder, GetOrder } from '@/types/order'
 import { CreateOrder } from '@/types/order/create'
 import { AxiosResponse } from 'axios'
 
 export interface OrdersContextData {
   orders: GetOrder[]
-  getAllOrders: (all?: boolean) => Promise<void>
-  addOrder: (order: CreateOrder) => Promise<AxiosResponse>
+  addOrder: (order: CreateOrder) => Promise<OrdersResponse>
   removeOrder: (id: string) => Promise<AxiosResponse>
-  editOrder: (order: EditOrder) => Promise<AxiosResponse>
+  editOrder: (order: EditOrder) => Promise<OrdersResponse>
 }

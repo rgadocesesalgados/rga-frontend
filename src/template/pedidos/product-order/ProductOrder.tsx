@@ -7,6 +7,7 @@ import { SelectSearch } from '@/components/ui-componets/select-search'
 import { Button } from '@/components/ui/button'
 import { useContextProduct } from '@/contexts/dataContexts/productsContext/useContextProduct'
 import { CategoryProps } from '@/template/categorias/types'
+import { useQuery } from '@tanstack/react-query'
 import { PlusCircle, Trash2 } from 'lucide-react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -20,7 +21,9 @@ export const ProductOrder = ({ category, index: categoryIndex }: ProductOrderPro
 
   const methods = useFormContext<FormDataPedidos>()
 
-  const { products } = useContextProduct()
+  const { getAllProducts } = useContextProduct()
+
+  const { data } = useQuery({ queryKey: ['products'], queryFn: getAllProducts, initialData: [] })
 
   const { setProductId, setProductPrice, setProductTotalPrice, getProductTotalPrice, getProducts } =
     useOrderProduct(categoryIndex)
@@ -50,12 +53,12 @@ export const ProductOrder = ({ category, index: categoryIndex }: ProductOrderPro
               label="Produto"
               control={methods.control}
               name={`orderProduct.${categoryIndex}.${productIndex}.product_id`}
-              data={getProducts(products, category)}
+              data={getProducts(data, category)}
               onSelect={(value) => {
                 setProductId({ productIndex, value })
                 setProductPrice({
                   productIndex,
-                  value: products.find((product) => product.id === value)?.price,
+                  value: data.find((product) => product.id === value)?.price,
                 })
                 setProductTotalPrice({ productIndex, value: getProductTotalPrice(productIndex) })
                 executeCalculateTotal()

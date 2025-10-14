@@ -27,7 +27,7 @@ const fetchDebounce = debounce((func: () => void) => func(), 500)
 
 export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
   const { page, take, query, setOrderStates, idRemove, openDelete, openPrint } = useOrderStates()
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['orders', page, take, query],
     queryFn: async () => {
       return await getOrders(page, take, query)
@@ -84,15 +84,19 @@ export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
             <Search className="h-4 w-4" />
           </Button>
         </div>
-        <div className="flex flex-col divide-y">
-          {data?.map(({ id, name, paid, status, date, total }) => {
-            return <Order key={id} date={date} id={id} name={name} paid={paid} status={status} total={total} />
-          })}
+        {!isLoading && (
+          <div className="flex flex-col divide-y">
+            {data?.map(({ id, name, paid, status, date, total }) => {
+              return <Order key={id} date={date} id={id} name={name} paid={paid} status={status} total={total} />
+            })}
 
-          {data?.length === 0 && (
-            <p className="mx-auto my-10 text-center font-bold text-black/40">Nenhum pedido encontrado</p>
-          )}
-        </div>
+            {data?.length === 0 && (
+              <p className="mx-auto my-10 text-center font-bold text-black/40">Nenhum pedido encontrado</p>
+            )}
+          </div>
+        )}
+
+        {isLoading && <Loader2 className="animate-spin" />}
 
         <Pagination>
           <PaginationContent>

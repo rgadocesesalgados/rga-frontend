@@ -306,6 +306,7 @@ export const ModalPedidos = () => {
               ? new Date(paymentRest.date)
               : undefined,
       })),
+      address: data.address_id,
     }
     methods.reset(order)
   }, [data, methods.reset])
@@ -463,7 +464,7 @@ export const ModalPedidos = () => {
                     }
                     shouldFilter={false}
                     onValueChange={(val) => setAddress(val)}
-                    displayValue={addressComplete}
+                    displayValue={data?.address}
                     isLoading={isLoadingAddress}
                   />
 
@@ -539,7 +540,7 @@ export const ModalPedidos = () => {
           </Form>
         )}
 
-        {isLoading && <Loader2 className="animate-spin" />}
+        {isOrderLoading && <Loader2 className="animate-spin" />}
       </DialogContent>
     </Dialog>
   )

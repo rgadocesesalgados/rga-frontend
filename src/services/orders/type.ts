@@ -14,6 +14,7 @@ export interface OrderUniqueResponse {
   logistic?: Logistic
   value_frete?: number
   address?: string
+  address_id?: string
   payment: PaymentItem[]
 }
 

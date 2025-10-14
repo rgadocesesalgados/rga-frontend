@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 
 export interface ProductContextData {
   products: ProductProps[]
-  getAllProducts: () => Promise<void>
+  getAllProducts: () => Promise<ProductProps[]>
   addProduct: (prodcut: ProductPropsRequestToCreate) => Promise<AxiosResponse>
   removeProduct: (prodcut_id: string) => Promise<AxiosResponse>
   editProduct: (prodcut: ProductPropsRequestToEdit) => Promise<AxiosResponse>

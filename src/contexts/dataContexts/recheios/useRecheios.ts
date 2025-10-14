@@ -5,15 +5,11 @@ import { useState } from 'react'
 export const useRecheios = () => {
   const [recheios, setRecheios] = useState<RecheiosProps[]>([])
   const getAllRecheios = async () => {
-    api
-      .get('/recheio')
-      .then((response) => {
-        console.log('recheios: ', response.data)
-        setRecheios(response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const response = await api.get('/recheio')
+
+    setRecheios(response.data)
+
+    return response.data
   }
   const addRecheio = async (recheio: RecheioPropsRequestToCreate) => {
     const response = await api.post('/recheio', recheio)

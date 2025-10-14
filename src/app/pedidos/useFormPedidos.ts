@@ -22,7 +22,6 @@ export const useFormPedidos = () => {
       value_frete: 0,
       total: 0,
       payment: [],
-      status: 'RASCUNHO',
       boxes: [],
     },
   })

@@ -2,9 +2,11 @@ import * as S from './styles'
 
 import { FormDataPedidos } from '@/app/pedidos/types'
 import { useFormCorePedidos } from '@/app/pedidos/useFormCorePedidos'
+import { RecheiosProps as RecheiosType } from '@/app/recheios/types'
 import { SelectSearch } from '@/components/ui-componets/select-search'
 import { Button } from '@/components/ui/button'
-import { useContextRecheios } from '@/contexts/dataContexts/recheios/useContextRecheios'
+import { api } from '@/services/api/apiClient'
+import { useQuery } from '@tanstack/react-query'
 import { Trash2 } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
 
@@ -17,18 +19,25 @@ export const Recheios = ({ cakeIndex, recheioIndex, remove }: RecheiosProps) => 
   const methods = useFormContext<FormDataPedidos>()
   const cake = useFormCorePedidos()
 
-  const { recheios } = useContextRecheios()
+  const { data } = useQuery<RecheiosType[]>({
+    initialData: [],
+    queryKey: ['recheios'],
+    queryFn: async () => {
+      const response = await api.get('/recheio')
 
+      return response.data
+    },
+  })
   return (
     <S.contentProduct>
       <SelectSearch
         control={methods.control}
         name={`cakes.${cakeIndex}.recheios.${recheioIndex}.id`}
-        data={recheios.map((recheio) => ({ value: recheio.id, label: recheio.name }))}
+        data={data.map((recheio) => ({ value: recheio.id, label: recheio.name }))}
         onSelect={(recheioId) => {
           methods.setValue(`cakes.${cakeIndex}.recheios.${recheioIndex}.id`, recheioId)
 
-          const recheio = recheios.find(({ id }) => id === recheioId)
+          const recheio = data.find(({ id }) => id === recheioId)
 
           methods.setValue(`cakes.${cakeIndex}.recheios.${recheioIndex}.price`, recheio?.price)
 

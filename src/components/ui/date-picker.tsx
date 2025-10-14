@@ -22,7 +22,7 @@ export function DatePicker({ onChange, value, className }: DatePicker) {
           className={cn('w-[280px] justify-start text-left font-normal', !value && 'text-muted-foreground', className)}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? value.toLocaleDateString() : <span>Data</span>}
+          {value ? new Date(value).toLocaleDateString() : <span>Data</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

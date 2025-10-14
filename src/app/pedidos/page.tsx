@@ -6,7 +6,6 @@ import { useFormPedidos } from './useFormPedidos'
 import { FormProvider } from 'react-hook-form'
 import { TablePedidos } from '@/template/pedidos/Table'
 import { ModalPedidos } from '@/template/pedidos/Modal'
-import { ModalPrint } from '@/template/pedidos/modal-print/ModalPrint'
 import { useModalPrint } from '@/contexts/modalPrint'
 
 export default function Pedios() {
@@ -25,8 +24,6 @@ export default function Pedios() {
           )}
         </Wrap>
       </FormProvider>
-
-      <ModalPrint />
     </Layout>
   )
 }

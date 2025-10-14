@@ -7,15 +7,10 @@ export const useCategorys = () => {
   const [categorys, setCategorys] = useState<CategoryProps[]>([])
 
   const getAllCategorys = async () => {
-    api
-      .get('/category')
-      .then((response) => {
-        setCategorys(response.data)
-        console.log('categorias: ', response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const response = await api.get('/category')
+
+    setCategorys(response.data)
+    return response.data
   }
 
   const addCategory = async (category: string, priority: number, boxes: number[]): Promise<AxiosResponse> => {

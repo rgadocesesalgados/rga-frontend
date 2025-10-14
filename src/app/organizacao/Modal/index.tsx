@@ -11,11 +11,8 @@ import { DatePickerForm } from '@/components/ui-componets/date-picker'
 import { TextareaForm } from '@/components/ui-componets/textarea-form'
 import { CheckboxForm } from '@/components/ui-componets/checkbox-form/CheckboxForm'
 import { SelectForm } from '@/components/ui-componets/select-form/SelectForm'
-import { FormPayment } from '../FormPayments'
-import { CakesFullForm } from '../cakes-full-form'
 import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog'
 import { Form } from '@/components/ui/form'
-import { ProductOrder } from '../product-order'
 import { useOrder } from '@/app/pedidos/useFormCorePedidos'
 import { useContextOrders } from '@/contexts/dataContexts/ordersContext/useContextOrders'
 import { toast } from 'react-toastify'
@@ -32,10 +29,13 @@ import { debounce } from 'lodash'
 import { useQueryState } from 'nuqs'
 import { AddressProps } from '@/app/enderecos/types'
 import { AxiosError } from 'axios'
-import { Boxes } from '../boxes'
-import { useOrderStates } from '../Table/useOrderStatus'
 import { getOrder, OrdersResponse } from '@/services/orders'
 import { queryClient } from '@/app/layout'
+import { CakesFullForm } from '@/template/pedidos/cakes-full-form'
+import { Boxes } from '@/template/pedidos/boxes'
+import { ProductOrder } from '@/template/pedidos/product-order'
+import { useOrderStates } from '@/template/pedidos/Table/useOrderStatus'
+import { FormPayment } from '@/template/pedidos/FormPayments'
 
 const fetchDebounce = debounce((func: () => void) => func(), 500)
 
@@ -232,16 +232,16 @@ export const ModalPedidos = () => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: submit,
-    onSuccess: (data) => {
-      const orders = queryClient.getQueryData(['orders', page, take, query]) as OrdersResponse[]
+    onSuccess: async (data) => {
+      const orders = queryClient.getQueryData(['orders', 'organization']) as OrdersResponse[]
 
       const order = orders.find(({ id }) => orderId === id)
 
       if (!order) {
-        queryClient.setQueryData(['orders', page, take, query], [data, ...orders])
+        queryClient.setQueryData(['orders', 'organization'], [data, ...orders])
       }
 
-      queryClient.setQueryData(['orders', page, take, query], [data, ...orders.filter(({ id }) => id !== orderId)])
+      queryClient.setQueryData(['orders', 'organization'], [data, ...orders.filter(({ id }) => id !== orderId)])
 
       setOrderStates({ orderId: '', openOrderModal: false })
       toast.success('Salvo com sucesso!')
@@ -257,7 +257,7 @@ export const ModalPedidos = () => {
     },
   })
 
-  const { openOrderModal, orderId, setOrderStates, page, query, take } = useOrderStates()
+  const { openOrderModal, orderId, setOrderStates } = useOrderStates()
 
   const { isLoading: isOrderLoading, data } = useQuery({
     queryKey: ['orders', orderId],
@@ -269,7 +269,6 @@ export const ModalPedidos = () => {
 
   useEffect(() => {
     if (!data) return
-
     const order: FormDataPedidos = {
       ...data,
 
@@ -291,7 +290,7 @@ export const ModalPedidos = () => {
         boxArray.map((box) => {
           const sizeNumber = typeof box.size === 'string' ? parseInt(box.size, 10) : box.size
           return {
-            size: `${sizeNumber}` as unknown as number,
+            size: sizeNumber,
             products: box.products.map(({ id, name, ...productRest }) => productRest),
           }
         }),

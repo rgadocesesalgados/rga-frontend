@@ -1,3 +1,4 @@
+'use client'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ChangeEvent } from 'react'
@@ -33,29 +34,34 @@ export function SelectForm<Tdata>({
       rules={{
         onChange,
       }}
-      render={({ field }) => (
-        <FormItem>
-          {label && <FormLabel>{label}</FormLabel>}
-          <FormControl>
-            <Select onValueChange={field.onChange} defaultValue={field.value as string}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione" />
-              </SelectTrigger>
-              <FormControl>
-                <SelectContent>
-                  {data.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </FormControl>
-            </Select>
-          </FormControl>
-          {description && <FormDescription>{description}</FormDescription>}
-          {showMessageError && <FormMessage />}
-        </FormItem>
-      )}
+      render={({ field }) => {
+        return (
+          <FormItem>
+            {label && <FormLabel>{label}</FormLabel>}
+            <FormControl>
+              <Select onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue
+                    placeholder={`${data.find(({ value }) => value === field.value)?.label ?? 'Selecione'}`}
+                    defaultValue={`${field.value}`}
+                  />
+                </SelectTrigger>
+                <FormControl>
+                  <SelectContent>
+                    {data.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </FormControl>
+              </Select>
+            </FormControl>
+            {description && <FormDescription>{description}</FormDescription>}
+            {showMessageError && <FormMessage />}
+          </FormItem>
+        )
+      }}
     />
   )
 }

@@ -8,10 +8,10 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { columns } from './columns'
-import { GetOrder } from '@/types/order'
 import { useState } from 'react'
+import { OrdersResponse } from '@/services/orders'
 
-export const useTable = (data: GetOrder[]) => {
+export const useTable = (data: OrdersResponse[]) => {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilter] = useState<ColumnFiltersState>([])
 

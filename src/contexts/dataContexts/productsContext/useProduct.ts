@@ -7,15 +7,11 @@ export const useProduct = () => {
   const [products, setProducts] = useState<ProductProps[]>([])
 
   const getAllProducts = async () => {
-    api
-      .get('/product')
-      .then((response) => {
-        console.log('produtos: ', response.data)
-        setProducts(response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const response = await api.get('/product')
+
+    setProducts(response.data)
+
+    return response.data as ProductProps[]
   }
 
   const addProduct = async (poduct: ProductPropsRequestToCreate): Promise<AxiosResponse> => {

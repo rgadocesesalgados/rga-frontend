@@ -234,7 +234,18 @@ export const Print = () => {
             </div>
           )}
 
-          {data?.observations && <div>Observação: {data?.observations}</div>}
+          {data?.observations && (
+            <div className="mx-2 overflow-hidden rounded-md border-2 border-black pb-2">
+              <div className="bg-black px-5 font-bold uppercase text-white">Atenção:</div>
+              <div>
+                {data.observations.split('\n').map((item, i) => (
+                  <div key={i} className="px-5 pt-1">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {data?.payment && (
             <div>

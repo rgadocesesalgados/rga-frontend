@@ -73,7 +73,7 @@ export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="rounded-md border bg-white p-5">
+      <div className="space-y-2 rounded-md border bg-white p-5">
         <div className="flex justify-start gap-2">
           <Input
             className="w-fit"
@@ -85,7 +85,7 @@ export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
           </Button>
         </div>
         {!isLoading && (
-          <div className="flex flex-col divide-y">
+          <div className="flex flex-col divide-y px-5">
             {data?.map(({ id, name, paid, status, date, total }) => {
               return <Order key={id} date={date} id={id} name={name} paid={paid} status={status} total={total} />
             })}
@@ -117,16 +117,13 @@ export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
             )}
 
             {!!page && (
-              <>
-                <PaginationItem>
-                  <PaginationLink>{page}</PaginationLink>
-                </PaginationItem>
-
-                <PaginationItem>
-                  <PaginationLink isActive>{page + 1}</PaginationLink>
-                </PaginationItem>
-              </>
+              <PaginationItem>
+                <PaginationLink>{page}</PaginationLink>
+              </PaginationItem>
             )}
+            <PaginationItem>
+              <PaginationLink isActive>{page + 1}</PaginationLink>
+            </PaginationItem>
 
             {data?.length === take && (
               <PaginationItem>
@@ -170,12 +167,12 @@ const Order = ({ date, name, paid, total, status, id }: OrderProps) => {
     <div className="flex items-center justify-between gap-2 py-5">
       <div>
         <div className="text-xs font-bold text-black/60">{new Date(date).toLocaleDateString()}</div>
-        <div className="text-sm">{name}</div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <div className="text-sm">{toBRL(total)}</div>
+        <div className="font-semibold ">{name}</div>
+
+        <div className="text-sm text-black/60">{toBRL(total)}</div>
         {!!paid && <Badge>{toBRL(paid)}</Badge>}
       </div>
+
       <Badge variant={status.toLocaleLowerCase() as BadgeProps['variant']}>
         {status === 'EM_PRODUCAO' ? 'Em Produção' : status}
       </Badge>

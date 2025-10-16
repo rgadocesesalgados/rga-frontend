@@ -80,6 +80,7 @@ export const columns: ColumnDef<Tooper>[] = [
 
       return (
         <div>
+          <div>{origin.tema}</div>
           <div>{origin.name}</div>
           <div>{origin.idade}</div>
           <div>{origin.description}</div>

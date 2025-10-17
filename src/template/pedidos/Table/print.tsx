@@ -130,7 +130,13 @@ export const Print = () => {
 
                   {cake.decoracao && (
                     <div>
-                      <p className="text-wrap">Descrição: {cake.decoracao}</p>
+                      <div>Descrição:</div>
+
+                      {cake.decoracao.split('\n').map((item, i) => (
+                        <div key={i} className="pt-1">
+                          {item}
+                        </div>
+                      ))}
                     </div>
                   )}
 
@@ -152,7 +158,11 @@ export const Print = () => {
 
                       {cake.topper.description && (
                         <div>
-                          <p>{cake.topper.description}</p>
+                          {cake.topper.description.split('\n').map((item, i) => (
+                            <div key={i} className="pt-1">
+                              {item}
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>

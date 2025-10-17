@@ -84,7 +84,11 @@ export const PrintBolos = ({ cakes, boxes }: { cakes: GetRelatorio['bolos']; box
 
               {bolo.description && (
                 <S.description>
-                  <p>{bolo.description}</p>
+                  {bolo.description.split('\n').map((item, i) => (
+                    <div key={i} className="pt-1">
+                      {item}
+                    </div>
+                  ))}
                 </S.description>
               )}
 

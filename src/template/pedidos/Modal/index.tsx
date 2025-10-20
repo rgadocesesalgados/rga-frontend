@@ -243,6 +243,7 @@ export const ModalPedidos = () => {
 
       queryClient.setQueryData(['orders', page, take, query], [data, ...orders.filter(({ id }) => id !== orderId)])
 
+      queryClient.invalidateQueries({ queryKey: ['orders', orderId] })
       setOrderStates({ orderId: '', openOrderModal: false })
       toast.success('Salvo com sucesso!')
     },

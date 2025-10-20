@@ -22,6 +22,7 @@ import Link from 'next/link'
 import { queryClient } from '@/app/layout'
 import { toast } from 'react-toastify'
 import { Print } from './print'
+import { parseAsString, useQueryState } from 'nuqs'
 
 const fetchDebounce = debounce((func: () => void) => func(), 500)
 
@@ -51,6 +52,7 @@ export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
     },
   })
 
+  const [search, setSearch] = useQueryState('search', parseAsString.withDefault(''))
   if (openPrint) return <Print />
   return (
     <>
@@ -78,7 +80,12 @@ export const TablePedidos = ({ children }: { children: React.ReactNode }) => {
           <Input
             className="w-fit"
             placeholder="Nome ou telefone"
-            onChange={(e) => fetchDebounce(() => setOrderStates({ query: e.target.value, page: 0, take: 10 }))}
+            value={search}
+            onFocus={(e) => e.target.select()}
+            onChange={(e) => {
+              setSearch(e.target.value)
+              fetchDebounce(() => setOrderStates({ query: e.target.value, page: 0, take: 10 }))
+            }}
           />
           <Button size="icon">
             <Search className="h-4 w-4" />

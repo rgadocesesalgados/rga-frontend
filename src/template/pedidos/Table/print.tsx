@@ -48,7 +48,7 @@ export const Print = () => {
 
   return (
     <S.container
-      className={`${courierPrime.className} absolute left-0 right-0 top-0 flex w-full flex-col items-center`}
+      className={`${courierPrime.className} absolute left-0 right-0 top-0 flex min-h-svh w-full flex-col items-center justify-start`}
     >
       {showButtonPrint && (
         <div className="flex gap-2 self-end p-5">

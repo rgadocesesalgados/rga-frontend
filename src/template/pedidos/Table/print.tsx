@@ -86,9 +86,8 @@ export const Print = () => {
               setTimeout(async () => {
                 const urlImage = await handlePrintScreen()
                 setDataURL(urlImage)
-              }, 1)
-
-              setShowButtonPrint(true)
+                setShowButtonPrint(true)
+              })
             }}
           >
             Tirar print <Camera className="ml-2 h-5 w-5" />
@@ -142,6 +141,8 @@ export const Print = () => {
 
                   <div>{cake.banner ? 'Tem Modelo' : 'Não tem modelo'}</div>
 
+                  {showButtonPrint && !!cake.banner && <img alt="Foto do bolo" src={cake.banner} />}
+
                   {cake.tem_topper && (
                     <div className="flex flex-col gap-1 pt-5">
                       <div className="flex items-baseline font-bold">
@@ -167,6 +168,8 @@ export const Print = () => {
                       )}
                     </div>
                   )}
+
+                  {showButtonPrint && cake.tem_topper && <img alt="Foto do topper" src={cake.topper.banner} />}
                 </div>
               )
             })}

@@ -7,10 +7,8 @@ grid
 w-full
 border-collapse
 grid-cols-4
-divide-x
-divide-y
 bg-white
-text-[0.7rem]
+text-[0.6rem]
 `
 
 export const cake = tw.div`
@@ -21,6 +19,7 @@ flex-col
 gap-3
 bg-white
 p-5
+border
 `
 
 export const day = tw.div`
@@ -54,7 +53,6 @@ font-bold
 
 export const noWrap = tw.div`
 flex
-gap-2
 `
 
 export const filling = tw.div`

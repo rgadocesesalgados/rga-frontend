@@ -48,7 +48,7 @@ export const Print = () => {
 
   return (
     <S.container
-      className={`${courierPrime.className} absolute left-0 right-0 top-0 flex w-full flex-col items-center`}
+      className={`${courierPrime.className} absolute left-0 right-0 top-0 flex min-h-svh w-full flex-col items-center justify-start`}
     >
       {showButtonPrint && (
         <div className="flex gap-2 self-end p-5">
@@ -86,9 +86,8 @@ export const Print = () => {
               setTimeout(async () => {
                 const urlImage = await handlePrintScreen()
                 setDataURL(urlImage)
-              }, 1)
-
-              setShowButtonPrint(true)
+                setShowButtonPrint(true)
+              })
             }}
           >
             Tirar print <Camera className="ml-2 h-5 w-5" />
@@ -142,6 +141,8 @@ export const Print = () => {
 
                   <div>{cake.banner ? 'Tem Modelo' : 'Não tem modelo'}</div>
 
+                  {showButtonPrint && !!cake.banner && <img alt="Foto do bolo" src={cake.banner} />}
+
                   {cake.tem_topper && (
                     <div className="flex flex-col gap-1 pt-5">
                       <div className="flex items-baseline font-bold">
@@ -167,6 +168,8 @@ export const Print = () => {
                       )}
                     </div>
                   )}
+
+                  {showButtonPrint && cake.tem_topper && <img alt="Foto do topper" src={cake.topper.banner} />}
                 </div>
               )
             })}
@@ -185,7 +188,7 @@ export const Print = () => {
                       <div className="flex flex-nowrap items-baseline font-bold">
                         <div className="flex flex-nowrap gap-2">
                           <div>{box.size}</div>
-                          <div className="text-nowrap">doces</div>
+                          <div className="text-nowrap">unidades</div>
                         </div>
                         <Divider />
                         <div>{toBRL(box.products.reduce((acc, { total }) => acc + total, 0))}</div>

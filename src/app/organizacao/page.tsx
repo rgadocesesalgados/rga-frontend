@@ -16,9 +16,10 @@ import { Print } from '@/template/pedidos/Table/print'
 import { useOrderStates } from '@/template/pedidos/Table/useOrderStatus'
 import { useQuery } from '@tanstack/react-query'
 import { getOrdersOrganization, OrdersResponse } from '@/services/orders'
-import { Search } from 'lucide-react'
+import { Check, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModalPedidos } from './Modal'
+import { parseAsBoolean, useQueryState } from 'nuqs'
 
 export default function Organizacao() {
   const { data, isLoading } = useQuery<OrdersResponse[]>({
@@ -45,6 +46,8 @@ export default function Organizacao() {
 
   const { openPrint } = useOrderStates()
 
+  const [enableFilterId, setEnableFilterId] = useQueryState('filter-for-id', parseAsBoolean.withDefault(false))
+
   if (openPrint) return <Print />
 
   return (
@@ -56,13 +59,30 @@ export default function Organizacao() {
               <div className="flex items-center justify-between gap-5">
                 <div className="flex items-center gap-5">
                   <Input
-                    placeholder="Nome do cliente"
-                    value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-                    onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
+                    placeholder={enableFilterId ? 'Id do Pedido' : 'Nome do cliente'}
+                    value={(table.getColumn(enableFilterId ? 'id' : 'name')?.getFilterValue() as string) ?? ''}
+                    onChange={(event) =>
+                      table.getColumn(enableFilterId ? 'id' : 'name')?.setFilterValue(event.target.value)
+                    }
                     className="max-w-sm"
                   />
-                  <Button size="icon">
-                    <Search className="h-4 w-4" />
+
+                  <Button
+                    variant={enableFilterId ? 'default' : 'outline'}
+                    onClick={() => setEnableFilterId((prev) => !prev)}
+                  >
+                    {enableFilterId && (
+                      <>
+                        <span>Por id</span>
+                        <Check className="ml-5" />
+                      </>
+                    )}
+
+                    {!enableFilterId && (
+                      <>
+                        <span>Por id</span>
+                      </>
+                    )}
                   </Button>
                 </div>
 

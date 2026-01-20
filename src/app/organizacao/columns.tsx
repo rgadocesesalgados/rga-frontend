@@ -93,6 +93,15 @@ export const columns: ColumnDef<OrdersResponse>[] = [
       }),
   },
   {
+    accessorKey: 'id',
+    header() {
+      return
+    },
+    cell() {
+      return
+    },
+  },
+  {
     accessorKey: 'status',
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Status" />

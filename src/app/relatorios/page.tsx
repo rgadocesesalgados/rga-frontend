@@ -83,6 +83,16 @@ export default function Relatorios() {
     },
   })
 
+  data.bolos.sort((a, b) => {
+    if (a.banner && !b.banner) {
+      return -1
+    }
+    if (!a.banner && b.banner) {
+      return 1
+    }
+    return 0
+  })
+
   return (
     <Layout>
       <Wrap data-open={open || openTopper} className="space-y-10 data-[open=true]:hidden">

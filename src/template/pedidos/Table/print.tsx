@@ -32,7 +32,7 @@ export const Print = () => {
 
   const [showButtonPrint, setShowButtonPrint] = useState(true)
 
-  const modalPrintScreen = useRef<HTMLDivElement>()
+  const modalPrintScreen = useRef<HTMLDivElement>(null)
 
   const handlePrintScreen = async () => {
     const modalPrint = modalPrintScreen.current

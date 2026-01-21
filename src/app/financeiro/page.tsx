@@ -21,6 +21,7 @@ import { useState } from 'react'
 import { DataTablePagination } from '@/components/data-table/Pagination'
 
 export default function Financeiro() {
+  console.log('ss')
   const { dates, setDates } = useDateRange()
 
   const { entradas, getEntradas, getOuts, saidas } = useQuerys(dates)

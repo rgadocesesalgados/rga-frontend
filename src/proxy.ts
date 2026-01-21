@@ -1,8 +1,9 @@
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
-export function middleware(req: NextRequest) {
-  const cookieAuth = cookies().get('nextauth.token')
+export async function proxy(req: NextRequest) {
+  const cookieStore = await cookies()
+  const cookieAuth = cookieStore.get('nextauth.token')
 
   if (cookieAuth && req.nextUrl.pathname === '/login') {
     return NextResponse.redirect(new URL('/', req.url))

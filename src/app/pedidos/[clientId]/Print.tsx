@@ -25,7 +25,7 @@ export const Print = ({ order }: { order: GetOrder }) => {
     return [...acc, product.category.name]
   }, [] as string[])
 
-  const modalPrintScreen = useRef<HTMLDivElement>()
+  const modalPrintScreen = useRef<HTMLDivElement>(null)
 
   const handlePrintScreen = async () => {
     const modalPrint = modalPrintScreen.current

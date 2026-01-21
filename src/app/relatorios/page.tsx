@@ -32,8 +32,8 @@ export default function Relatorios() {
   const { dates, setDates } = useDateRange()
 
   const [date, setDate] = useQueryStates({
-    startDate: parseAsInteger.withDefault(new Date().setHours(0, 0, 0, 0)),
-    endDate: parseAsInteger.withDefault(new Date().setHours(23, 59, 59)),
+    startDate: parseAsInteger.withDefault(dates?.from.setHours(0, 0, 0, 0) || new Date().setHours(0, 0, 0, 0)),
+    endDate: parseAsInteger.withDefault(dates?.to?.setHours(23, 59, 59)),
     status: parseAsArrayOf(parseAsStringEnum(statusList)).withDefault(['ANOTADO']),
   })
   const { data, isFetching: isPendingGet } = useQuery<GetRelatorio>({
@@ -54,9 +54,8 @@ export default function Relatorios() {
       return false
     },
   })
-
   const { open, openTopper, handleOpen } = useModalPrint()
-  console.log(data.produtos)
+  console.log(data)
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (ids: string[]) => {

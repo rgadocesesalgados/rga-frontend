@@ -1,5 +1,5 @@
 import { configSidebarlinks } from '@/config-components/links/sidebar'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
 import Link from 'next/link'
@@ -14,6 +14,7 @@ export default function Sidebar() {
       </SheetTrigger>
 
       <SheetContent side="left" className="flex flex-col overflow-scroll pt-10">
+        <SheetTitle className="hidden">menu</SheetTitle>
         {configSidebarlinks.map((link) => (
           // <Button
           //   key={link.href}

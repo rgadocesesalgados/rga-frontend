@@ -13,7 +13,7 @@ import { CheckboxForm } from '@/components/ui-componets/checkbox-form/CheckboxFo
 import { SelectForm } from '@/components/ui-componets/select-form/SelectForm'
 import { FormPayment } from '../FormPayments'
 import { CakesFullForm } from '../cakes-full-form'
-import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogTitle } from '@/components/ui/dialog'
 import { Form } from '@/components/ui/form'
 import { ProductOrder } from '../product-order'
 import { useOrder } from '@/app/pedidos/useFormCorePedidos'
@@ -357,6 +357,7 @@ export const ModalPedidos = () => {
       </Button>
 
       <DialogContent className="my-5 h-full max-w-6xl overflow-y-scroll rounded-2xl pb-10">
+        <DialogTitle>Pedido</DialogTitle>
         {!isOrderLoading && (
           <Form {...methods}>
             <form className="flex flex-col gap-5" onSubmit={methods.handleSubmit((data) => mutate(data))}>

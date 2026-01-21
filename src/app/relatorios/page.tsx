@@ -102,9 +102,9 @@ export default function Relatorios() {
             setDates(value)
             console.clear()
 
-            console.log(value?.from?.toLocaleString(), value?.to?.toLocaleString())
+            console.log(value?.from?.toLocaleString(), new Date(value?.to?.setHours(23, 59, 59, 99)).toLocaleString())
             const startDate = value?.from?.getTime()
-            const endDate = value?.to?.getTime() ?? value?.from?.getTime()
+            const endDate = value?.to?.getTime() ?? value?.from?.setHours(23, 59, 59, 99)
 
             setDate({ startDate, endDate })
           }}

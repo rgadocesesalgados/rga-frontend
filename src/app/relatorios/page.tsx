@@ -29,11 +29,16 @@ const getRelatorios = async ({ dateInicial, dateFinal, status }: GetRelatoriosPr
   return response.data as GetRelatorio
 }
 export default function Relatorios() {
+  const startDateInit = new Date()
+  startDateInit.setUTCHours(0, 0, 0, 0)
+  const endDateInit = new Date()
+  endDateInit.setUTCHours(23, 59, 59, 99)
+
   const { dates, setDates } = useDateRange()
 
   const [date, setDate] = useQueryStates({
-    startDate: parseAsInteger.withDefault(dates?.from.setHours(0, 0, 0, 0) || new Date().setHours(0, 0, 0, 0)),
-    endDate: parseAsInteger.withDefault(dates?.to?.setHours(23, 59, 59)),
+    startDate: parseAsInteger.withDefault(startDateInit.getTime()),
+    endDate: parseAsInteger.withDefault(endDateInit.getTime()),
     status: parseAsArrayOf(parseAsStringEnum(statusList)).withDefault(['ANOTADO']),
   })
   const { data, isFetching: isPendingGet } = useQuery<GetRelatorio>({
@@ -102,11 +107,33 @@ export default function Relatorios() {
             setDates(value)
             console.clear()
 
-            console.log(value?.from?.toLocaleString(), new Date(value?.to?.setHours(23, 59, 59, 99)).toLocaleString())
-            const startDate = value?.from?.getTime()
-            const endDate = value?.to?.getTime() ?? value?.from?.setHours(23, 59, 59, 99)
+            let finalStart = startDateInit.getTime()
+            let finalEnd = endDateInit.getTime()
 
-            setDate({ startDate, endDate })
+            if (value?.from) {
+              const d = new Date(value.from)
+              d.setUTCHours(0, 0, 0, 0)
+              finalStart = d.getTime()
+
+              const dEnd = new Date(value.from)
+              dEnd.setUTCHours(23, 59, 59, 999)
+              finalEnd = dEnd.getTime()
+            }
+
+            if (value?.to) {
+              const d = new Date(value.to)
+              d.setUTCHours(23, 59, 59, 999)
+              finalEnd = d.getTime()
+            }
+
+            console.log(
+              'Filtro Local:',
+              new Date(finalStart).toLocaleString(),
+              'até',
+              new Date(finalEnd).toLocaleString(),
+            )
+
+            setDate({ startDate: finalStart, endDate: finalEnd })
           }}
           onChange={() => {}}
         />
